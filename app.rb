@@ -1,21 +1,21 @@
 require 'roda'
-require 'base'
+require 'splitter'
+
+$fat = Splitter.fat
+puts $fat.edition
 
 class App < Roda
   route do |r|
     r.on "public" do
-      @greeting = Time.fov_str
-      r.get "world" do
-        "#{@greeting} world from cors!"
-      end
-      r.post "post" do
-        message = "On #{@greeting} we received #{r.params['name']}"
+      r.post "save_tiddler" do
+        message = "Received #{r.params['name']}"
         puts message
         message
       end
     end
 
     r.get "local" do
+      puts $fat['MainMenu'].content
       "local only"
     end
   end
