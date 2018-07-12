@@ -1,15 +1,24 @@
 require 'roda'
 require 'splitter'
 
-$fat = Splitter.fat
-puts $fat.edition
+$wikis = {
+  fat: Splitter.fat,
+  dev: Splitter.dev
+}
+puts $wikis[:fat].edition
+puts $wikis[:dev].edition
 
 class App < Roda
   route do |r|
     r.on "public" do
       r.post "save_tiddler" do
-        message = "Received #{r.params['name']}"
+        p = r.params
+        wiki_name = p['wiki'].to_sym
+        title = p['name']
+        message = "#{title} changed in #{wiki_name}"
         puts message
+        wiki = $wikis[wiki_name]
+        wiki.add_changes(p['changes'])
         message
       end
     end
