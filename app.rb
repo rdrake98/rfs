@@ -1,5 +1,6 @@
 require 'roda'
 require 'splitter'
+# require 'dd'
 
 $wikis = {
   fat: Splitter.fat,
@@ -23,8 +24,19 @@ class App < Roda
     end
 
     r.get "local" do
-      puts $fat['MainMenu'].content
+      puts $wikis[:fat]['rfs'].content
       "local only"
+    end
+
+    r.get "try_save" do
+      # byebug
+      $wikis[:dev].try_save
+      "save done"
+    end
+
+    r.get "try_backup" do
+      $wikis[:dev].try_backup
+      "backup done"
     end
   end
 end
