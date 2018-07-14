@@ -14,7 +14,7 @@ class App < Roda
       r.post "change_tiddler" do
         p = r.params
         wiki_name = p['wiki'].to_sym
-        title = p['name']
+        title = p['title']
         message = "#{title} #{p['action']} in #{wiki_name}"
         puts message
         wiki = $wikis[wiki_name]
