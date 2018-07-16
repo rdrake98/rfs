@@ -25,8 +25,7 @@ class App < Roda
         p = r.params
         wiki_type = p['wiki'].to_sym
         puts "saving #{wiki_type}"
-        $wikis[wiki_type]&.save(p['edition'])
-        puts $wikis[:dev].edition + " from rb"
+        $wikis[wiki_type]&.save
         "#{wiki_type} saved"
       end
     end
