@@ -1,6 +1,5 @@
 require 'roda'
 require 'splitter'
-# require 'dd'
 
 $wikis = {
   fat: Splitter.fat,
@@ -22,8 +21,7 @@ class App < Roda
       end
 
       r.post "save" do
-        p = r.params
-        wiki_type = p['wiki'].to_sym
+        wiki_type = r.params['wiki'].to_sym
         puts "saving #{wiki_type}"
         $wikis[wiki_type]&.save
         "#{wiki_type} saved"
