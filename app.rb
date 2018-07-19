@@ -15,35 +15,25 @@ class App < Roda
         p = r.params
         wiki_type = p['wiki']
         wiki = $wikis[wiki_type]
-        if wiki
-          message = "#{p['title']} #{p['action']} in #{wiki_type}"
-          puts message
-          wiki.add_changes(p['changes'])
-          message
-        else
-          message = "#{p['title']} not #{p['action']} for #{wiki_type}"
-          puts message
-          message
-        end
+        message = "#{p['title']} #{p['action']} in #{wiki_type}"
+        puts message
+        wiki.add_changes(p['changes']) if wiki
+        message
       end
 
       r.post "save" do
         p = r.params
         wiki_type = p['wiki']
-        wiki = $wikis[wiki_type]
-        if wiki
-          puts "saving #{wiki_type}"
-          wiki.save
-          wiki.edition
-        else
-          puts "saving not supported for #{wiki_type}"
-          ""
-        end
+        wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
+        puts "saving #{wiki_type}"
+        wiki.add_changes(p['changes'])
+        wiki.save
+        wiki.edition
       end
     end
 
     r.get "local" do
-      puts $wikis[:fat]['rfs'].content
+      puts $wikis["fat"]['rfs'].content
       "local only"
     end
   end
