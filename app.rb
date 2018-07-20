@@ -1,10 +1,7 @@
 require 'roda'
 require 'splitter'
 
-$wikis = {
-  "fat" => Splitter.fat,
-  "dev" => Splitter.dev
-}
+$wikis = {"fat" => Splitter.fat, "dev" => Splitter.dev}
 puts $wikis["fat"].edition
 puts $wikis["dev"].edition
 
@@ -27,7 +24,6 @@ class App < Roda
         wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
         puts "saving #{wiki_type}"
         wiki.save(p['changes'])
-        wiki.edition
       end
     end
 
