@@ -6,6 +6,7 @@ puts $wikis["fat"].edition
 puts $wikis["dev"].edition
 
 class App < Roda
+  plugin :render
   route do |r|
     r.on "public" do
       r.post "change_tiddler" do
@@ -28,8 +29,8 @@ class App < Roda
     end
 
     r.get "local" do
-      puts $wikis["fat"]['rfs'].content
-      "local only"
+      puts "charting"
+      view('index')
     end
   end
 end
