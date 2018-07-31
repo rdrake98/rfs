@@ -1,9 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'roda'
+# Web framework
+gem "roda", "~> 3.9"
 gem 'rack-cors'
+
+# Rendering
 gem 'tilt'
 gem 'chartkick'
-group :development, :test do
-  gem "shotgun"
-end
+
+# Testing
+gem "shotgun"

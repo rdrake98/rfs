@@ -16,7 +16,7 @@ PLATFORMS
 DEPENDENCIES
   chartkick
   rack-cors
-  roda
+  roda (~> 3.9)
   shotgun
   tilt
 

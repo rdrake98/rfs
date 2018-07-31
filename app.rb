@@ -8,7 +8,9 @@ puts $wikis["dev"].edition
 
 class App < Roda
   plugin :render
+  plugin :assets, js: ['Chart.bundle.min.js', 'chartkick.js']
   route do |r|
+    r.assets
     r.on "public" do
       r.post "change_tiddler" do
         p = r.params
