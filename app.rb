@@ -1,5 +1,6 @@
 require 'roda'
 require 'splitter'
+require 'chartkick/helper'
 
 $wikis = {"fat" => Splitter.fat, "dev" => Splitter.dev}
 puts $wikis["fat"].edition

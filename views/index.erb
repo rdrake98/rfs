@@ -1,6 +1,5 @@
 <h3>Graph</h3>
 
-<div id="chart-1" style="height: 300px"></div>
-<script type="text/javascript">
-  new Chartkick.AreaChart("chart-1", {"2017-01-01": 11, "2017-01-02": 6})
-</script>
+<div id="chart-1" style="height: 300px">
+  <%= area_chart({"2017-01-01": 11, "2017-01-02": 6}) %>
+</div>
