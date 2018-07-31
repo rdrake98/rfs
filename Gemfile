@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Web framework
-gem "roda", "~> 3.9"
+gem "roda"
 gem 'rack-cors'
 
 # Rendering
