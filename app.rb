@@ -33,8 +33,9 @@ class App < Roda
       end
     end
 
-    r.get "local" do
-      view('index', locals: {chart: (Class.new.include Chartkick::Helper).new})
+    r.get "graph" do
+      help = Class.new.include(Chartkick::Helper).new
+      view('graph', locals: {help: help})
     end
   end
 end
