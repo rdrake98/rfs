@@ -36,7 +36,7 @@ class App < Roda
 
     r.get "graph" do
       chartkick = Class.new.include(Chartkick::Helper).new
-      view('graph', locals: {chartkick: chartkick, data: $repo.graph_data})
+      view('graph', locals: {chartkick: chartkick, repo: $repo})
     end
   end
 end
