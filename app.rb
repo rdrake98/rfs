@@ -1,6 +1,7 @@
 require 'roda'
 require 'splitter'
 require 'chartkick'
+require 'repo'
 require 'dd'
 
 $wikis = {"fat" => Splitter.fat, "dev" => Splitter.dev}
@@ -34,8 +35,8 @@ class App < Roda
     end
 
     r.get "graph" do
-      help = Class.new.include(Chartkick::Helper).new
-      view('graph', locals: {help: help})
+      charter = Class.new.include(Chartkick::Helper).new
+      view('graph', locals: {charter: charter, data: Repo.new.graph_data})
     end
   end
 end

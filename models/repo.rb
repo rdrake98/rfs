@@ -72,6 +72,10 @@ class Repo
     end
     names
   end
+
+  def graph_data
+    summary.map{|c| [c.time, c.size]}
+  end
 end
 
 __END__
