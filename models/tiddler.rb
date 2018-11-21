@@ -177,6 +177,11 @@ class Tiddler
       gsub(/<script((?:.|\n)*?)<\/script\>/,"")
   end
 
+  def search_text
+    @content.gsub(/\/%((?:.|\n)*?)%\//,"").
+      gsub(/\{{3}((?:.|\n)*?)\}{3}/," #{$1} ")
+  end
+
   def tiddler_links
     @tiddler_links ||= Tiddler.parse_tiddler_links(basic_content, @wiki)
   end
