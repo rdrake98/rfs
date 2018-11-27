@@ -1,15 +1,14 @@
 # repo.rb
 
 require 'rugged'
-require 'set'
 
 Commit = Struct.new(:oid, :time, :message, :files, :size)
 RepoFile = Struct.new(:name, :size)
 
 class Repo
 
-  def initialize
-    @repo = Rugged::Repository.new(ENV["compiled"])
+  def initialize(dir=ENV["compiled"])
+    @repo = Rugged::Repository.new(dir)
   end
 
   def commits
