@@ -8,7 +8,9 @@ dir = "#{mp? ? '/Volumes/SH1' : '/Users/rd'}/_backup"
 Dir.chdir(dir)
 names = Dir.glob("*.html").reverse
 puts names.size
-(0..21).each do |n|
+limit = ARGV[0]&.to_i || names.size
+puts limit
+(0...limit).each do |n|
   prev_name = names[n]
   prev_titles = Splitter.new("#{dir}/#{prev_name}").titles
   puts; puts name
