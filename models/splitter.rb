@@ -22,7 +22,7 @@ class Splitter
     @tiddler_hash = {}
     @tiddler_splits = {}
     @store = ""
-    @host = `hostname`[1]
+    @host = mp? ? "p" : "g"
     return unless filename
     open(filename) do |file|
       @before = ""
@@ -117,6 +117,10 @@ class Splitter
 
   def tiddlers
     unsorted_tiddlers.sort_by &:title
+  end
+
+  def titles
+    tiddlers.map &:title
   end
 
   def titles_linked(title)
