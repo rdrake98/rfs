@@ -2,7 +2,13 @@
 
 require 'repo'
 
+Commit = Struct.new(:oid, :time, :message, :files, :size)
+RepoFile = Struct.new(:name, :size)
+
 class RepoCompiled < Repo
+  def initialize
+    super(ENV["compiled"])
+  end
 
   def summary
     return @summary if @summary
@@ -30,7 +36,7 @@ class RepoCompiled < Repo
       tree = c.tree
       files = tree.map do |f|
         name = f[:name]
-        size = @repo.lookup(f[:oid]).size
+        size = lookup(f).size
         stop_words.include?(name) || (name == "code.js" && size == 45) ?
           nil :
           RepoFile.new(name, size)
@@ -61,4 +67,3 @@ __END__
 
 [6] pry(main)> File.read("/Users/rd/Dropbox/_js/code281.js").size
 => 278112
-end

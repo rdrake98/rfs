@@ -2,12 +2,8 @@
 
 require 'rugged'
 
-Commit = Struct.new(:oid, :time, :message, :files, :size)
-RepoFile = Struct.new(:name, :size)
-
 class Repo
-
-  def initialize(dir=ENV["compiled"], limit=999999)
+  def initialize(dir, limit=999999)
     @repo = Rugged::Repository.new(dir)
     @limit = limit
   end
@@ -23,5 +19,9 @@ class Repo
     @commits = []
     walker.each { |c| @commits << c; break if @commits.size >= @limit }
     @commits
+  end
+
+  def lookup(hash)
+    @repo.lookup(hash[:oid])
   end
 end
