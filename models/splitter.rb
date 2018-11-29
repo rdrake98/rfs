@@ -254,15 +254,15 @@ class Splitter
     write
   end
 
-  def add_tiddlers(json, noisy=true)
+  def add_tiddlers(json)
     JSON.parse(json).each do |hash|
       byebug if $dd
       title = hash["title"]
       if title
         change_tiddler(title, Tiddler.new(self, title, hash))
-        puts title if noisy
+        puts title
       else
-        puts "#{hash} wants deleting" if noisy
+        puts "#{hash} wants deleting"
         delete(hash, true)
       end
     end

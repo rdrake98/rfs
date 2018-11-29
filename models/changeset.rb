@@ -8,10 +8,14 @@ class Changeset < Splitter
   def initialize(json)
     super(nil)
     @deleted = []
-    add_tiddlers(json, false)
+    add_tiddlers(json)
   end
 
-  def delete(title, noisy=false)
-    @deleted << title
+  def add_tiddlers(json)
+    JSON.parse(json).each do |hash|
+      (title = hash["title"]) ?
+        self[title] = Tiddler.new(self, title, hash) :
+        @deleted << hash
+    end
   end
 end
