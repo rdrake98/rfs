@@ -1,20 +1,22 @@
 # repo_rubyf.rb
 
 require 'repo'
-require 'json'
+require 'changeset'
 
-RubySave = Struct.new(:time, :changes)
+RubySave = Struct.new(:time, :json, :changeset)
 
 class RepoRubyf < Repo
   def self.test
-    mg = new("/Users/rd/ww/rubyf", 32)
+    mg = new("/Users/rd/ww/rubyf", 26)
     c = mg.summary.last
     puts c.time
-    puts c.changes.size
+    puts c.changeset.titles.size
+    puts c.changeset.deleted.size
     mp = new("/Users/rd/ww/rubyf_mp")
     c = mp.summary.last
     puts c.time
-    puts c.changes.size
+    puts c.changeset.titles.size
+    puts c.changeset.deleted.size
     [mg, mp]
   end
 
@@ -29,8 +31,9 @@ class RepoRubyf < Repo
     return @summary if @summary
     @summary = commits.select {|c| c.message == "before fat saved\n"}.map do |c|
       dir = find_name(lookup(find_name(c.tree, "_data")), "_changes")
-      blob = lookup(find_name(lookup(dir), "fat.json"))
-      RubySave.new(c.time, JSON.parse(blob.text))
+      json = lookup(find_name(lookup(dir), "fat.json")).text
+      (changeset = Changeset.new).add_tiddlers(json, false)
+      RubySave.new(c.time, json, changeset)
     end
   end
 end
