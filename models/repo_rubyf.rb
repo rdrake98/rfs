@@ -8,16 +8,17 @@ RubySave = Struct.new(:time, :changeset)
 class RepoRubyf < Repo
   def self.test
     mg = new("/Users/rd/ww/rubyf", 26)
-    c = mg.summary.last
-    puts c.time
-    puts c.changeset.titles.size
-    puts c.changeset.deleted.size
+    mg.show
     mp = new("/Users/rd/ww/rubyf_mp")
-    c = mp.summary.last
+    mp.show
+    [mg, mp]
+  end
+
+  def show
+    c = summary.last
     puts c.time
     puts c.changeset.titles.size
     puts c.changeset.deleted.size
-    [mg, mp]
   end
 
   def lookup_name(tree, name)
