@@ -14,4 +14,8 @@ class Changeset < Splitter
         @deleted << hash
     end
   end
+
+  def tiddlers
+    unsorted_tiddlers.sort_by &:modified
+  end
 end
