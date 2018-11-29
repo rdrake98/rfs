@@ -20,15 +20,15 @@ class RepoRubyf < Repo
     [mg, mp]
   end
 
-  def find_name(tree, name)
-    tree.find {|hash| hash[:name] == name}
+  def lookup_name(tree, name)
+    lookup(tree.find{|hash| hash[:name] == name})
   end
 
   def summary
     return @summary if @summary
     @summary = commits.select {|c| c.message == "before fat saved\n"}.map do |c|
-      dir = find_name(lookup(find_name(c.tree, "_data")), "_changes")
-      json = lookup(find_name(lookup(dir), "fat.json")).text
+      dir = lookup_name(lookup_name(c.tree, "_data"), "_changes")
+      json = lookup_name(dir, "fat.json").text
       (changeset = Changeset.new).add_tiddlers(json, false)
       RubySave.new(c.time, json, changeset)
     end
