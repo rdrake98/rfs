@@ -2,20 +2,20 @@
 
 require 'splitter'
 
-class Changeset < Splitter
-  attr_reader :deleted
+class Changeset
+  attr_reader :tiddlers, :deleted
 
   def initialize(json)
-    super(nil)
+    @tiddlers = []
     @deleted = []
     JSON.parse(json).each do |hash|
       (title = hash["title"]) ?
-        self[title] = Tiddler.new(self, title, hash) :
+        @tiddlers << Tiddler.new(self, title, hash) :
         @deleted << hash
     end
   end
 
-  def tiddlers
-    unsorted_tiddlers.sort_by &:modified
+  def titles
+    @tiddlers.map &:title
   end
 end
