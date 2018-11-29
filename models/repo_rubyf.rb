@@ -29,8 +29,7 @@ class RepoRubyf < Repo
     @summary = commits.select {|c| c.message == "before fat saved\n"}.map do |c|
       dir = lookup_name(lookup_name(c.tree, "_data"), "_changes")
       json = lookup_name(dir, "fat.json").text
-      changeset = Changeset.new.from(json)
-      RubySave.new(c.time, json, changeset)
+      RubySave.new(c.time, json, Changeset.new(json))
     end
   end
 end

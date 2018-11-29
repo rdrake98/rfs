@@ -5,10 +5,10 @@ require 'splitter'
 class Changeset < Splitter
   attr_reader :deleted
 
-  def from(json)
+  def initialize(json)
+    super(nil)
     @deleted = []
     add_tiddlers(json, false)
-    self
   end
 
   def delete(title, noisy=false)
