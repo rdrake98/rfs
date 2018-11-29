@@ -3,7 +3,7 @@
 require 'repo'
 require 'changeset'
 
-RubySave = Struct.new(:time, :json, :changeset)
+RubySave = Struct.new(:time, :changeset)
 
 class RepoRubyf < Repo
   def self.test
@@ -29,7 +29,7 @@ class RepoRubyf < Repo
     @summary = commits.select {|c| c.message == "before fat saved\n"}.map do |c|
       dir = lookup_name(lookup_name(c.tree, "_data"), "_changes")
       json = lookup_name(dir, "fat.json").text
-      RubySave.new(c.time, json, Changeset.new(json))
+      RubySave.new(c.time, Changeset.new(json))
     end
   end
 end
