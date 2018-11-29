@@ -21,10 +21,7 @@ class RepoRubyf < Repo
   end
 
   def find_name(tree, name)
-    tree.each do |hash|
-      return hash if hash[:name] == name
-    end
-    nil
+    tree.find {|hash| hash[:name] == name}
   end
 
   def summary
