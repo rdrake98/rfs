@@ -10,7 +10,7 @@ class Changeset
     @deleted = []
     JSON.parse(json).each do |hash|
       (title = hash["title"]) ?
-        if title != "Search"
+        unless title == "Search"
           @tiddlers << Tiddler.new(self, title, hash)
         end :
         @deleted << hash

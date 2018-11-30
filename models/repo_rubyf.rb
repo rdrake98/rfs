@@ -2,10 +2,43 @@
 
 require 'repo'
 require 'changeset'
+require 'splitter'
 
 RubySave = Struct.new(:time, :changeset)
 
 class RepoRubyf < Repo
+  def self.probe
+    tiddlers = Hash.new{[]}
+    new("/Users/rd/ww/rubyf", 26).add_changes_to(tiddlers)
+    puts tiddlers.size
+    new("/Users/rd/ww/rubyf_mp").add_changes_to(tiddlers)
+    puts tiddlers.size
+    tiddlers.each{|k,v| v.sort_by!(&:modified)}
+    volumes = Hash.new{[]}
+    tiddlers.each {|k,v| volumes[v.size] <<= k}
+    p volumes.keys.sort.map {|k| [k, volumes[k].size]}
+    fat = Splitter.fat
+    missing = []
+    different = []
+    volumes[1].each do |title|
+      tiddler_now = fat[title]
+      if tiddler_now
+        tiddler_then = tiddlers[title][0]
+        different << title if tiddler_now.content != tiddler_then.content
+      else
+        missing << title
+      end
+    end
+    puts missing.size
+    puts different.size
+    {
+      tiddlers: tiddlers,
+      volumes: volumes,
+      missing: missing,
+      different: different
+    }
+  end
+
   def self.test
     mg = new("/Users/rd/ww/rubyf", 26)
     mg.show
@@ -19,6 +52,10 @@ class RepoRubyf < Repo
     puts c.time
     puts c.changeset.titles.size
     puts c.changeset.deleted.size
+  end
+
+  def add_changes_to(hash)
+    summary.each {|save| save.changeset.tiddlers.each {|t| hash[t.title] <<= t}}
   end
 
   def lookup_name(tree, name)
