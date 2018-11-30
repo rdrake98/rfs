@@ -7,45 +7,11 @@ require 'splitter'
 RubySave = Struct.new(:time, :changeset)
 
 class RepoRubyf < Repo
-  def self.fix_different
-    tiddlers, volumes, missing, different, fat = probe
-    diff = different.map do |title|
-      changes = tiddlers[title]
-      puts "#{title} #{changes.size}"
-      changes.last
-    end
-    content = diff.map(&:wiki_link).join("\n")
-    fat.create_new("1130Different", content, "1130 Different")
-    diff.each {|tiddler| fat[tiddler.title] = tiddler}
-    fat.write
-  end
-
-  def self.fix_other_missing
-    tiddlers, volumes, missing, different, fat = probe
-    other = missing.select {|title| tiddlers[title].size > 1}.
-      map {|title| tiddlers[title].last}
-    content = other.map(&:wiki_link).join("\n")
-    fat.create_new("1130OtherMissing", content, "1130 Other Missing")
-    other.each {|tiddler| fat[tiddler.title] = tiddler}
-    fat.write
-  end
-
-  def self.fix_easy_missing
-    tiddlers, volumes, missing, different, fat = probe
-    easy = missing.map do |title|
-      changes = tiddlers[title]
-      changes.size == 1 ? changes.last : nil
-    end.compact
-    content = easy.map(&:wiki_link).join("\n")
-    fat.create_new("1130EasyMissing", content, "1130 Easy Missing")
-    easy.each {|tiddler| fat[tiddler.title] = tiddler}
-    fat.write
-  end
-
   def self.probe
     tiddlers = Hash.new{[]}
     new("/Users/rd/ww/rubyf", 26).add_changes_to(tiddlers)
     puts tiddlers.size
+    # shared repo available on mg only
     new("/Users/rd/ww/rubyf_mp").add_changes_to(tiddlers)
     puts tiddlers.size
     tiddlers.each{|k,v| v.sort_by!(&:modified)}
@@ -71,6 +37,7 @@ class RepoRubyf < Repo
   def self.test
     mg = new("/Users/rd/ww/rubyf", 26)
     mg.show
+    # shared repo available on mg only
     mp = new("/Users/rd/ww/rubyf_mp")
     mp.show
     [mg, mp]
