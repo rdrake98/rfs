@@ -20,11 +20,10 @@ class RepoRubyf < Repo
     fat = Splitter.fat
     missing = []
     different = []
-    volumes[1].each do |title|
+    tiddlers.each do |title, changes|
       tiddler_now = fat[title]
       if tiddler_now
-        tiddler_then = tiddlers[title][0]
-        different << title if tiddler_now.content != tiddler_then.content
+        different << title if tiddler_now.content != changes.last.content
       else
         missing << title
       end
