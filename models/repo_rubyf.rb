@@ -7,6 +7,18 @@ require 'splitter'
 RubySave = Struct.new(:time, :changeset)
 
 class RepoRubyf < Repo
+  def self.fix_easy_missing
+    tiddlers, volumes, missing, different, fat = probe
+    easy = missing.map do |title|
+      changes = tiddlers[title]
+      changes.size == 1 ? changes.last : nil
+    end.compact
+    content = easy.map(&:wiki_link).join("\n")
+    fat.create_new("1130EasyMissing", content, "1130 Easy Missing")
+    easy.each {|tiddler| fat[tiddler.title] = tiddler}
+    fat.write
+  end
+
   def self.probe
     tiddlers = Hash.new{[]}
     new("/Users/rd/ww/rubyf", 26).add_changes_to(tiddlers)
@@ -20,20 +32,17 @@ class RepoRubyf < Repo
     fat = Splitter.fat
     missing = []
     different = []
-    different_mod = []
     tiddlers.each do |title, changes|
       tiddler_now = fat[title]
       if tiddler_now
         different << title if tiddler_now.content != changes.last.content
-        different_mod << title if tiddler_now.modified != changes.last.modified
       else
         missing << title
       end
     end
     puts missing.size
     puts different.size
-    puts different_mod.size
-    [tiddlers, volumes, missing, different, different_mod, fat]
+    [tiddlers, volumes, missing, different, fat]
   end
 
   def self.test
