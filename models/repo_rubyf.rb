@@ -20,22 +20,20 @@ class RepoRubyf < Repo
     fat = Splitter.fat
     missing = []
     different = []
+    different_mod = []
     tiddlers.each do |title, changes|
       tiddler_now = fat[title]
       if tiddler_now
         different << title if tiddler_now.content != changes.last.content
+        different_mod << title if tiddler_now.modified != changes.last.modified
       else
         missing << title
       end
     end
     puts missing.size
     puts different.size
-    {
-      tiddlers: tiddlers,
-      volumes: volumes,
-      missing: missing,
-      different: different
-    }
+    puts different_mod.size
+    [tiddlers, volumes, missing, different, different_mod, fat]
   end
 
   def self.test
