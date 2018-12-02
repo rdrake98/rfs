@@ -111,6 +111,15 @@ class Splitter
     $1
   end
 
+  def latest_edition
+    open(@filename) do |file|
+      until (line = file.gets) =~ /<div id="storeArea">/
+        return $1 if line =~ /^var edition = "(.*)";$/
+      end
+    end
+    return nil
+  end
+
   def unsorted_tiddlers
     @tiddler_hash.values
   end
