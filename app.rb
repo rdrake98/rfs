@@ -30,7 +30,7 @@ class App < Roda
         wiki_type = p['wiki']
         wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
         puts "saving #{wiki_type}"
-        wiki.save(p['changes'])
+        wiki.save(p['edition'], p['changes'])
       end
     end
 

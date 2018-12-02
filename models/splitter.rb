@@ -329,13 +329,19 @@ class Splitter
     add_tiddlers(json)
   end
 
-  def save(json)
-    commit_changes_file("before #{@wiki_type} saved") if @wiki_type
-    add_changes(json)
-    backup
-    newFile = write("", @host)
-    commit_changes_file("#{@wiki_type} saved") if @wiki_type
-    newFile ? [edition, newFile].join(",") : edition
+  def save(prev_edition, json)
+    latest = latest_edition
+    if prev_edition == latest
+      commit_changes_file("before #{@wiki_type} saved") if @wiki_type
+      add_changes(json)
+      backup
+      newFile = write("", @host)
+      commit_changes_file("#{@wiki_type} saved") if @wiki_type
+      newFile ? [edition, newFile].join(",") : edition
+    else
+      puts "clash between #{prev_edition} and #{latest}"
+      "#{latest},clash"
+    end
   end
 
   def inject_tests(testing)
