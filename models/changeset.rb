@@ -1,6 +1,7 @@
 # changeset.rb
 
-require 'splitter'
+require 'tiddler'
+require 'json'
 
 class Changeset
   attr_reader :tiddlers, :deleted
