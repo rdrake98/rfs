@@ -17,9 +17,6 @@ class Splitter
     @wiki_type = "dev" if @filename == ENV["dev"]
     @wiki_type = "fat" if @filename == ENV["fat"]
     @backup_area = "#{@filename.split("/")[0..-2].join("/")}/_backup" if @wiki_type
-    @backup_area = "/Volumes/SH1/_backup" if mp? && @wiki_type == "fat"
-    @fat_backup_area = "/Users/rd/rf/_backup" if @wiki_type == "fat"
-    # was "/Users/rd/ww/_b2/#{@wiki_type}/_backup"
     @split = split
     @tiddler_hash = {}
     @tiddler_splits = {}
@@ -81,7 +78,6 @@ class Splitter
     command = "rsync -a #{@filename} #{@backup_area}/#{edition}"
     puts "backing up edition #{edition}"
     puts command
-    `rsync -a #{@filename} #{@fat_backup_area}/#{edition}` if @fat_backup_area
     `#{command}`
   end
 
