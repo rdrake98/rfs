@@ -111,15 +111,6 @@ class Splitter
     $1
   end
 
-  def latest_edition
-    open(@filename) do |file|
-      until (line = file.gets) =~ /<div id="storeArea">/
-        return $1 if line =~ /^var edition = "(.*)";$/
-      end
-    end
-    return nil
-  end
-
   def unsorted_tiddlers
     @tiddler_hash.values
   end
@@ -329,19 +320,36 @@ class Splitter
     add_tiddlers(json)
   end
 
-  def save(prev_edition, json)
-    latest = latest_edition
-    if prev_edition == latest
-      commit_changes_file("before #{@wiki_type} saved") if @wiki_type
-      add_changes(json)
-      backup
-      newFile = write("", @host)
-      commit_changes_file("#{@wiki_type} saved") if @wiki_type
-      newFile ? [edition, newFile].join(",") : edition
-    else
-      puts "clash between #{prev_edition} and #{latest}"
-      "#{latest},clash"
+  def save(browser_edition, json)
+    dropbox_edition = nil
+    open(@filename) do |file|
+      until (line = file.gets) =~ /<div id="storeArea">/
+        if line =~ /^var edition = "(.*)";$/
+          dropbox_edition = $1
+          break
+        end
+      end
     end
+    if browser_edition == dropbox_edition
+      server_edition = edition
+      if browser_edition == server_edition
+        commit_changes_file("before #{@wiki_type} saved") if @wiki_type
+        add_changes(json)
+        backup
+        newFile = write("", @host)
+        commit_changes_file("#{@wiki_type} saved") if @wiki_type
+        newFile ? [edition, newFile].join(",") : edition
+      else
+        clash(browser_edition, server_edition, "server")
+      end
+    else
+      clash(browser_edition, dropbox_edition, "dropbox")
+    end
+  end
+
+  def clash(browser_edition, other_edition, type)
+    puts "clash between browser #{browser_edition} and #{type} #{other_edition}"
+    "#{other_edition},clash"
   end
 
   def inject_tests(testing)
