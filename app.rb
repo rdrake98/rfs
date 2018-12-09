@@ -38,5 +38,9 @@ class App < Roda
       chartkick = Class.new.include(Chartkick::Helper).new
       view('graph', locals: {chartkick: chartkick, repo: $repo}) unless mp?
     end
+
+    r.get "sync" do
+      $wikis["fat"].sync
+    end
   end
 end

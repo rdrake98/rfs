@@ -339,15 +339,22 @@ class Splitter
         commit_changes_file("#{@wiki_type} saved") if @wiki_type
         newFile ? [edition, newFile].join(",") : edition
       else
-        clash(browser_edition, server_edition, "server")
+        clash(browser_edition, server_edition, "server", json)
       end
     else
-      clash(browser_edition, dropbox_edition, "dropbox")
+      clash(browser_edition, dropbox_edition, "dropbox", json)
     end
   end
 
-  def clash(browser_edition, other_edition, type)
-    puts "clash between browser #{browser_edition} and #{type} #{other_edition}"
+  def clash(browser_edition, other_edition, clash_type, json)
+    if @wiki_type == "fat"
+      @browser_edition = browser_edition
+      commit_changes_file("before fat #{clash_type} clash")
+      add_changes(json)
+      commit_changes_file("after fat #{clash_type} clash")
+    end
+    puts "clash between browser #{browser_edition}" +
+         " and #{clash_type} #{other_edition}"
     "#{other_edition},clash"
   end
 
@@ -370,5 +377,37 @@ class Splitter
     puts @code.size
     inject_tests(testing) unless testing == :none
     write("")
+  end
+
+  def self.dir
+    "/Users/rd/rf/_tiddlers"
+  end
+
+  def self.mkdir
+    FileUtils.remove_dir(dir) if Dir.exist?(dir)
+    Dir.mkdir(dir)
+    Dir.chdir(dir)
+    `gin`
+  end
+
+  def sync
+    Splitter.mkdir
+    puts "writing #{@browser_edition}"
+    root_wiki = Splitter.new("#{@backup_area}/#{@browser_edition}")
+    root_wiki.tiddlers.each(&:write)
+    puts "committing #{@browser_edition}"
+    `gcaa #{@browser_edition}`
+    puts "writing #{edition}"
+    FileUtils.rm Dir.glob('*.txt')
+    tiddlers.each(&:write)
+    puts "committing #{edition}"
+    `gcaa #{edition}`
+    puts "writing unsaved changes"
+    root_wiki.add_tiddlers(File.read(changes_file))
+    `git checkout HEAD^; git checkout -b clash`
+    FileUtils.rm Dir.glob('*.txt')
+    root_wiki.tiddlers.each(&:write)
+    puts "committing unsaved changes"
+    `gcaa unsaved changes`
   end
 end

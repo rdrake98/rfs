@@ -214,4 +214,24 @@ class Tiddler
   def html
     Tiddler.html(title, output)
   end
+
+  def filename
+    "#{title.gsub("/", "*")}.txt"
+  end
+
+  def write
+    readable = []
+    readable << splitname
+    readable << modified
+    # temporary fix for 1130Different, 1130EasyMissing, 1130OtherMissing
+    readable << (created.size > 12 ? modified : time_from(created))
+    readable << modifier
+    readable << creator
+    readable << changecount
+    readable << ""
+    readable << content
+    readable = readable.join("\n")
+    File.write("#{Splitter.dir}/#{filename}", readable + "\n")
+    readable
+  end
 end
