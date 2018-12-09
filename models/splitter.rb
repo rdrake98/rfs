@@ -316,7 +316,6 @@ class Splitter
 
   def add_changes(json)
     File.write(changes_file, json + "\n") if @wiki_type
-    add_tiddlers(json)
   end
 
   def save(browser_edition, json)
@@ -334,6 +333,7 @@ class Splitter
       if browser_edition == server_edition
         commit_changes_file("before #{@wiki_type} saved") if @wiki_type
         add_changes(json)
+        add_tiddlers(json)
         backup
         newFile = write("", @host)
         commit_changes_file("#{@wiki_type} saved") if @wiki_type
