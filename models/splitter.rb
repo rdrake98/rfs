@@ -380,7 +380,7 @@ class Splitter
   end
 
   def self.dir
-    "/Users/rd/rf/_tiddlers"
+    "/Users/rd/rf/_tiddlers2"
   end
 
   def self.mkdir
@@ -409,5 +409,32 @@ class Splitter
     root_wiki.tiddlers.each(&:write)
     puts "committing unsaved changes"
     `gcaa unsaved changes`
+  end
+
+  def test_write
+    Splitter.mkdir
+    puts "writing #{edition}"
+    puts tiddlers.size
+    tiddlers.each(&:write)
+  end
+
+  def title_sizes
+    sizes = Hash.new{0}
+    titles.each {|t| sizes[t.size] += 1}
+    sizes
+  end
+
+  def hexes
+    titles.select{|t| t.size > 35}.each do |t|
+      puts t, self[t].hex
+    end
+    tiddlers.sample(7).each do |t|
+      puts t.title, t.hex
+    end
+  end
+
+  def read_from_dir
+    Dir.chdir(Splitter.dir)
+    Dir.glob("*.txt").map {|f| f[0..-5].gsub("*", "/")}
   end
 end

@@ -216,7 +216,17 @@ class Tiddler
   end
 
   def filename
-    "#{title.gsub("/", "*")}.txt"
+    "#{title.gsub("/", "*")}.#{hex}.txt"
+  end
+
+  def hex
+    bin = 1
+    tot = 0
+    title.each_char do |c|
+      tot += bin if c != c.downcase || c == "/"
+      bin *= 2
+    end
+    tot.to_s(36)
   end
 
   def write
