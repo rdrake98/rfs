@@ -411,30 +411,20 @@ class Splitter
     `gcaa unsaved changes`
   end
 
-  def test_write
-    Splitter.mkdir
-    puts "writing #{edition}"
-    puts tiddlers.size
-    tiddlers.each(&:write)
-  end
-
-  def title_sizes
-    sizes = Hash.new{0}
-    titles.each {|t| sizes[t.size] += 1}
-    sizes
-  end
-
-  def hexes
-    titles.select{|t| t.size > 35}.each do |t|
-      puts t, self[t].hex
-    end
-    tiddlers.sample(7).each do |t|
-      puts t.title, t.hex
-    end
-  end
-
-  def read_from_dir
+  def changed_from_dir
+    changed = {}
     Dir.chdir(Splitter.dir)
-    Dir.glob("*.txt").map {|f| f[0..-5].gsub("*", "/")}
+    Dir.glob("*.txt", File::FNM_DOTMATCH).each do |f|
+      title = f.split(".")[0..-3].join(".").gsub("*", "/")
+      lines = File.read(f).split("\n")
+      content = self[title]&.content
+      file_content = lines[7..-1]&.join("\n").to_s
+      if content != file_content &&
+        content != file_content + "\n" &&
+        content != file_content + "\n\n"
+        changed[title] = lines
+      end
+    end
+    changed
   end
 end
