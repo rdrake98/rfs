@@ -380,7 +380,7 @@ class Splitter
   end
 
   def self.dir
-    "/Users/rd/rf/_tiddlers2"
+    "/Users/rd/rf/_tiddlers2" # tiddlers2 has the truth for now
   end
 
   def self.mkdir
@@ -411,14 +411,25 @@ class Splitter
     `gcaa unsaved changes`
   end
 
+  def content_from(lines, dedup=false)
+    lines = lines[7..-1]
+    if dedup
+      size = lines.size
+      lines = lines&.uniq
+      puts "dedup saved #{size - lines.size} lines"
+    end
+    lines&.join("\n").to_s
+  end
+
   def changed_from_dir
     changed = {}
     Dir.chdir(Splitter.dir)
     Dir.glob("*.txt", File::FNM_DOTMATCH).each do |f|
+      # should check hex before doing gsub
       title = f.split(".")[0..-3].join(".").gsub("*", "/")
       lines = File.read(f).split("\n")
       content = self[title]&.content
-      file_content = lines[7..-1]&.join("\n").to_s
+      file_content = content_from(lines)
       if content != file_content &&
         content != file_content + "\n" &&
         content != file_content + "\n\n"
@@ -426,5 +437,49 @@ class Splitter
       end
     end
     changed
+  end
+
+  def merge
+    # no changes to splitname or deletions, first time around
+    added = []
+    changed = []
+    # hard-coded the first time
+    merged = %w[DevDec18 FatwordSync FromMonday]
+    changed_from_dir.each do |title, lines|
+      unless title == "Search"
+        puts title, lines[5]
+        tiddler = self[title]
+        if tiddler
+          changed << tiddler
+          dedup = title == "DefaultTiddlers"
+          time = merged.include?(title) ? nil : lines[1]
+          tiddler.merge_content(content_from(lines, dedup), time, lines[5])
+        else
+          # @content = content["text"]
+          # self.creator = content["creator"]
+          # self.modifier = content["modifier"]
+          # self.created = jsontime(content["created"])
+          # self.modified = jsontime(content["modified"])
+          # self.splitname = content["fields"]["splitname"]
+          # self.changecount = content["fields"]["changecount"]
+          t = self["DefaultTiddlers"] # kludge
+          hash = {
+            "text" => content_from(lines),
+            "creator" => "RubyMerge",
+            "modifier" => "RubyMerge",
+            "created" => t.jsontime(lines[2]),
+            "modified" => t.jsontime(lines[1]),
+            "fields" => {"splitname" => lines[0], "changecount" => lines[5]}
+          }
+          tiddler = Tiddler.new(self, title, hash)
+          self[title] = tiddler
+          added << tiddler
+        end
+      end
+    end
+    content = (changed + added).map(&:wiki_link).join("\n")
+    create_new("1210Merge", content, "1210 Merge")
+    write
+    [changed.size, added.size]
   end
 end

@@ -64,10 +64,17 @@ class Tiddler
   def content= content
     return if @content == content
     @content = content
-    return if basic
     self.modifier = "RubyTuesday"
     self.modified = strftime(Time.now.utc)
     self.changecount = changecount.to_i + 1
+  end
+
+  def merge_content content, modified, changecount
+    return if @content == content
+    @content = content
+    self.modifier = "RubyMerge"
+    self.modified = modified ? jsontime(modified) : strftime(Time.now.utc)
+    self.changecount = modified ? changecount : changecount.to_i + 1
   end
 
   def [] attribute
