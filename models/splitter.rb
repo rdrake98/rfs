@@ -380,13 +380,17 @@ class Splitter
   end
 
   def self.dir
-    "/Users/rd/rf/_tiddlers2" # tiddlers2 has the truth for now
+    "/Users/rd/rf/_tiddlers2"
+  end
+
+  def self.dir2
+    dir[-1] == "2" ? dir[0...-1] : dir + "2"
   end
 
   def self.mkdir
-    FileUtils.remove_dir(dir) if Dir.exist?(dir)
-    Dir.mkdir(dir)
-    Dir.chdir(dir)
+    FileUtils.remove_dir(dir2) if Dir.exist?(dir2)
+    Dir.mkdir(dir2)
+    Dir.chdir(dir2)
     `gin`
   end
 
@@ -455,14 +459,7 @@ class Splitter
           time = merged.include?(title) ? nil : lines[1]
           tiddler.merge_content(content_from(lines, dedup), time, lines[5])
         else
-          # @content = content["text"]
-          # self.creator = content["creator"]
-          # self.modifier = content["modifier"]
-          # self.created = jsontime(content["created"])
-          # self.modified = jsontime(content["modified"])
-          # self.splitname = content["fields"]["splitname"]
-          # self.changecount = content["fields"]["changecount"]
-          t = self["DefaultTiddlers"] # kludge
+          t = self["MainMenu"] # kludge
           hash = {
             "text" => content_from(lines),
             "creator" => "RubyMerge",
