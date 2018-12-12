@@ -247,8 +247,7 @@ class Tiddler
     readable = []
     readable << splitname
     readable << modified
-    # temporary fix for 1130Different, 1130EasyMissing, 1130OtherMissing
-    readable << (created.size > 12 ? modified : time_from(created))
+    readable << time_from(created)
     readable << modifier
     readable << creator
     readable << changecount
