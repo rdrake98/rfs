@@ -480,34 +480,25 @@ class Splitter
     [changed.size, added.size]
   end
 
-  def self.chomp_spaces
-    fat.chomp_spaces
+  def self.check_tiddlers(fixed=true)
+    f = fixed ? fat : new("/Users/rd/rf/_milestones/f181211.212407g.html")
+    puts f.tiddlers.select {|t| t.content =~ /\n\Z/}.size
+    puts f.tiddlers.select {|t| t.content =~ / (\n|\Z)/}.size
+    puts f.tiddlers.select {|t| t.created.size != 12}.size
+    puts f.tiddlers.select {|t| t["modified"].size != 12}.size
+    puts f.tiddlers.select {|t| t.modifier.nil?}.size
+    puts f.tiddlers.select {|t| t.creator.nil?}.size
   end
 
-  def show_select(re)
-    selection = tiddlers.select {|t| t.content =~ re}
-    puts "#{re.inspect} -- #{selection.size}"
-    selection
-  end
-
-  def chomp_spaces
-    all = show_select(/ \Z/)
-    all.each {|t| t.tweak_content(t.content.gsub(/ \Z/, ""))}
-    content = all.map(&:wiki_link).join("\n")
-    create_new("1212Tweaks", content)
-    write
-  end
-
-  def self.fix_created
+  def self.fix_nil_creators
     f = fat
-    all = f.tiddlers.select {|t| t.created.size > 12}
+    all = f.tiddlers.select {|t| t.creator.nil?}
     all.each do |t|
-      t['created'] = t.jsontime(t.created)
-      t['modifier'] = "RubyFix"
+      t['creator'] = "NilCreator"
       t["changecount"] = t["changecount"].to_i + 1
     end
     content = all.map(&:wiki_link).join("\n")
-    f.create_new("1212Fixes", content)
+    f.create_new("1212FixNilCreators", content)
     f.write
   end
 end
