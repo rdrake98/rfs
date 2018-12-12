@@ -77,6 +77,13 @@ class Tiddler
     self.changecount = modified ? changecount : changecount.to_i + 1
   end
 
+  def tweak_content content
+    return if @content == content
+    @content = content
+    self.modifier = "RubyTweak"
+    self.changecount = changecount.to_i + 1
+  end
+
   def [] attribute
     @header =~ /#{attribute}="([^"]+)"/ &&
       CGI::unescapeHTML($1).gsub(/\\s/m,"\\")

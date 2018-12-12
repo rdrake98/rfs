@@ -479,4 +479,31 @@ class Splitter
     write
     [changed.size, added.size]
   end
+
+  def self.chomp_spaces
+    fat.chomp_spaces
+  end
+
+  def show_select(re)
+    selection = tiddlers.select {|t| t.content =~ re}
+    puts "#{re.inspect} -- #{selection.size}"
+    selection
+  end
+
+  def chomp_spaces
+    puts tiddlers.size
+    all = show_select(/\n\Z/)
+    w = show_select(/\w\n\Z/)
+    s = show_select(/\s\n\Z/)
+    n = show_select(/\n\n\Z/)
+    remains = all - w - s - n
+    puts remains.size
+    chars = Hash.new(0)
+    remains.each {|t| t.content =~ /(.)\n\Z/; chars[$1] += 1}
+    p chars
+    content = show_select(/>\n\Z/).map(&:wiki_link).join("\n")
+    create_new("1212Look", content)
+    write
+    content
+  end
 end
