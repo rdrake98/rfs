@@ -490,15 +490,12 @@ class Splitter
     puts f.tiddlers.select {|t| t.creator.nil?}.size
   end
 
-  def self.fix_nil_creators
-    f = fat
-    all = f.tiddlers.select {|t| t.creator.nil?}
-    all.each do |t|
-      t['creator'] = "NilCreator"
-      t["changecount"] = t["changecount"].to_i + 1
-    end
-    content = all.map(&:wiki_link).join("\n")
-    f.create_new("1212FixNilCreators", content)
-    f.write
+  def self.show_numbers
+    tiddlers = fat.tiddlers
+    c = tiddlers.group_by(&:creator).map{|k,v|[k,v.size]}.sort_by{|a| -a[1]}
+    m = tiddlers.group_by(&:modifier).map{|k,v|[k,v.size]}.sort_by{|a| -a[1]}
+    cc = tiddlers.group_by(&:changecount).
+      map{|k,v|[k.to_i,v.size]}.sort_by{|a| [-a[1],-a[0]]}
+    [c, m, cc]
   end
 end
