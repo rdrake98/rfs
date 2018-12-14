@@ -498,4 +498,46 @@ class Splitter
       map{|k,v|[k.to_i,v.size]}.sort_by{|a| [-a[1],-a[0]]}
     [c, m, cc]
   end
+
+  def shadow_titles
+    @before.scan(/<div title="(.*)">\n/).map(&:first)
+  end
+
+  def config_titles
+    (shadow_titles +
+      self["OptionsPanel"].content.split(/\W+/) +
+      %w[OpenTiddlers OpenTiddlersRaw RecentCreations DefaultTiddlers Search]
+    ).uniq.sort
+  end
+
+  def expanded(titles)
+    (titles + (titles << "MainMenu").map{|t| titles_linked(t)}.flatten).uniq
+  end
+
+  def write_tiny(hash, selected=[], file="empty", expand=false)
+    tinys = {}
+    hash.each do |key, content|
+      title = key.to_s
+      tinys[title] = Tiddler.new(self, title, content, self[title].splitname)
+    end
+    titles = (config_titles + (expand ? expanded(selected) : selected)).uniq
+    divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
+    tiny_wiki = @before + divs + @mid + @code + @after
+    File.write("/Users/rd/rf/tinys/#{file}.html", tiny_wiki)
+    [titles.size, tiny_wiki.size]
+  end
+
+  def write_empty
+    write_tiny(DefaultTiddlers: "GettingStarted", SiteTitle: "m")
+  end
+
+  def write_selected(titles, file, expand=false)
+    titles = titles.map(&:to_s)
+    configs = {DefaultTiddlers: titles.join("\n"), SiteTitle: "x"}
+    write_tiny(configs, titles, file, expand)
+  end
+
+  def write_sample(n, expand=false)
+    write_selected(titles.sample(n), "sample", expand)
+  end
 end
