@@ -1,12 +1,12 @@
 require 'roda'
 require 'splitter'
 require 'chartkick'
-require 'repo_compiled' unless mp?
+require 'repo_compiled'
 
 $wikis = {"fat" => Splitter.fat, "dev" => Splitter.dev}
 puts $wikis["fat"].edition
 puts $wikis["dev"].edition
-$repo = RepoCompiled.new unless mp?
+$repo = RepoCompiled.new
 
 class App < Roda
   plugin :render
@@ -36,7 +36,7 @@ class App < Roda
 
     r.get "graph" do
       chartkick = Class.new.include(Chartkick::Helper).new
-      view('graph', locals: {chartkick: chartkick, repo: $repo}) unless mp?
+      view('graph', locals: {chartkick: chartkick, repo: $repo})
     end
 
     r.get "sync" do
