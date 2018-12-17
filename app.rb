@@ -30,7 +30,13 @@ class App < Roda
         wiki_type = p['wiki']
         wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
         puts "saving #{wiki_type}"
-        wiki.save(p['edition'], p['changes'])
+        response = wiki.save(p['edition'], p['changes'])
+        unless response
+          puts "reloading #{wiki_type}"
+          $wikis[wiki_type] = wiki_type == "fat" ? Splitter.fat : Splitter.dev
+          response = $wikis[wiki_type].save(p['edition'], p['changes'])
+        end
+        response
       end
     end
 

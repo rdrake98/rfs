@@ -340,6 +340,7 @@ class Splitter
         newFile ? [edition, newFile].join(",") : edition
       else
         clash(browser_edition, server_edition, "server", json)
+        nil
       end
     else
       clash(browser_edition, dropbox_edition, "dropbox", json)
