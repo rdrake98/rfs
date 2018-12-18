@@ -247,12 +247,6 @@ class Splitter
     `cd $data; git add #{changes_file_}; git commit -m "#{message}"`
   end
 
-  def update_from_json
-    return unless @wiki_type
-    add_tiddlers(File.read(changes_file))
-    write
-  end
-
   def add_tiddlers(json)
     JSON.parse(json).each do |hash|
       byebug if $dd
