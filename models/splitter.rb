@@ -333,9 +333,7 @@ class Splitter
       if browser_edition == server_edition
         commit_changes_file("before #{@wiki_type} saved") if @wiki_type
         add_changes(json)
-        add_tiddlers(json)
-        backup
-        newFile = write("", @host)
+        do_save(json)
         commit_changes_file("#{@wiki_type} saved") if @wiki_type
         newFile ? [edition, newFile].join(",") : edition
       else
@@ -345,6 +343,12 @@ class Splitter
     else
       clash(browser_edition, dropbox_edition, "dropbox", json)
     end
+  end
+
+  def do_save(json=File.read(changes_file))
+    add_tiddlers(json)
+    backup
+    newFile = write("", @host)
   end
 
   def clash(browser_edition, other_edition, clash_type, json)

@@ -13,10 +13,11 @@ class App < Roda
   plugin :assets, js: ['Chart.bundle.min.js', 'chartkick.js']
   plugin :h
 
-  def reload(wiki_type, p)
+  def reload(wiki_type="fat", p=nil)
     puts "reloading #{wiki_type}"
-    $wikis[wiki_type] = (wiki_type == "fat" ? Splitter.fat : Splitter.dev)
-    $wikis[wiki_type].save(p['edition'], p['changes'])
+    wiki = wiki_type == "fat" ? Splitter.fat : Splitter.dev
+    $wikis[wiki_type] = wiki
+    p ? wiki.save(p['edition'], p['changes']) : wiki.do_save
   end
 
   route do |r|
@@ -48,6 +49,11 @@ class App < Roda
 
     r.get "sync" do
       $wikis["fat"].sync
+    end
+
+    r.get "force_save" do
+      reload
+      "hopefully not lost anything"
     end
   end
 end
