@@ -12,6 +12,13 @@ class App < Roda
   plugin :render
   plugin :assets, js: ['Chart.bundle.min.js', 'chartkick.js']
   plugin :h
+
+  def reload(wiki_type, p)
+    puts "reloading #{wiki_type}"
+    $wikis[wiki_type] = (wiki_type == "fat" ? Splitter.fat : Splitter.dev)
+    $wikis[wiki_type].save(p['edition'], p['changes'])
+  end
+
   route do |r|
     r.assets
     r.on "public" do
@@ -30,13 +37,7 @@ class App < Roda
         wiki_type = p['wiki']
         wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
         puts "saving #{wiki_type}"
-        response = wiki.save(p['edition'], p['changes'])
-        unless response
-          puts "reloading #{wiki_type}"
-          $wikis[wiki_type] = wiki_type == "fat" ? Splitter.fat : Splitter.dev
-          response = $wikis[wiki_type].save(p['edition'], p['changes'])
-        end
-        response
+        wiki.save(p['edition'], p['changes']) || reload(wiki_type, p)
       end
     end
 
