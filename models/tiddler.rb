@@ -137,6 +137,7 @@ class Tiddler
   end
 
   def splitdown
+    binding.pry if $dd && splitname.nil?
     splitname.downcase
   end
 
