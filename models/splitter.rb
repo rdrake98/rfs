@@ -337,11 +337,12 @@ class Splitter
     end
   end
 
-  def do_save(json=File.read(changes_file))
-    add_tiddlers(json)
+  def do_save(json=nil)
+    add_tiddlers(json || File.read(changes_file))
     backup
     newFile = write("", @host)
-    commit_changes_file("#{@wiki_type} saved") if @wiki_type
+    commit_changes_file(
+      "#{@wiki_type} #{json ? '' : 'force '}saved") if @wiki_type
     newFile
   end
 
