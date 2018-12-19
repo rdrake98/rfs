@@ -137,8 +137,8 @@ class Tiddler
   end
 
   def splitdown
-    binding.pry if $dd && splitname.nil?
-    splitname.downcase
+    # binding.pry if $dd && splitname.nil?
+    (splitname || @title).downcase
   end
 
   def parse_external_links
