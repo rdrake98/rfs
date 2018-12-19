@@ -52,7 +52,7 @@ class App < Roda
     end
 
     r.get "force_save" do
-      reload
+      reload # fat only for now
       "hopefully not lost anything"
     end
   end

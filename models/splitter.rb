@@ -313,29 +313,27 @@ class Splitter
   end
 
   def save(browser_edition, json)
-    dropbox_edition = nil
+    file_edition = nil
     open(@filename) do |file|
       until (line = file.gets) =~ /<div id="storeArea">/
         if line =~ /^var edition = "(.*)";$/
-          dropbox_edition = $1
+          file_edition = $1
           break
         end
       end
     end
-    if browser_edition == dropbox_edition
+    if browser_edition == file_edition
       server_edition = edition
       if browser_edition == server_edition
         commit_changes_file("before #{@wiki_type} saved") if @wiki_type
         add_changes(json)
-        do_save(json)
-        commit_changes_file("#{@wiki_type} saved") if @wiki_type
-        newFile ? [edition, newFile].join(",") : edition
+        (newFile = do_save(json)) ? [edition, newFile].join(",") : edition
       else
         clash(browser_edition, server_edition, "server", json)
         nil
       end
     else
-      clash(browser_edition, dropbox_edition, "dropbox", json)
+      clash(browser_edition, file_edition, "file", json)
     end
   end
 
@@ -343,6 +341,8 @@ class Splitter
     add_tiddlers(json)
     backup
     newFile = write("", @host)
+    commit_changes_file("#{@wiki_type} saved") if @wiki_type
+    newFile
   end
 
   def clash(browser_edition, other_edition, clash_type, json)
