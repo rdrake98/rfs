@@ -13,7 +13,7 @@ class App < Roda
   plugin :assets, js: ['Chart.bundle.min.js', 'chartkick.js']
   plugin :h
 
-  def reload(wiki_type="fat", p=nil)
+  def load_and_save(wiki_type="fat", p=nil)
     puts "reloading #{wiki_type}"
     wiki = wiki_type == "fat" ? Splitter.fat : Splitter.dev
     $wikis[wiki_type] = wiki
@@ -38,7 +38,7 @@ class App < Roda
         wiki_type = p['wiki']
         wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
         puts "saving #{wiki_type}"
-        wiki.save(p['edition'], p['changes']) || reload(wiki_type, p)
+        wiki.save(p['edition'], p['changes']) || load_and_save(wiki_type, p)
       end
     end
 
@@ -51,8 +51,8 @@ class App < Roda
       $wikis["fat"].sync
     end
 
-    r.get "force_save" do
-      reload # fat only for now
+    r.get "force" do
+      load_and_save # fat only for now
       "hopefully not lost anything"
     end
   end
