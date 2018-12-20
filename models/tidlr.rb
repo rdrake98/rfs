@@ -2,6 +2,12 @@
 
 require 'tiddler'
 
+# line2 = line.scrub {|c| c == "\xB0" ? "**" : "£"}
+# \xB0 °
+# \xA3 £
+# \xAB -
+# \xF1 ñ
+
 class Tidlr < Tiddler
   def self.div_text(file, line)
     div_text = ""
@@ -11,8 +17,13 @@ class Tidlr < Tiddler
       begin
         ending = line =~ /<\/div>/
       rescue
-        line1 = line.scrub('£')
-        line2 = line.scrub
+        line2 = line.scrub do |c|
+          c == "\xB0" ? "°" :
+          (c == "\xA3" ? "£" :
+          (c == "\xAB" ? "-" :
+          (c == "\xF1" ? "ñ" :
+          "??")))
+        end
         binding.pry if $dd
         line = line2
         ending = line =~ /<\/div>/
@@ -21,11 +32,8 @@ class Tidlr < Tiddler
     begin
       div_text << line
     rescue
-      line1 = line.scrub('£')
-      line2 = line.scrub
       binding.pry if $dd
-      line = line2
-      div_text << line
+      div_text << line.scrub
     end
   end
 
