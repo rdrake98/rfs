@@ -16,14 +16,11 @@ class Splitr < Splitter
         @before << line
       end
       @before << line
-      begin
-        while (line = file.gets) =~ /<div title=.*/
-          tiddler = Tidlr.from_file(self, file, line)
-          self[tiddler.title] = tiddler
-        end
-      rescue
-        binding.pry if $dd
+      while (line = Tidlr.repair(file.gets)) =~ /<div title=.*/
+        tiddler = Tidlr.from_file(self, file, line)
+        self[tiddler.title] = tiddler
       end
+      binding.pry if $dd
       @mid = line
       until (line = file.gets) =~ /^<script id="jsArea" type="text\/javascript">/
         @mid << line
@@ -40,6 +37,13 @@ class Splitr < Splitter
 
   def store_size
     unsorted_tiddlers.map(&:size).reduce(0, &:+)
+  end
+
+  def write(suffix="_")
+    filename = new_name(suffix)
+    puts "writing splitr to #{filename}"
+    File.write(filename, contents)
+    filename
   end
 
   def self.show_history(n=nil)
