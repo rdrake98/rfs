@@ -16,9 +16,13 @@ class Splitr < Splitter
         @before << line
       end
       @before << line
-      while (line = file.gets) =~ /<div title=.*/
-        tiddler = Tidlr.from_file(self, file, line)
-        self[tiddler.title] = tiddler
+      begin
+        while (line = file.gets) =~ /<div title=.*/
+          tiddler = Tidlr.from_file(self, file, line)
+          self[tiddler.title] = tiddler
+        end
+      rescue
+        binding.pry if $dd
       end
       @mid = line
       until (line = file.gets) =~ /^<script id="jsArea" type="text\/javascript">/

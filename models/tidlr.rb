@@ -11,13 +11,22 @@ class Tidlr < Tiddler
       begin
         ending = line =~ /<\/div>/
       rescue
-        puts line
-        puts line.scrub
-        # binding.pry if $dd
-        ending = true
+        line1 = line.scrub('£')
+        line2 = line.scrub
+        binding.pry if $dd
+        line = line2
+        ending = line =~ /<\/div>/
       end
     end until ending
-    div_text << line
+    begin
+      div_text << line
+    rescue
+      line1 = line.scrub('£')
+      line2 = line.scrub
+      binding.pry if $dd
+      line = line2
+      div_text << line
+    end
   end
 
   def splitdown
