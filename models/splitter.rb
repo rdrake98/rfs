@@ -54,19 +54,11 @@ class Splitter
   end
 
   def Splitter.fat split=true
-    dev false, split
+    new ENV["fat"], split
   end
 
-  def Splitter.dev small=true, split=true
-    new name(small), split
-  end
-
-  def Splitter.dev_alt
-    new "/Users/rd/ww/emptys/dev_alt.html", true
-  end
-
-  def Splitter.name(small)
-    ENV[small ? "dev" : "fat"]
+  def Splitter.dev split=true
+    new ENV["dev"], split
   end
 
   def Splitter.name_(name, suffix="_")
