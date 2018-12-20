@@ -1,12 +1,41 @@
 # splitr.rb
 
 require 'splitter'
+require 'tidlr'
 require 'dd' if $dd
 
 class Splitr < Splitter
-  def []=(title, tiddler)
-    @tiddler_hash[title] = tiddler
-    puts title unless tiddler
+  def initialize(filename)
+    @filename = filename
+    @tiddler_hash = {}
+    @tiddler_splits = {}
+    @host = mp? ? "p" : "g"
+    open(filename) do |file|
+      @before = ""
+      until (line = file.gets) =~ /<div id="storeArea">/
+        @before << line
+      end
+      @before << line
+      while (line = file.gets) =~ /<div title=.*/
+        tiddler = Tidlr.from_file(self, file, line)
+        self[tiddler.title] = tiddler
+      end
+      @mid = line
+      until (line = file.gets) =~ /^<script id="jsArea" type="text\/javascript">/
+        @mid << line
+      end
+      @mid << line
+      @code = ""
+      until (line = file.gets) =~ /^<\/script>/
+        @code << line
+      end
+      @after = line
+      @after << line while (line = file.gets)
+    end
+  end
+
+  def store_size
+    unsorted_tiddlers.map(&:size).reduce(0, &:+)
   end
 
   def self.show_history(n=nil)

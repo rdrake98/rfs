@@ -37,7 +37,7 @@ class Tiddler
 
   def self.from_file(wiki, file, line)
     div_text(file, line) =~ /^(<div.*?>)\n<pre>(.*)<\/pre>\n<\/div>$/m
-    Tiddler.new(wiki, nil, CGI::unescapeHTML($2), $1)
+    new(wiki, nil, CGI::unescapeHTML($2), $1)
   end
 
   def self.div_text(file, line)
@@ -137,8 +137,7 @@ class Tiddler
   end
 
   def splitdown
-    # binding.pry if $dd && splitname.nil?
-    (splitname || @title).downcase
+    splitname.downcase
   end
 
   def parse_external_links
