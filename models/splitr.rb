@@ -46,21 +46,24 @@ class Splitr < Splitter
     filename
   end
 
-  def self.show_history(n=nil)
+  def self.show_history(n=nil, step=100)
     dirs = Dir.glob "/Volumes/SH1/fatword/*"
     range = n ? (n..n) : (13...dirs.size)
-    range.each {|n| show_sample(dirs[n])}
-    show_sample("/Volumes/SH1/_backup") unless n
-    puts "", n ? 1 : range.size + 1
+    range.each {|n| puts "", n; show_sample(dirs[n], step)}
+    unless n
+      puts "", dirs.size
+      show_sample("/Volumes/SH1/_backup") unless n
+      puts "", range.size + 1
+    end
   end
 
-  def self.show_sample(dir)
+  def self.show_sample(dir, step)
     Dir.chdir(dir)
-    puts "", dir
+    puts dir
     glob = Dir.glob "whiteword*.html"
     glob = Dir.glob "f*.html" if glob.size == 0
-    puts glob.size
-    (0...glob.size).step(100).map{|i| glob[i]}.each do |f|
+    puts "#{glob.size} with step #{step}"
+    (0...glob.size).step(step).map{|i| glob[i]}.each do |f|
       print f, " "
       begin
         w = new(f)
