@@ -52,7 +52,7 @@ class Splitr < Splitter
     range.each {|n| puts "", n; show_sample(dirs[n], step)}
     unless n
       puts "", dirs.size
-      show_sample("/Volumes/SH1/_backup") unless n
+      show_sample("/Volumes/SH1/_backup", step) unless n
       puts "", range.size + 1
     end
   end
