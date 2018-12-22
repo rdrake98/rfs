@@ -254,7 +254,7 @@ class Tiddler
     readable << ""
     readable << content
     readable = readable.join("\n")
-    File.write("#{Splitter.dir}/#{filename}", readable + "\n")
+    File.write(filename, readable + "\n")
     readable
   end
 end

@@ -99,7 +99,7 @@ class Splitter
 
   def edition
     @before =~ /^var edition = "(.*)";$/
-    $1
+    $1 || @filename
   end
 
   def unsorted_tiddlers
@@ -372,36 +372,45 @@ class Splitter
   end
 
   def self.dir
-    "/Users/rd/rf/_tiddlers2"
+    "/Users/rd/rf/tiddlers"
   end
 
   def self.dir2
     dir[-1] == "2" ? dir[0...-1] : dir + "2"
   end
 
-  def self.mkdir
-    FileUtils.remove_dir(dir2) if Dir.exist?(dir2)
-    Dir.mkdir(dir2)
-    Dir.chdir(dir2)
+  def self.mkdir(dir1=dir)
+    FileUtils.remove_dir(dir1) if Dir.exist?(dir1)
+    Dir.mkdir(dir1)
+    Dir.chdir(dir1)
     `gin`
   end
 
-  def write_tiddlers(message=edition, noisy=true)
-    puts "writing #{message}" if noisy
+  def write_tiddlers(time=nil, noisy=true, message=edition)
+    dir = Dir.pwd
+    Dir.chdir(Splitter.dir)
     FileUtils.rm Dir.glob('*.txt')
+    puts "writing #{message}" if noisy
     tiddlers.each(&:write)
     puts "committing #{message}" if noisy
-    `gcaa #{message}`
+    if time
+      git_time = time.to_s[0..-7]
+      pre = "git add .; GIT_COMMITTER_DATE="
+      `#{pre}"#{git_time}" git commit -m #{message} --date "#{git_time}"`
+    else
+      `gcaa #{message}`
+    end
+    Dir.chdir(dir)
   end
 
   def sync
-    Splitter.mkdir
+    Splitter.mkdir(Splitter.dir2)
     root_wiki = Splitter.new("#{@backup_area}/#{@browser_edition}")
     root_wiki.write_tiddlers
     write_tiddlers
     root_wiki.add_tiddlers(File.read(changes_file))
     `git checkout HEAD^; git checkout -b clash`
-    root_wiki.write_tiddlers("unsaved changes")
+    root_wiki.write_tiddlers(nil, true, "unsaved changes")
   end
 
   def content_from(lines, dedup=false)

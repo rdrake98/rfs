@@ -47,6 +47,7 @@ class Splitr < Splitter
   end
 
   def self.show_history(n=13, just_one=false, step=100)
+    mkdir
     $last_save = Time.new(0)
     dirs = Dir.glob "/Volumes/SH1/fatword/*"
     range = just_one ? (n..n) : (n...dirs.size)
@@ -73,6 +74,7 @@ class Splitr < Splitter
         puts "#{w.tiddlers.size} - #{save.to_minute 2} - #{tiddler.to_minute 2}"
         puts "*** save before tiddler ***" if save < tiddler
         puts "*** save before last save ***" if save < $last_save
+        w.write_tiddlers(save, false)
         $last_save = save
       rescue => e
         puts e
