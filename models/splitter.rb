@@ -386,25 +386,22 @@ class Splitter
     `gin`
   end
 
-  def sync
-    Splitter.mkdir
-    puts "writing #{@browser_edition}"
-    root_wiki = Splitter.new("#{@backup_area}/#{@browser_edition}")
-    root_wiki.tiddlers.each(&:write)
-    puts "committing #{@browser_edition}"
-    `gcaa #{@browser_edition}`
-    puts "writing #{edition}"
+  def write_tiddlers(message=edition, noisy=true)
+    puts "writing #{message}" if noisy
     FileUtils.rm Dir.glob('*.txt')
     tiddlers.each(&:write)
-    puts "committing #{edition}"
-    `gcaa #{edition}`
-    puts "writing unsaved changes"
+    puts "committing #{message}" if noisy
+    `gcaa #{message}`
+  end
+
+  def sync
+    Splitter.mkdir
+    root_wiki = Splitter.new("#{@backup_area}/#{@browser_edition}")
+    root_wiki.write_tiddlers
+    write_tiddlers
     root_wiki.add_tiddlers(File.read(changes_file))
     `git checkout HEAD^; git checkout -b clash`
-    FileUtils.rm Dir.glob('*.txt')
-    root_wiki.tiddlers.each(&:write)
-    puts "committing unsaved changes"
-    `gcaa unsaved changes`
+    root_wiki.write_tiddlers("unsaved changes")
   end
 
   def content_from(lines, dedup=false)
