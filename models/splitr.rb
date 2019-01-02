@@ -91,4 +91,14 @@ class Splitr < Splitter
   def tidder_time
     tiddlers.map(&:modified).max
   end
+
+  def self.problem_files
+    files = Dir.glob "/Volumes/SH1/fatword/*/*.html"
+    File.readlines("/Users/rd/Dropbox/_shared/problems.txt").map{|line|
+      files.find{|full_name| full_name[line.split(" ")[0]]}}
+  end
+
+  def self.cp_problem_files
+    problem_files.each {|f| `cp #{f} /Users/rd/Dropbox/_shared`}
+  end
 end
