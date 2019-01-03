@@ -115,10 +115,9 @@ class Tidlr < Tiddler
   end
 
   def time_from(s)
-    if s.size > 20
-      puts filename
-      puts s.size
-      Time.new(0)
+    Y << YY.new(title, s.size) if $y
+    if s.size == 25
+      Time.parse(s)
     else
       Time.new(s[0..3],s[4..5],s[6..7],s[8..9],s[10..11])
     end

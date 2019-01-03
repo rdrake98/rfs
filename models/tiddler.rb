@@ -244,7 +244,7 @@ class Tiddler
   end
 
   def write
-    binding.pry if $dd && filename == "F1706mgN01.3l.txt"
+    # binding.pry if $dd && filename == "F1706mgN01.3l.txt"
     readable = []
     readable << splitname
     readable << modified

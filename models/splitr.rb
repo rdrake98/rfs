@@ -3,6 +3,8 @@
 require 'splitter'
 require 'tidlr'
 require 'dd' if $dd
+Y = $y && []
+YY = $y && Struct.new(:title, :date_size)
 
 class Splitr < Splitter
   def initialize(filename)
@@ -20,7 +22,6 @@ class Splitr < Splitter
         tiddler = Tidlr.from_file(self, file, line)
         self[tiddler.title] = tiddler
       end
-      binding.pry if $dd
       @mid = line
       until (line = file.gets) =~ /^<script id="jsArea" type="text\/javascript">/
         @mid << line
@@ -84,10 +85,10 @@ class Splitr < Splitter
   end
 
   def self.show_problem(step, start=0)
-    dir = "/Volumes/SH1/_backup"
+    dir = "/Users/rd/rf/_history"
     $last_save = Time.new(0)
     Dir.chdir(dir)
-    glob = Dir.glob "f*.html"
+    glob = Dir.glob "f17*.html"
     puts "#{glob.size - start} with step #{step}"
     (start...glob.size).step(step).map{|i| glob[i]}.each do |f|
       print f, " "
