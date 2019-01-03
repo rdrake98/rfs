@@ -78,6 +78,31 @@ class Splitr < Splitter
         $last_save = save
       rescue => e
         puts e
+        Dir.chdir(dir)
+      end
+    end
+  end
+
+  def self.show_problem(step, start=0)
+    dir = "/Volumes/SH1/_backup"
+    $last_save = Time.new(0)
+    Dir.chdir(dir)
+    glob = Dir.glob "f*.html"
+    puts "#{glob.size - start} with step #{step}"
+    (start...glob.size).step(step).map{|i| glob[i]}.each do |f|
+      print f, " "
+      begin
+        w = new(f)
+        save = w.save_time
+        tiddler = w.tidder_time
+        puts "#{w.tiddlers.size} - #{save.to_minute 2} - #{tiddler.to_minute 2}"
+        puts "*** save before tiddler ***" if save < tiddler
+        puts "*** save before last save ***" if save < $last_save
+        w.write_tiddlers
+        $last_save = save
+      rescue => e
+        puts e
+        Dir.chdir(dir)
       end
     end
   end

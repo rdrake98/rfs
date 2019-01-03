@@ -372,7 +372,7 @@ class Splitter
   end
 
   def self.dir
-    "/Users/rd/rf/tiddlers"
+    "/Users/rd/rf/tiddlers3"
   end
 
   def self.dir2

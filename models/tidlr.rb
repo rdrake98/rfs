@@ -113,4 +113,14 @@ class Tidlr < Tiddler
   def splitdown
     (splitname || @title).downcase
   end
+
+  def time_from(s)
+    if s.size > 20
+      puts filename
+      puts s.size
+      Time.new(0)
+    else
+      Time.new(s[0..3],s[4..5],s[6..7],s[8..9],s[10..11])
+    end
+  end
 end
