@@ -4,8 +4,9 @@ require 'tiddler'
 require 'tiddler_links'
 require 'tiddler_list'
 require 'json'
-require 'd' if $d ||= ARGV[0] == "d"
-require 'dd' if $dd ||= ARGV[0] == "dd"
+require 'fileutils'
+require 'd' if $d ||= ARGV[0] == "d" || ENV["dd"] == "d"
+require 'dd' if $dd ||= ARGV[0] == "dd" || ENV["dd"] == "dd"
 
 class Splitter
   def self.shadow?(name); TiddlerList.shadows.include?(name); end
@@ -241,7 +242,7 @@ class Splitter
 
   def add_tiddlers(json)
     JSON.parse(json).each do |hash|
-      byebug if $dd
+      # binding.pry if $dd
       title = hash["title"]
       if title
         change_tiddler(title, Tiddler.new(self, title, hash))
@@ -372,7 +373,7 @@ class Splitter
   end
 
   def self.dir
-    "/Users/rd/rf/tiddlers"
+    "/Users/rd/rf/tiddlers3"
   end
 
   def self.dir2
@@ -387,6 +388,7 @@ class Splitter
   end
 
   def write_tiddlers(time=nil, noisy=true, message=edition)
+    binding.pry if $dd
     dir = Dir.pwd
     Dir.chdir(Splitter.dir)
     FileUtils.rm Dir.glob('*.txt')
