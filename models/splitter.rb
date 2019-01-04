@@ -388,7 +388,7 @@ class Splitter
   end
 
   def write_tiddlers(time=nil, noisy=true, message=edition)
-    binding.pry if $dd
+    byebug if $dd
     dir = Dir.pwd
     Dir.chdir(Splitter.dir)
     FileUtils.rm Dir.glob('*.txt')
