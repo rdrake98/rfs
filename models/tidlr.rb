@@ -115,7 +115,6 @@ class Tidlr < Tiddler
   end
 
   def time_from(s)
-    Y << YY.new(title, s.size) if $y
     if s.size == 25
       Time.parse(s)
     else

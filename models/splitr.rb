@@ -3,8 +3,6 @@
 require 'splitter'
 require 'tidlr'
 require 'dd' if $dd
-Y = $y && []
-YY = $y && Struct.new(:title, :date_size)
 
 class Splitr < Splitter
   def initialize(filename)
@@ -47,48 +45,24 @@ class Splitr < Splitter
     filename
   end
 
-  def self.show_history(n=13, just_one=false, step=100)
+  def self.write_history(n=13, just_one=false, step=100, writing=false)
     mkdir
     $last_save = Time.new(0)
     dirs = Dir.glob "/Volumes/SH1/fatword/*"
     range = just_one ? (n..n) : (n...dirs.size)
-    range.each {|n| puts "", n; show_sample(dirs[n], step)}
+    range.each {|n| puts "", n; write_sample(dirs[n], step, writing)}
     unless just_one && n < dirs.size
       puts "", dirs.size
-      show_sample("/Volumes/SH1/_backup", step)
+      write_sample("/Volumes/SH1/_backup", step, writing)
       puts "", range.size + 1
     end
   end
 
-  def self.show_sample(dir, step)
+  def self.write_sample(dir, step, writing, start=0)
     Dir.chdir(dir)
     puts dir
     glob = Dir.glob "whiteword*.html"
     glob = Dir.glob "f*.html" if glob.size == 0
-    puts "#{glob.size} with step #{step}"
-    (0...glob.size).step(step).map{|i| glob[i]}.each do |f|
-      print f, " "
-      begin
-        w = new(f)
-        save = w.save_time
-        tiddler = w.tidder_time
-        puts "#{w.tiddlers.size} - #{save.to_minute 2} - #{tiddler.to_minute 2}"
-        puts "*** save before tiddler ***" if save < tiddler
-        puts "*** save before last save ***" if save < $last_save
-        w.write_tiddlers(save, false)
-        $last_save = save
-      rescue => e
-        puts e
-        Dir.chdir(dir)
-      end
-    end
-  end
-
-  def self.show_problem(step, start=0)
-    dir = "/Users/rd/rf/_history"
-    $last_save = Time.new(0)
-    Dir.chdir(dir)
-    glob = Dir.glob "f17*.html"
     puts "#{glob.size - start} with step #{step}"
     (start...glob.size).step(step).map{|i| glob[i]}.each do |f|
       print f, " "
@@ -99,7 +73,7 @@ class Splitr < Splitter
         puts "#{w.tiddlers.size} - #{save.to_minute 2} - #{tiddler.to_minute 2}"
         puts "*** save before tiddler ***" if save < tiddler
         puts "*** save before last save ***" if save < $last_save
-        w.write_tiddlers
+        w.write_tiddlers(save, false) if writing
         $last_save = save
       rescue => e
         puts e
