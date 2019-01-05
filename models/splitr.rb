@@ -82,6 +82,11 @@ class Splitr < Splitter
     end
   end
 
+  def self.test_write
+    mkdir
+    write_sample('/Users/rd/rf/_history/_backup', 1, true)
+  end
+
   def save_time
     s = @filename.gsub(/\D/, "")
     s = "20" + s if s.size == 12
