@@ -242,7 +242,7 @@ class Splitter
 
   def add_tiddlers(json)
     JSON.parse(json).each do |hash|
-      # binding.pry if $dd
+      # byebug if $dd
       title = hash["title"]
       if title
         change_tiddler(title, Tiddler.new(self, title, hash))
@@ -388,7 +388,7 @@ class Splitter
   end
 
   def write_tiddlers(time=nil, noisy=true, message=edition)
-    binding.pry if $dd
+    byebug if $dd
     dir = Dir.pwd
     Dir.chdir(Splitter.dir)
     FileUtils.rm Dir.glob('*.txt')

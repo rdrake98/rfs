@@ -95,7 +95,7 @@ class Tidlr < Tiddler
     line.scrub do |c|
       sym = c.inspect[3..4].to_sym
       replacement = @@fixes[sym] || (lazy ? "" : nil)
-      # binding.pry if $dd && (!replacement || replacement == "")
+      # byebug if $dd && (!replacement || replacement == "")
       replacement || "??" # no nil now
     end
   end
