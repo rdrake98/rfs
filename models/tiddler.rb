@@ -3,6 +3,7 @@
 require 'base'
 require 'wikifier'
 require 'regex'
+require 'wiki_text'
 require 'time'
 
 class Tiddler
@@ -183,12 +184,7 @@ class Tiddler
   end
 
   def basic_content
-    @content.gsub(/\/%((?:.|\n)*?)%\//,"").
-      gsub(/\{{3}((?:.|\n)*?)\}{3}/,"").
-      gsub(/"""((?:.|\n)*?)"""/,"").
-      gsub(/<nowiki\>((?:.|\n)*?)<\/nowiki\>/,"").
-      gsub(/<html\>((?:.|\n)*?)<\/html\>/,"").
-      gsub(/<script((?:.|\n)*?)<\/script\>/,"")
+    WikiText.new(@content).basic_content
   end
 
   def search_text
