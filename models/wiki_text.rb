@@ -5,14 +5,26 @@ class WikiText
 
   def initialize(content)
     @content = content
+    @reduced = content
+  end
+
+  def reduce(before, after=before)
+    pre = Regexp.escape(before)
+    post = Regexp.escape(after)
+    @reduced.gsub!(Regexp.new("#{pre}((?:.|\\n)*?)#{post}"), "")
+  end
+
+  def reduce_tag(tag)
+    reduce("<#{tag}>", "</#{tag}>")
   end
 
   def basic_content
-    @content.gsub(/\/%((?:.|\n)*?)%\//,"").
-      gsub(/\{{3}((?:.|\n)*?)\}{3}/,"").
-      gsub(/"""((?:.|\n)*?)"""/,"").
-      gsub(/<nowiki\>((?:.|\n)*?)<\/nowiki\>/,"").
-      gsub(/<html\>((?:.|\n)*?)<\/html\>/,"").
-      gsub(/<script((?:.|\n)*?)<\/script\>/,"")
+    reduce("/%", "%/")
+    reduce("{{{", "}}}")
+    reduce('"""')
+    reduce_tag("nowiki")
+    reduce_tag("html")
+    reduce_tag("script")
+    @reduced
   end
 end
