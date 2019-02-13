@@ -8,10 +8,12 @@ class WikiText
     @reduced = content
   end
 
+  def esc(regex_fragment)
+    Regexp.escape(regex_fragment)
+  end
+
   def reduce(before, after=before)
-    pre = Regexp.escape(before)
-    post = Regexp.escape(after)
-    @reduced.gsub!(Regexp.new("#{pre}((?:.|\\n)*?)#{post}"), "")
+    @reduced.gsub!(Regexp.new("#{esc(before)}((?:.|\\n)*?)#{esc(after)}"), "")
   end
 
   def reduce_tag(tag)
