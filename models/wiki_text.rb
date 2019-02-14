@@ -5,28 +5,28 @@ class WikiText
 
   def initialize(content)
     @content = content
-    @reduced = content
+    @blanked = content
   end
 
   def esc(regex_fragment)
     Regexp.escape(regex_fragment)
   end
 
-  def reduce(before, after=before)
-    @reduced.gsub!(/#{esc(before)}((?:.|\n)*?)#{esc(after)}/, "")
+  def blank(pre, post=pre)
+    @blanked.gsub!(/#{esc(pre)}((?:.|\n)*?)#{esc(post)}/) {|s| " " * s.size}
   end
 
-  def reduce_tag(tag)
-    reduce("<#{tag}>", "</#{tag}>")
+  def blank_tag(tag)
+    blank("<#{tag}>", "</#{tag}>")
   end
 
   def basic_content
-    reduce("/%", "%/")
-    reduce("{{{", "}}}")
-    reduce('"""')
-    reduce_tag("nowiki")
-    reduce_tag("html")
-    reduce_tag("script")
-    @reduced
+    blank("/%", "%/")
+    blank("{{{", "}}}")
+    blank('"""')
+    blank_tag("nowiki")
+    blank_tag("html")
+    blank_tag("script")
+    @blanked
   end
 end
