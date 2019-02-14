@@ -13,7 +13,7 @@ class WikiText
   end
 
   def reduce(before, after=before)
-    @reduced.gsub!(Regexp.new("#{esc(before)}((?:.|\\n)*?)#{esc(after)}"), "")
+    @reduced.gsub!(/#{esc(before)}((?:.|\n)*?)#{esc(after)}/, "")
   end
 
   def reduce_tag(tag)
