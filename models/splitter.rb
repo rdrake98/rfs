@@ -229,7 +229,7 @@ class Splitter
   end
 
   def changes_file
-    "#{ENV['data']}/#{changes_file_}"
+    "#{ENV['ww']}/#{changes_file_}"
   end
 
   def changes_file_
