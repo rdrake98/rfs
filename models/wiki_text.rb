@@ -29,4 +29,9 @@ class WikiText
     blank_tag("script")
     @blanked
   end
+
+  def link(highlight)
+    basic_content
+
+  end
 end
