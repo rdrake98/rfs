@@ -229,15 +229,19 @@ class Splitter
   end
 
   def changes_file
-    "#{ENV['ww']}/#{changes_file_}"
+    "#{changes_dir}/#{changes_file_}"
+  end
+
+  def changes_dir
+    "#{ENV['ww']}/_changes"
   end
 
   def changes_file_
-    "_changes/#{@wiki_type}.json"
+    "#{@wiki_type}.json"
   end
 
   def commit_changes_file(message)
-    `cd $data; git add #{changes_file_}; git commit -m "#{message}"`
+    `cd #{changes_dir}; git add #{changes_file_}; git commit -m "#{message}"`
   end
 
   def add_tiddlers(json)
