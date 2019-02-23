@@ -5,7 +5,7 @@ require 'splitter'
 
 module Minitest::Assertions
   def assert_has_line(content, line)
-    content.lines.map(&:chomp).must_include(line)
+    content.split("\n").must_include(line)
   end
 end
 
@@ -17,9 +17,9 @@ class TestLink < MiniTest::Test
   t1 = wiki[name]
   t1a = wiki["#{name}A"]
   describe name do
-    tests = t1a.content.split("-----\n")
+    tests = t1a.content.split("----\n")
     tests.each do |test|
-      search_text, result = test.lines.map(&:chomp)
+      search_text, result = test.split("\n")
       binding.pry if $dd
       it search_text do
         assert_has_line(t1.link(search_text), result)
