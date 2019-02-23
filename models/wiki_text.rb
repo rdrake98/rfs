@@ -36,21 +36,23 @@ class WikiText
     name =~ /^#{Regex.wikiLink}$/
   end
 
-  def queryNames(searchText)
+  def queryNames(wiki, searchText)
     names = Names.new
     names.name = searchText.gsub(/(^\,|\,$)/,"").gsub(/\,/," ")
     names.Name = names.name.gsub(/\w+/) {|s| s[0] = s[0].upcase; s}
     names.justOne = names.name == names.Name
     names.wikiName = names.Name.gsub(/\W/,"")
-    # need to implement splitWordsIfRequired
-    names.wikiName = isWikiLink(names.wikiName) ? names.wikiName : nil
+    # hopefully wiki.splitName does all that splitWordsIfRequired did
+    names.wikiName = isWikiLink(names.wikiName) &&
+      wiki.splitName(names.wikiName) == names.Name ?
+      names.wikiName : nil
     names.justWiki = names.wikiName == names.name
     names.minimalName = names.wikiName || names.Name
     names
   end
 
-  def link(searchText)
-    names = queryNames(searchText)
+  def link(wiki, searchText)
+    names = queryNames(wiki, searchText)
     qq :names if $d
     newText = @content
     forBracketting = /#{names.name}/i # needs an esc?
