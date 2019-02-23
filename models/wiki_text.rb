@@ -37,18 +37,16 @@ class WikiText
   end
 
   def queryNames(wiki, searchText)
-    names = Names.new
-    names.name = searchText.gsub(/(^\,|\,$)/,"").gsub(/\,/," ")
-    names.Name = names.name.gsub(/\w+/) {|s| s[0] = s[0].upcase; s}
-    names.justOne = names.name == names.Name
-    names.wikiName = names.Name.gsub(/\W/,"")
+    name = searchText.gsub(/(^\,|\,$)/,"").gsub(/\,/," ")
+    dName = name.gsub(/\w+/) {|s| s[0] = s[0].upcase; s}
+    justOne = name == dName
+    wikiName = dName.gsub(/\W/,"")
     # hopefully wiki.splitName does all that splitWordsIfRequired did
-    names.wikiName = isWikiLink(names.wikiName) &&
-      wiki.splitName(names.wikiName) == names.Name ?
-      names.wikiName : nil
-    names.justWiki = names.wikiName == names.name
-    names.minimalName = names.wikiName || names.Name
-    names
+    wikiName = isWikiLink(wikiName) && wiki.splitName(wikiName) == dName ?
+      wikiName : nil
+    justWiki = wikiName == name
+    minimalName = wikiName || dName
+    Names.new(name, dName, justOne, wikiName, justWiki, minimalName)
   end
 
   def link(wiki, searchText)
