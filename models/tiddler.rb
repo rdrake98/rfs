@@ -188,7 +188,7 @@ class Tiddler
   end
 
   def link(search_text)
-    @content = WikiText.new(@content).link(search_text)
+    WikiText.new(@content).link(search_text)
   end
 
   def search_text

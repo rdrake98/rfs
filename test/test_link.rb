@@ -20,7 +20,7 @@ class TestLink < MiniTest::Test
     tests = t1a.content.split("----\n")
     tests.each do |test|
       search_text, result = test.split("\n")
-      binding.pry if $dd
+      # binding.pry if $dd
       it search_text do
         assert_has_line(t1.link(search_text), result)
       end
