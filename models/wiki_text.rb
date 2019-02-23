@@ -30,7 +30,7 @@ class WikiText
     @blanked
   end
 
-  def link(highlight)
+  def link(search_text)
     basic_content
 
   end

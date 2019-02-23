@@ -187,6 +187,10 @@ class Tiddler
     WikiText.new(@content).basic_content
   end
 
+  def link(search_text)
+    @content = WikiText.new(@content).link(search_text)
+  end
+
   def search_text
     @content.gsub(/\/%((?:.|\n)*?)%\//,"").
       gsub(/\{{3}((?:.|\n)*?)\}{3}/," #{$1} ")

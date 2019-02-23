@@ -5,8 +5,8 @@ require 'tiddler_links'
 require 'tiddler_list'
 require 'json'
 require 'fileutils'
-require 'd' if $d ||= ARGV[0] == "d" || ENV["dd"] == "d"
-require 'dd' if $dd ||= ARGV[0] == "dd" || ENV["dd"] == "dd"
+require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
+require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
 
 class Splitter
   def self.shadow?(name); TiddlerList.shadows.include?(name); end
