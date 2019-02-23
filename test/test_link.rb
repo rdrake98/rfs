@@ -5,7 +5,7 @@ require 'splitter'
 
 module Minitest::Assertions
   def assert_has_line(content, line)
-    content.split("\n").must_include(line)
+    assert_includes(content.split("\n"), line)
   end
 end
 
