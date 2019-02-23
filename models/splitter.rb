@@ -161,7 +161,7 @@ class Splitter
     @prettySplits[name]
   end
 
-  def split(name)
+  def splitName(name)
     warmup_splits
     split = []
     prettified = false

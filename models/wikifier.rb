@@ -65,10 +65,10 @@ class Wikifier
       title.size < 6 && splitname.size == title.size ?
         @wiki.pretty(link) ? splitname : link :
         splitname == title && link != title ?
-          @wiki.split(link) :
+          @wiki.splitName(link) :
           splitname
     else
-      @wiki.split(link)
+      @wiki.splitName(link)
     end
     @output << a
   end
