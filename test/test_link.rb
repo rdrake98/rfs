@@ -3,6 +3,12 @@
 require 'minitest/autorun'
 require 'splitter'
 
+module Minitest::Assertions
+  def assert_has_line(line, content)
+    content.lines.map(&:chomp).must_include(line.chomp)
+  end
+end
+
 class TestLink < MiniTest::Test
   wiki_path = "#{ENV['data']}/dev_links.html"
   if ARGV[0] == "c"; `cp $dev #{wiki_path}`; end
@@ -20,7 +26,7 @@ class TestLink < MiniTest::Test
       # qq :lines, :search_text, :result if $d
       # binding.pry if $dd
       it search_text do
-        assert_equal(result, t1.link(search_text))
+        assert_has_line(result, t1.link(search_text))
       end
     end
   end
