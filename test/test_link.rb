@@ -4,8 +4,8 @@ require 'minitest/autorun'
 require 'splitter'
 
 module Minitest::Assertions
-  def assert_has_line(line, content)
-    content.lines.map(&:chomp).must_include(line.chomp)
+  def assert_has_line(content, line)
+    content.lines.map(&:chomp).must_include(line)
   end
 end
 
@@ -17,16 +17,12 @@ class TestLink < MiniTest::Test
   t1 = wiki[name]
   t1a = wiki["#{name}A"]
   describe name do
-    tests = t1a.content.split("-----")
-    # qq :tests if $d
+    tests = t1a.content.split("-----\n")
     tests.each do |test|
-      lines = test.strip.lines
-      search_text = lines[0].chomp
-      result = lines[1].chomp
-      # qq :lines, :search_text, :result if $d
-      # binding.pry if $dd
+      search_text, result = test.lines.map(&:chomp)
+      binding.pry if $dd
       it search_text do
-        assert_has_line(result, t1.link(search_text))
+        assert_has_line(t1.link(search_text), result)
       end
     end
   end
