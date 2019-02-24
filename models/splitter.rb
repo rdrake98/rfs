@@ -333,7 +333,8 @@ class Splitter
   end
 
   def save(browser_edition, json)
-    return clash if (clash = check_file_edition(browser_edition, json))
+    clash = check_file_edition(browser_edition, json)
+    return clash if clash
     commit_changes_file("before #{@type} saved") if @type
     add_changes(json)
     if !@type || browser_edition == edition # check non fat,dev wikis
