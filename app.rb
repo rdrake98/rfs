@@ -13,11 +13,11 @@ class App < Roda
   plugin :assets, js: ['Chart.bundle.min.js', 'chartkick.js']
   plugin :h
 
-  def load_and_save(wiki_type="fat", p=nil)
+  def reload(wiki_type="fat", p=nil, saving=true)
     puts "reloading #{wiki_type}"
     wiki = wiki_type == "fat" ? Splitter.fat : Splitter.dev
     $wikis[wiki_type] = wiki
-    p ? wiki.save(p['edition'], p['changes']) : wiki.do_save
+    p ? wiki.save(p['edition'], p['changes']) : wiki.do_save if saving
   end
 
   route do |r|
@@ -39,12 +39,14 @@ class App < Roda
         wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
         title = p['title']
         name = p['name']
-        message = "#{p['action']} '#{name}' in #{title} in #{wiki_type}"
-        puts message
+        puts "#{p['action']} '#{name}' in #{title} in #{wiki_type}"
         new_text = wiki[title].link(name)
         compare = new_text == p['newText'] ? "same" : "different"
+        byebug if $dd && compare == "different"
         puts compare
-        compare
+        response = {}
+        response["compare"] = compare
+        response.to_json
       end
 
       r.post "save" do
@@ -52,7 +54,7 @@ class App < Roda
         wiki_type = p['wiki']
         wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
         puts "saving #{wiki_type}"
-        wiki.save(p['edition'], p['changes']) || load_and_save(wiki_type, p)
+        wiki.save(p['edition'], p['changes']) || reload(wiki_type, p)
       end
     end
 
@@ -66,7 +68,7 @@ class App < Roda
     end
 
     r.get "force" do
-      load_and_save # fat only for now
+      reload # fat only for now
       "hopefully not lost anything"
     end
   end

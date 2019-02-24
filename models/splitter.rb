@@ -321,17 +321,23 @@ class Splitter
   def save(browser_edition, json)
     file_edition = read_file_edition
     if browser_edition == file_edition
-      server_edition = edition
-      if browser_edition == server_edition
-        commit_changes_file("before #{@wiki_type} saved") if @wiki_type
-        add_changes(json)
-        (newFile = do_save(json)) ? [edition, newFile].join(",") : edition
+      commit_changes_file("before #{@wiki_type} saved") if @wiki_type
+      add_changes(json)
+      if browser_edition == edition
+        newFile = do_save(json)
+        newFile ? [edition, newFile].join(",") : edition
       else
-        clash(browser_edition, server_edition, "server", json)
         nil
       end
     else
-      clash(browser_edition, file_edition, "file", json)
+      if @wiki_type == "fat"
+        @browser_edition = browser_edition
+        commit_changes_file("before fat file clash")
+        add_changes(json)
+        commit_changes_file("after fat file clash")
+      end
+      puts "clash between browser #{browser_edition} and file #{file_edition}"
+      "#{file_edition},clash"
     end
   end
 
@@ -342,18 +348,6 @@ class Splitter
     commit_changes_file(
       "#{@wiki_type} #{json ? '' : 'force '}saved") if @wiki_type
     newFile
-  end
-
-  def clash(browser_edition, other_edition, clash_type, json)
-    if @wiki_type == "fat"
-      @browser_edition = browser_edition
-      commit_changes_file("before fat #{clash_type} clash")
-      add_changes(json)
-      commit_changes_file("after fat #{clash_type} clash")
-    end
-    puts "clash between browser #{browser_edition}" +
-         " and #{clash_type} #{other_edition}"
-    "#{other_edition},clash"
   end
 
   def inject_tests(testing)
