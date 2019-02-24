@@ -33,6 +33,20 @@ class App < Roda
         message
       end
 
+      r.post "link" do
+        p = r.params
+        wiki_type = p['wiki']
+        wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
+        title = p['title']
+        name = p['name']
+        message = "#{p['action']} '#{name}' in #{title} in #{wiki_type}"
+        puts message
+        new_text = wiki[title].link(name)
+        compare = new_text == p['newText'] ? "same" : "different"
+        puts compare
+        compare
+      end
+
       r.post "save" do
         p = r.params
         wiki_type = p['wiki']
