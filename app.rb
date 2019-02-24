@@ -13,11 +13,11 @@ class App < Roda
   plugin :assets, js: ['Chart.bundle.min.js', 'chartkick.js']
   plugin :h
 
-  def reload(wiki_type="fat", p=nil, saving=true)
-    puts "reloading #{wiki_type}"
-    wiki = wiki_type == "fat" ? Splitter.fat : Splitter.dev
-    $wikis[wiki_type] = wiki
-    p ? wiki.save(p['edition'], p['changes']) : wiki.do_save if saving
+  def reload(type="fat", saving=true, edition=nil, changes=nil)
+    puts "reloading #{type}"
+    wiki = type == "fat" ? Splitter.fat : Splitter.dev
+    $wikis[type] = wiki
+    saving ? edition ? wiki.save(edition, changes) : wiki.do_save : wiki
   end
 
   route do |r|
@@ -25,36 +25,39 @@ class App < Roda
     r.on "public" do
       r.post "change_tiddler" do
         p = r.params
-        wiki_type = p['wiki']
-        wiki = $wikis[wiki_type]
-        message = "#{p['title']} #{p['action']} in #{wiki_type}"
+        type = p['wiki']
+        wiki = $wikis[type]
+        message = "#{p['title']} #{p['action']} in #{type}"
         puts message
         wiki.add_changes(p['changes']) if wiki
         message
       end
 
       r.post "link" do
-        p = r.params
-        wiki_type = p['wiki']
-        wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
-        title = p['title']
-        name = p['name']
-        puts "#{p['action']} '#{name}' in #{title} in #{wiki_type}"
-        new_text = wiki[title].link(name)
-        compare = new_text == p['newText'] ? "same" : "different"
-        byebug if $dd && compare == "different"
-        puts compare
         response = {}
-        response["compare"] = compare
+        p = r.params
+        type, title, name, edition = p['wiki'],p['title'],p['name'],p['edition']
+        puts "#{p['action']} '#{name}' in #{title} in #{type}"
+        wiki = $wikis[type] || (w = Splitter.new(type); type = nil; w)
+        clash = wiki.check_file_edition(edition)
+        if clash
+          response["clash"] = clash.split(",")[0]
+        else
+          wiki = reload(type, false) if type && edition != wiki.edition
+          wiki.add_tiddlers(p['changes'])
+          new_text = wiki[title].link(name)
+          compare = new_text == p['newText'] ? "same" : "different"
+          puts compare
+          response["compare"] = compare
+        end
         response.to_json
       end
 
       r.post "save" do
         p = r.params
-        wiki_type = p['wiki']
-        wiki = $wikis[wiki_type] || Splitter.new(wiki_type)
-        puts "saving #{wiki_type}"
-        wiki.save(p['edition'], p['changes']) || reload(wiki_type, p)
+        type, edition, changes = p['wiki'], p['edition'], p['changes']
+        wiki = $wikis[type] || Splitter.new(type)
+        wiki.save(edition, changes) || reload(type, true, edition, changes)
       end
     end
 

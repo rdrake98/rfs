@@ -15,9 +15,9 @@ class Splitter
 
   def initialize(filename=nil, split=true)
     @filename = filename
-    @wiki_type = "dev" if @filename == ENV["dev"]
-    @wiki_type = "fat" if @filename == ENV["fat"]
-    @backup_area = "#{@filename.split("/")[0..-2].join("/")}/_backup" if @wiki_type
+    @type = "dev" if @filename == ENV["dev"]
+    @type = "fat" if @filename == ENV["fat"]
+    @backup_area = "#{@filename.split("/")[0..-2].join("/")}/_backup" if @type
     @split = split
     @tiddler_hash = {}
     @tiddler_splits = {}
@@ -67,7 +67,7 @@ class Splitter
   end
 
   def backup
-    return unless @wiki_type
+    return unless @type
     command = "rsync -a #{@filename} #{@backup_area}/#{edition}"
     puts "backing up edition #{edition}"
     puts command
@@ -237,7 +237,7 @@ class Splitter
   end
 
   def changes_file_
-    "#{@wiki_type}.json"
+    "#{@type}.json"
   end
 
   def commit_changes_file(message)
@@ -306,7 +306,7 @@ class Splitter
   end
 
   def add_changes(json)
-    File.write(changes_file, json + "\n") if @wiki_type
+    File.write(changes_file, json + "\n") if @type
   end
 
   def read_file_edition
@@ -318,26 +318,29 @@ class Splitter
     nil
   end
 
-  def save(browser_edition, json)
+  def check_file_edition(browser_edition, json=nil)
+    return nil unless @type # need to check needs of non fat,dev wikis
     file_edition = read_file_edition
-    if browser_edition == file_edition
-      commit_changes_file("before #{@wiki_type} saved") if @wiki_type
+    return nil if browser_edition == file_edition
+    if json && @type == "fat"
+      @browser_edition = browser_edition
+      commit_changes_file("before fat file clash")
       add_changes(json)
-      if browser_edition == edition
-        newFile = do_save(json)
-        newFile ? [edition, newFile].join(",") : edition
-      else
-        nil
-      end
+      commit_changes_file("after fat file clash")
+    end
+    puts "clash between browser #{browser_edition} and file #{file_edition}"
+    "#{file_edition},clash"
+  end
+
+  def save(browser_edition, json)
+    return clash if (clash = check_file_edition(browser_edition, json))
+    commit_changes_file("before #{@type} saved") if @type
+    add_changes(json)
+    if browser_edition == edition
+      newFile = do_save(json)
+      newFile ? [edition, newFile].join(",") : edition # check non fat,dev wikis
     else
-      if @wiki_type == "fat"
-        @browser_edition = browser_edition
-        commit_changes_file("before fat file clash")
-        add_changes(json)
-        commit_changes_file("after fat file clash")
-      end
-      puts "clash between browser #{browser_edition} and file #{file_edition}"
-      "#{file_edition},clash"
+      nil
     end
   end
 
@@ -345,8 +348,7 @@ class Splitter
     add_tiddlers(json || File.read(changes_file))
     backup
     newFile = write("", @host)
-    commit_changes_file(
-      "#{@wiki_type} #{json ? '' : 'force '}saved") if @wiki_type
+    commit_changes_file("#{@type} #{json ? '' : 'force '}saved") if @type
     newFile
   end
 
