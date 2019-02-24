@@ -309,16 +309,17 @@ class Splitter
     File.write(changes_file, json + "\n") if @wiki_type
   end
 
-  def save(browser_edition, json)
-    file_edition = nil
+  def read_file_edition
     open(@filename) do |file|
       until (line = file.gets) =~ /<div id="storeArea">/
-        if line =~ /^var edition = "(.*)";$/
-          file_edition = $1
-          break
-        end
+        return $1 if line =~ /^var edition = "(.*)";$/
       end
     end
+    nil
+  end
+
+  def save(browser_edition, json)
+    file_edition = read_file_edition
     if browser_edition == file_edition
       server_edition = edition
       if browser_edition == server_edition
