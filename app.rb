@@ -25,7 +25,7 @@ class App < Roda
     r.on "public" do
       r.post "change_tiddler" do
         p = r.params
-        type = p['wiki']
+        type = p['type']
         wiki = $wikis[type]
         message = "#{p['title']} #{p['action']} in #{type}"
         puts message
@@ -36,7 +36,7 @@ class App < Roda
       r.post "link" do
         response = {}
         p = r.params
-        type, title, name, edition = p['wiki'],p['title'],p['name'],p['edition']
+        type, title, name, edition = p['type'],p['title'],p['name'],p['edition']
         puts "#{p['action']} '#{name}' in #{title} in #{type}"
         wiki = $wikis[type] || (w = Splitter.new(type); type = nil; w)
         clash = wiki.check_file_edition(edition)
@@ -55,7 +55,7 @@ class App < Roda
 
       r.post "save" do
         p = r.params
-        type, edition, changes = p['wiki'], p['edition'], p['changes']
+        type, edition, changes = p['type'], p['edition'], p['changes']
         wiki = $wikis[type] || Splitter.new(type)
         wiki.save(edition, changes) || reload(type, true, edition, changes)
       end
