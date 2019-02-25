@@ -10,7 +10,7 @@ module Minitest::Assertions
 end
 
 class TestLink < MiniTest::Test
-  wiki_path = "#{ENV['data']}/dev_for_link_tests.html"
+  wiki_path = "#{ENV['HOME']}/rf/_data/dev_for_link_tests.html"
   if ARGV[0] == "c"; `cp $dev #{wiki_path}`; end
   wiki = Splitter.new(wiki_path)
   %w[TL01 TL02 TL03].each do |name|
