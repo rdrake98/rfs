@@ -49,6 +49,8 @@ class App < Roda
           compare = new_text == p['newText'] ? "same" : "different"
           puts compare
           response["compare"] = compare
+          qq "p['newText']", :new_text if $d
+          response["newText"] = new_text
         end
         response.to_json
       end
