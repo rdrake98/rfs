@@ -41,7 +41,6 @@ class WikiText
     _Name = name.gsub(/\w+/) {|s| s[0] = s[0].upcase; s}
     justOne = name == _Name
     wikiName = _Name.gsub(/\W/,"")
-    # hopefully wiki.splitName does all that splitWordsIfRequired did
     wikiName = isWikiLink(wikiName) && wiki.splitName(wikiName) == _Name ?
       wikiName : nil
     justWiki = wikiName == name
@@ -50,15 +49,23 @@ class WikiText
   end
 
   def link(wiki, searchText, unlink, overlink)
-    names = queryNames(wiki, searchText)
-    # qq :names if $d
     newText = @content
-    forBracketting = /#{names.name}/i # needs an esc?
-    match = newText.match(forBracketting)
-    if match
-      replacer = "[[" + match[0] + "]]"
-      # qq :replacer if $d
-      newText = newText.sub(forBracketting, replacer)
+    names = queryNames(wiki, searchText)
+    if !unlink
+      byebug if $dd
+      forWikiing = /#{Regex.startWord}#{names.Name}#{Regex.endWord}/
+      if names.justWiki
+      else
+        forBracketting = /#{names.name}/i # needs an esc?
+        match = newText.match(forBracketting)
+        if match
+          wikiNameIndex = names.minimalName == names.wikiName ?
+            newText =~ forWikiing : nil
+          replacer = wikiNameIndex && match.begin(0) - wikiNameIndex > -1 ?
+            names.wikiName : "[[" + match[0] + "]]"
+          newText = newText.sub(forBracketting, replacer)
+        end
+      end
     end
     newText
   end

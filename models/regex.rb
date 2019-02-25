@@ -10,6 +10,8 @@ class Regex
     @anyLetterR = /#{anyLetter}/m
     notLetter   = "[^A-Za-z0-9\u00c0-\u00de\u00df-\u00ff\u0150\u0170\u0151\u0171]"
     @notLetterR = /#{notLetter}/
+    @startWord = "(^|#{notLetter})"
+    @endWord = "(#{notLetter}|$)"
     @wikiLink = "(?:" + upperLetter + "+" +
       lowerLetter + "+" +
       upperLetter +
@@ -68,7 +70,8 @@ class Regex
   class << self
     attr_reader :urlPattern, :wikiLink, :tiddlerAnyLink, :anyLetterR,
       :basicMorpheme, :format_tags, :format_match, :monospaced,
-      :monospaced_initial, :html_entities_match, :upperStart
+      :monospaced_initial, :html_entities_match, :upperStart,
+      :startWord, :endWord
   end
 end
 

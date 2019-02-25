@@ -244,15 +244,15 @@ class Splitter
     `cd #{changes_dir}; git add #{changes_file_}; git commit -m "#{message}"`
   end
 
-  def add_tiddlers(json)
+  def add_tiddlers(json, loud=false)
     JSON.parse(json).each do |hash|
       # byebug if $dd
       title = hash["title"]
       if title
         change_tiddler(title, Tiddler.new(self, title, hash))
-        puts title
+        puts title if loud
       else
-        puts "#{hash} wants deleting"
+        puts "#{hash} wants deleting" if loud
         delete(hash, true)
       end
     end
@@ -346,7 +346,7 @@ class Splitter
   end
 
   def do_save(json=nil)
-    add_tiddlers(json || File.read(changes_file))
+    add_tiddlers(json || File.read(changes_file), true)
     backup
     newFile = write("", @host)
     commit_changes_file("#{@type} #{json ? '' : 'force '}saved") if @type
