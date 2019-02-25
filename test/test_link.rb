@@ -13,7 +13,7 @@ class TestLink < MiniTest::Test
   wiki_path = "#{ENV['HOME']}/rf/_data/dev_for_link_tests.html"
   if ARGV[0] == "c"; `cp $dev #{wiki_path}`; end
   wiki = Splitter.new(wiki_path)
-  %w[TL01 TL02 TL03].each do |name|
+  wiki.titles.select{|t| t =~ /^TL\d+$/}.each do |name|
     describe name do
       tests = wiki["#{name}A"].content.split("----\n")
       tests.each do |test|
