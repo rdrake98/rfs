@@ -58,7 +58,7 @@ class WikiText
     if match
       replacer = "[[" + match[0] + "]]"
       qq :replacer if $d
-      newText = newText.gsub(forBracketting, replacer)
+      newText = newText.sub(forBracketting, replacer)
     end
     newText
   end
