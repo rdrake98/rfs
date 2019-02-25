@@ -45,11 +45,12 @@ class App < Roda
         else
           wiki = reload(type, false) if type && edition != wiki.edition
           wiki.add_tiddlers(p['changes'])
-          new_text = wiki[title].link(name)
+          unlink = p['unlink'] == "true"
+          overlink = p['overlink'] == "true"
+          new_text = wiki[title].link(name, unlink, overlink)
           compare = new_text == p['newText'] ? "same" : "different"
           puts compare
           response["compare"] = compare
-          qq "p['newText']", :new_text if $d
           response["newText"] = new_text
         end
         response.to_json

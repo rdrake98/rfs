@@ -187,8 +187,8 @@ class Tiddler
     WikiText.new(@content).basic_content
   end
 
-  def link(search_text)
-    WikiText.new(@content).link(@wiki, search_text)
+  def link(search_text, unlink, overlink)
+    WikiText.new(@content).link(@wiki, search_text, unlink, overlink)
   end
 
   def search_text
@@ -244,7 +244,7 @@ class Tiddler
   end
 
   def write
-    byebug if $dd && filename == "F1706mgN01.3l.txt"
+    # byebug if $dd && filename == "F1706mgN01.3l.txt"
     readable = []
     readable << splitname
     readable << modified

@@ -49,15 +49,15 @@ class WikiText
     Names.new(name, _Name, justOne, wikiName, justWiki, minimalName)
   end
 
-  def link(wiki, searchText)
+  def link(wiki, searchText, unlink, overlink)
     names = queryNames(wiki, searchText)
-    qq :names if $d
+    # qq :names if $d
     newText = @content
     forBracketting = /#{names.name}/i # needs an esc?
     match = newText.match(forBracketting)
     if match
       replacer = "[[" + match[0] + "]]"
-      qq :replacer if $d
+      # qq :replacer if $d
       newText = newText.sub(forBracketting, replacer)
     end
     newText
