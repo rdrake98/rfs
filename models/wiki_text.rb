@@ -7,7 +7,7 @@ class WikiText
 
   def initialize(content)
     @content = content
-    @blanked = content
+    @blanked = content.dup
   end
 
   def esc(regex_fragment)
@@ -56,7 +56,7 @@ class WikiText
       forWikiing = /#{Regex.startWord}#{names.Name}#{Regex.endWord}/
       if names.justWiki
       else
-        forBracketting = /#{names.name}/i # needs an esc?
+        forBracketting = /#{esc(names.name)}/i
         match = newText.match(forBracketting)
         if match
           wikiNameIndex = names.minimalName == names.wikiName ?
