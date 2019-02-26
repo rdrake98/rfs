@@ -48,9 +48,9 @@ class App < Roda
           unlink = p['unlink'] == "true"
           overlink = p['overlink'] == "true"
           new_text = wiki[title].link(name, unlink, overlink)
-          compare = new_text == p['newText'] ? "same" : "different"
-          puts compare
-          response["compare"] = compare
+          same = new_text == p['newText']
+          puts "** difference with JavaScript **" unless same
+          response["compare"] = same ? "same" : "different"
           response["newText"] = new_text
         end
         response.to_json

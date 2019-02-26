@@ -51,18 +51,38 @@ class WikiText
   def link(wiki, searchText, unlink, overlink)
     names = queryNames(wiki, searchText)
     newText = @content
+    startPos = 0
+    if unlink || overlink
+      bracketted = /#{esc("[[")}(#{esc(names.name)})#{esc("]]")}/i
+      bmatch = newText.match(bracketted)
+      wikied = /#{Regex.startWikiWord}#{names.wikiName}#{Regex.endWord}/
+      wmatch = names.wikiName && newText.match(wikied)
+      return newText if !bmatch && !wmatch
+      bmatch = nil if bmatch && wmatch && wmatch.begin(0) < bmatch.begin(0)
+      replacer = bmatch ?
+        bmatch[0] :
+        names.wikiName + (names.justWiki ? " to ~" + names.wikiName : "")
+      regex = bmatch ? bracketted : wikied
+      replacement = bmatch ?
+        bmatch[1] :
+        wmatch[1] + (names.justWiki ? "~" : "") + names.Name + wmatch[2]
+      newText = newText.sub(regex, replacement)
+      startPos = (bmatch || wmatch).begin(0) + replacement.length if overlink
+    end
     if !unlink
       byebug if $dd
       forWikiing = /#{Regex.startWord}#{names.Name}#{Regex.endWord}/
       forBracketting = /#{esc(names.name)}/i
-      match = newText.match(forBracketting)
+      textForLink = newText[startPos..-1]
+      match = textForLink.match(forBracketting)
       if match
         wikiNameIndex = names.minimalName == names.wikiName ?
-          newText =~ forWikiing : nil
+          textForLink =~ forWikiing : nil
         replacer = wikiNameIndex && match.begin(0) - wikiNameIndex > -1 ?
           names.wikiName : "[[" + match[0] + "]]"
-        newText = newText.sub(forBracketting, replacer)
+        textForLink = textForLink.sub(forBracketting, replacer)
       end
+      newText = newText[0...startPos] + textForLink
     end
     newText
   end

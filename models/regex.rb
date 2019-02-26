@@ -12,6 +12,7 @@ class Regex
     @notLetterR = /#{notLetter}/
     @startWord = "(^|#{notLetter})"
     @endWord = "(#{notLetter}|$)"
+    @startWikiWord = "(^|[^~#{notLetter[2..-1]})"
     @wikiLink = "(?:" + upperLetter + "+" +
       lowerLetter + "+" +
       upperLetter +
@@ -71,7 +72,7 @@ class Regex
     attr_reader :urlPattern, :wikiLink, :tiddlerAnyLink, :anyLetterR,
       :basicMorpheme, :format_tags, :format_match, :monospaced,
       :monospaced_initial, :html_entities_match, :upperStart,
-      :startWord, :endWord
+      :startWord, :endWord, :startWikiWord
   end
 end
 
