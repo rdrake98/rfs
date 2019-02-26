@@ -14,8 +14,12 @@ class WikiText
     Regexp.escape(regex_fragment)
   end
 
+  def re(pre, post, string)
+    /#{esc(pre)}#{string}#{esc(post)}/
+  end
+
   def blank(pre, post=pre)
-    @blanked.gsub!(/#{esc(pre)}((?:.|\n)*?)#{esc(post)}/) {|s| " " * s.size}
+    @blanked.gsub!(re(pre, post, "((?:.|\n)*?)")) {|s| " " * s.size}
   end
 
   def blank_tag(tag)
@@ -54,17 +58,14 @@ class WikiText
     if !unlink
       byebug if $dd
       forWikiing = /#{Regex.startWord}#{names.Name}#{Regex.endWord}/
-      if names.justWiki
-      else
-        forBracketting = /#{esc(names.name)}/i
-        match = newText.match(forBracketting)
-        if match
-          wikiNameIndex = names.minimalName == names.wikiName ?
-            newText =~ forWikiing : nil
-          replacer = wikiNameIndex && match.begin(0) - wikiNameIndex > -1 ?
-            names.wikiName : "[[" + match[0] + "]]"
-          newText = newText.sub(forBracketting, replacer)
-        end
+      forBracketting = /#{esc(names.name)}/i
+      match = newText.match(forBracketting)
+      if match
+        wikiNameIndex = names.minimalName == names.wikiName ?
+          newText =~ forWikiing : nil
+        replacer = wikiNameIndex && match.begin(0) - wikiNameIndex > -1 ?
+          names.wikiName : "[[" + match[0] + "]]"
+        newText = newText.sub(forBracketting, replacer)
       end
     end
     newText
