@@ -14,12 +14,8 @@ class WikiText
     Regexp.escape(regex_fragment)
   end
 
-  def re(pre, post, re_string)
-    /#{esc(pre)}#{re_string}#{esc(post)}/
-  end
-
   def blank(pre, post=pre)
-    @blanked.gsub!(re(pre, post, "((?:.|\n)*?)")) {|s| " " * s.size}
+    @blanked.gsub!(/#{esc(pre)}((?:.|\n)*?)#{esc(post)}/) {|s| " " * s.size}
   end
 
   def blank_tag(tag)
