@@ -14,8 +14,8 @@ class WikiText
     Regexp.escape(regex_fragment)
   end
 
-  def re(pre, post, string)
-    /#{esc(pre)}#{string}#{esc(post)}/
+  def re(pre, post, re_string)
+    /#{esc(pre)}#{re_string}#{esc(post)}/
   end
 
   def blank(pre, post=pre)
@@ -53,8 +53,8 @@ class WikiText
   end
 
   def link(wiki, searchText, unlink, overlink)
-    newText = @content
     names = queryNames(wiki, searchText)
+    newText = @content
     if !unlink
       byebug if $dd
       forWikiing = /#{Regex.startWord}#{names.Name}#{Regex.endWord}/
