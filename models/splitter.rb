@@ -162,6 +162,10 @@ class Splitter
   end
 
   def splitName(name)
+    self[name]&.splitname || splitNameFromPatches(name)
+  end
+
+  def splitNameFromPatches(name)
     warmup_splits
     split = []
     prettified = false

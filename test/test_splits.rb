@@ -15,7 +15,7 @@ SH
 
 module Minitest::Assertions
   def assert_split(output, name)
-    assert_equal(output, $wiki.splitName(name))
+    assert_equal(output, $wiki.splitNameFromPatches(name))
   end
 end
 
