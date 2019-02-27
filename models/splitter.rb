@@ -244,12 +244,24 @@ class Splitter
     "#{@type}.json"
   end
 
+  def shared_changes_file(host=@host)
+    "/Users/rd/Dropbox/_changes/m#{host}_#{@type}.json"
+  end
+
   def add_changes(json)
     if @type
       text = json + "\n"
       File.write(changes_file, text)
-      File.write("/Users/rd/Dropbox/_changes/m#{@host}_#{@type}.json", text)
+      File.write(shared_changes_file, text)
     end
+  end
+
+  def other_host
+    @host == "p" ? "g" : "p"
+  end
+
+  def other_changes
+    File.read(shared_changes_file(other_host))
   end
 
   def commit_changes_file(message)

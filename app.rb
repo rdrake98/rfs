@@ -33,6 +33,15 @@ class App < Roda
         message
       end
 
+      r.post "other_changes" do
+        p = r.params
+        type = p['type']
+        wiki = WIKIS[type]
+        wiki = reload(type, false) if wiki.edition != wiki.read_file_edition
+        puts "serving changes from m#{wiki.other_host} for #{type} on startup"
+        wiki.other_changes
+      end
+
       r.post "link" do
         response = {}
         p = r.params
