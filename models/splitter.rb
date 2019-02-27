@@ -264,8 +264,9 @@ class Splitter
     File.read(shared_changes_file(other_host))
   end
 
-  def commit_changes_file(message)
+  def commit_changes_file(message, blank_shared=true)
     `cd #{changes_dir}; git add #{changes_file_}; git commit -m "#{message}"`
+    File.write(shared_changes_file, "[]") if blank_shared
   end
 
   def add_tiddlers(json, loud=false)
@@ -344,9 +345,9 @@ class Splitter
     return nil if browser_edition == file_edition
     if json && @type == "fat"
       @browser_edition = browser_edition
-      commit_changes_file("before fat file clash")
+      commit_changes_file("before fat file clash", false)
       add_changes(json)
-      commit_changes_file("after fat file clash")
+      commit_changes_file("after fat file clash", false)
     end
     puts "clash between browser #{browser_edition} and file #{file_edition}"
     "#{file_edition},clash"
