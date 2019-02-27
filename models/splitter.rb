@@ -244,6 +244,10 @@ class Splitter
     "#{@type}.json"
   end
 
+  def add_changes(json)
+    File.write(changes_file, json + "\n") if @type
+  end
+
   def commit_changes_file(message)
     `cd #{changes_dir}; git add #{changes_file_}; git commit -m "#{message}"`
   end
@@ -307,10 +311,6 @@ class Splitter
     puts "writing edition #{edition} to #{filename}"
     File.write(filename, contents)
     protect ? filename : nil
-  end
-
-  def add_changes(json)
-    File.write(changes_file, json + "\n") if @type
   end
 
   def read_file_edition
