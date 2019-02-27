@@ -245,7 +245,11 @@ class Splitter
   end
 
   def add_changes(json)
-    File.write(changes_file, json + "\n") if @type
+    if @type
+      text = json + "\n"
+      File.write(changes_file, text)
+      File.write("/Users/rd/Dropbox/_changes/m#{@host}_#{@type}.json", text)
+    end
   end
 
   def commit_changes_file(message)
