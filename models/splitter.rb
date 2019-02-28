@@ -261,6 +261,7 @@ class Splitter
   end
 
   def other_changes
+    commit_changes_file("before plusChanges* on startup", false)
     File.read(shared_changes_file(other_host))
   end
 
