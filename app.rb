@@ -14,7 +14,7 @@ class App < Roda
   REPO = RepoCompiled.new
 
   def reload(type="fat", saving=true, edition=nil, changes=nil)
-    puts "reloading #{type}"
+    puts "reloading #{type} into server from file"
     wiki = type == "fat" ? Splitter.fat : Splitter.dev
     WIKIS[type] = wiki
     saving ? edition ? wiki.save(edition, changes) : wiki.do_save : wiki
@@ -29,7 +29,7 @@ class App < Roda
         wiki = WIKIS[type]
         message = "#{p['title']} #{p['action']} in #{type}"
         puts message
-        wiki.add_changes(p['changes']) if wiki
+        wiki.add_changes(p['changes'], p['shared'] == "true") if wiki
         message
       end
 
