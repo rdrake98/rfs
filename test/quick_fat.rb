@@ -8,11 +8,10 @@ if ARGV[0]&.downcase == "c"
   if ARGV[0] == "c" && File.read(wiki_path) == File.read(ENV["fat"])
     puts "#{wiki_path} is up to date"
   else
-    puts "writing #{wiki_path} and #{path}"
-    `cp $fat #{wiki_path}`
-    puts `phantomjs $compiled/write_output.js $fat #{path}`
+    puts "#{Splitter.fat.tiddlers.size} tiddlers in current fat"
+    puts "please seed from javascript"
+    exit
   end
-  puts
 end
 wiki = Splitter.new(wiki_path)
 size = wiki.tiddlers.size
