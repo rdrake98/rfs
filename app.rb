@@ -77,12 +77,12 @@ class App < Roda
         type, edition, output = p['type'], p['edition'], p['output']
         wiki = WIKIS[type] # type is checked in javascript
         if wiki.check_file_edition(edition)
-          "clash"
+          "version clash"
         else
           `cp $#{type} #{ENV['data']}/#{type}_.html`
           File.write("#{ENV['data']}/#{type}_output.html", output)
           puts "#{type}_ and #{type}_output written"
-          "done"
+          "seed success"
         end
       end
     end
