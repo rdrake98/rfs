@@ -30,10 +30,12 @@ class Wikifier
     end
     full = link.index("txmt://open?url=file:///") == 0
     tilde = link.index("txmt://open?url=file://~") == 0
+
     a.href = !txmt || full || tilde ?
       link :
       "txmt://open?url=file://~/" + link[23..-1]
     a.title = "External link to #{link}"
+
     a.target = "_blank" if !txmt
     a << text
     @output << a
