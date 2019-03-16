@@ -74,14 +74,15 @@ class App < Roda
 
       r.post "seed" do
         p = r.params
-        type, edition, output = p['type'], p['edition'], p['output']
+        type = p['type']
         wiki = WIKIS[type] # type is checked in javascript
-        if wiki.check_file_edition(edition)
+        if wiki.check_file_edition(p['edition'])
           "version clash"
         else
           `cp $#{type} #{ENV['data']}/#{type}_.html`
-          File.write("#{ENV['data']}/#{type}_output.html", output)
-          puts "#{type}_ and #{type}_output written"
+          File.write("#{ENV['data']}/#{type}_output.html", p['output'])
+          File.write("#{ENV['data']}/#{type}_links.txt", p['links'])
+          puts "#{type}_, #{type}_output and #{type}_links written"
           "seed success"
         end
       end
