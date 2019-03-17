@@ -302,7 +302,7 @@ class Wikifier
           end
           if img.align
             img.style = "margin-" +
-            (img.align == "right" ? "left:" : "right:") +
+            (img.align == "right" ? "left: " : "right: ") +
             (src[2] || "10") + "px;"
           end
           (link = match[4]) ?
@@ -446,7 +446,7 @@ class Wikifier
       @nextMatch = match.end(0)
       formatter = @@formatters[match[2..-1].index(&:itself)]
       X << XX.new($t, formatter[:type]) if $t1
-      binding.pry if $dd
+      # binding.pry if $dd
       formatter[:handler].(self)
     end
     if @nextMatch < source.size
