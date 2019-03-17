@@ -1,7 +1,5 @@
 # tiddler_list.rb
 
-require 'set'
-
 class TiddlerList
   @lists = Hash.new{[]}
 
@@ -21,17 +19,12 @@ class TiddlerList
     `cd #{ENV["data"]}; git checkout #{tag}#{silent ? ' &>/dev/null' : ''}`
   end
 
-  def self.setup
-    fat = Splitter.new(html_path("_", ""))
-    excluded = fat.titles_linked("MacrosNotTo") +
-      fat.titles_linked("AcceptableDifferences")
-    self._excluded = excluded
-    self._all = names_from(html_path("_output", "")) - excluded
+  def self.setup_mg_fixed
     set_git("apr01")
-    self._all1 = names_from(html_path("_output", "")) - excluded
-    self._fail1 = names_from(html_path) - excluded
+    self._all1 = names_from(html_path("_output", ""))
+    self._fail1 = names_from(html_path)
     set_git("mar23")
-    self._all2 = names_from(html_path("_output", "")) - excluded
+    self._all2 = names_from(html_path("_output", ""))
     self._fail2 = (1..154).map do |n|
       path_rb = html_path(sprintf('%03i',n))
       path_js = path_rb.gsub(/rb/, "js")
@@ -39,7 +32,16 @@ class TiddlerList
       Regex.scan_output(path_js).each {|name, output| js_hash[name] = output}
       Regex.scan_output(path_rb).
         select{|name, output| output != js_hash[name]}.map{|name, output| name}
-    end.flatten - excluded
+    end.flatten
+    set_git("test_only")
+  end
+
+  def self.setup
+    fat = Splitter.new(html_path("_", ""))
+    excluded = fat.titles_linked("MacrosNotTo") +
+      fat.titles_linked("AcceptableDifferences")
+    self._excluded = excluded
+    self._all = names_from(html_path("_output", "")) - excluded
     self._shadows = fat["ShadowTiddlersFinal"].content.split("\n")
     fat
   end
@@ -75,16 +77,18 @@ class TiddlerList
     names.each {|name| puts "#{name}: #{self[name].size}"}
   end
 
-  def self.segment(limit1, limit2)
-    # used segment 200, 1000;
+  def self.segment(limit1=250, limit2=1200)
+    # originally used 200, 1000
     names = @lists.keys.reject {|name| name[0] == "_"}
     smalln = names.select {|name| self[name].size <= limit1}
     largen = names.select {|name| self[name].size > limit2}
     midn = names - smalln - largen
-    small = smalln.map {|name| self[name]}.flatten.to_set
-    mid = midn.map {|name| self[name]}.flatten.to_set - small
-    self.__small = (small | fail1 & all).to_a.sort # some tiddlers were deleted
-    self.__mid = ((mid | fail2 & all) - self.small).to_a.sort
+    small = smalln.map {|name| self[name]}.flatten.uniq
+    mid = midn.map {|name| self[name]}.flatten.uniq - small
+    fail1 = (_fail1 - excluded) & all # some tiddlers were deleted
+    fail2 = (_fail2 - excluded) & all
+    self.__small = (small | fail1).sort
+    self.__mid = ((mid | fail2) - self.small).sort
     self.__large = all - self.small - self.mid
   end
 
