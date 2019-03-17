@@ -62,9 +62,6 @@ class RubyDOM
     inner = inner.gsub(/<\/object>/, '') unless inner.index('<object')
     inner = inner.gsub(/(<td.*?>|<\/td>)/, '') unless inner.index('<table')
     inner = inner.gsub(/<\/object><\/object>/, '</object>')
-    inner = inner.gsub(/(<noscript>)(.*)(<\/noscript>)/) do
-      "#{$1}#{CGI::h3($2)}#{$3}"
-    end
     inner = inner.gsub(/\s+([^= ]+)= *(?:"(.*?)"|'(.*?)'|([^"' >]+))/) do
       " #{$1.downcase}=\"#{CGI::h3(CGI.unescapeHTML($2||$3||$4))}\""
     end
