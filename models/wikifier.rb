@@ -31,11 +31,19 @@ class Wikifier
     full = link.index("txmt://open?url=file:///") == 0
     tilde = link.index("txmt://open?url=file://~") == 0
 
-    a.href = !txmt || full || tilde ?
+    href = !txmt || full || tilde ?
       link :
       "txmt://open?url=file://~/" + link[23..-1]
-    a.title = "External link to #{link}"
+    unless href =~ /#{Regex.urlPattern}/
+      href = "file://" + (href[0] == "/" ? "" : @wiki.parent_dir) + href
+      unless href =~ /\.(html|pdf)(#\S*)?$/
+        href = "txmt://open?url=" + href
+        txmt = true
+      end
+    end
 
+    a.href = href
+    a.title = "External link to #{link}"
     a.target = "_blank" if !txmt
     a << text
     @output << a
@@ -446,7 +454,7 @@ class Wikifier
       @nextMatch = match.end(0)
       formatter = @@formatters[match[2..-1].index(&:itself)]
       X << XX.new($t, formatter[:type]) if $t1
-      # binding.pry if $dd
+      binding.pry if $dd
       formatter[:handler].(self)
     end
     if @nextMatch < source.size
