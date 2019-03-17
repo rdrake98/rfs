@@ -24,13 +24,19 @@ class RubyDOM
     @tag ? "<#{@tag}#{@attributes}>" : ""
   end
 
-  def []= attribute, value
-    @attributes << " #{Tiddler.attribute_phrase attribute, value}"
+  def []= name, value
+    @attributes << " #{Tiddler.attribute_phrase name, value}"
+  end
+
+  def [] name
+    @attributes =~ /#{name}="([^"]+)"/ &&
+      CGI::unescapeHTML($1).gsub(/\\s/m,"\\")
   end
 
   def method_missing(name, *args)
-    args.size == 1 && name[-1] == "=" && self[name[0..-2]] = args[0] ||
-    super.method_missing(name, *args)
+    (args.size == 1 && name[-1] == "=" && self[name[0..-2]] = args[0]) ||
+    (args.size == 0 && self[name]) ||
+    nil
   end
 
   def close_tag
