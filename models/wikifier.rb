@@ -113,7 +113,7 @@ class Wikifier
               td = RubyDOM.new(td_match[2] ? "th" : "td")
               tr << td
               w.nextMatch = td_match.begin(3)
-              w.subWikifyTerm(td, /\s*\|/)
+              w.subWikifyTerm(td, / *\|/)
               if colspan > 1
                 td.colspan = colspan
                 colspan = 1
