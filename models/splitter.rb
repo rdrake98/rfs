@@ -130,16 +130,13 @@ class Splitter
     self[title]&.tiddlers_linked || []
   end
 
-  def macros_not_to
-    tiddlers_linked("MacrosNotTo")
-  end
-
-  def acceptable_differences
-    tiddlers_linked("AcceptableDifferences")
+  def titles_excluded
+    titles_linked("MacrosNotTo") + titles_linked("AcceptableDifferences")
   end
 
   def testing_tiddlers
-    tiddlers - macros_not_to - acceptable_differences
+    tiddlers -
+      tiddlers_linked("MacrosNotTo") - tiddlers_linked("AcceptableDifferences")
   end
 
   def store_size

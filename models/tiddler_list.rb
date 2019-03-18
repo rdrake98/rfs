@@ -38,8 +38,7 @@ class TiddlerList
 
   def self.setup
     fat = Splitter.new(html_path("_", ""))
-    excluded = fat.titles_linked("MacrosNotTo") +
-      fat.titles_linked("AcceptableDifferences")
+    excluded = fat.titles_excluded
     self._excluded = excluded
     self._all = names_from(html_path("_output", "")) - excluded
     self._shadows = fat["ShadowTiddlersFinal"].content.split("\n")
