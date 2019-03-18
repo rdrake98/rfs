@@ -6,6 +6,12 @@ require 'regex'
 require 'wiki_text'
 require 'time'
 
+module CGI::Util
+  def h4(string) # who knows
+    string.gsub(/[&\"]/, TABLE_FOR_ESCAPE_HTML__)
+  end
+end
+
 class Tiddler
   attr_reader :header, :title, :content
 
@@ -90,8 +96,10 @@ class Tiddler
       CGI::unescapeHTML($1).gsub(/\\s/m,"\\")
   end
 
-  def self.attribute_phrase attribute, value
-    "#{attribute}=\"#{CGI::h2 value.to_s}\""
+  def self.attribute_phrase attribute, value, escaped=true
+    s = value.to_s
+    s = escaped ? CGI::h2(s) : CGI::h4(s)
+    "#{attribute}=\"#{s}\""
   end
 
   def []= attribute, value
