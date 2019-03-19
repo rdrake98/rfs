@@ -54,16 +54,12 @@ class Wikifier
     a.href = "javascript:;"
     link_text = link || text.strip
     tiddler = @wiki.referent(link_text)
-    a.title = (tiddler ?
+    a.title = tiddler ?
       "#{tiddler.title} - #{tiddler.modified.to_minute}" :
-      Splitter.shadow?(link_text) ?
-        "The tiddler '#{link_text}' doesn't yet exist, " +
-          "but has a pre-defined shadow value" :
-        "The tiddler '#{link_text}' doesn't yet exist")
+      "The tiddler '#{link_text}' doesn't yet exist"
     classes = ["tiddlyLink"]
     classes << (tiddler ? "tiddlyLinkExisting" : "tiddlyLinkNonExisting")
     classes << "imageLink" if image
-    classes << "shadow" if !tiddler && Splitter.shadow?(link_text)
     a.class = classes.join(" ")
     a.refresh = "link"
     a.tiddlylink = tiddler&.title || link_text

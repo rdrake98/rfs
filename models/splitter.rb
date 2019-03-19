@@ -9,8 +9,6 @@ require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
 require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
 
 class Splitter
-  def self.shadow?(name); TiddlerList.shadows.include?(name); end
-
   attr_accessor :code
 
   def parent_dir

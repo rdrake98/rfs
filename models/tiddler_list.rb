@@ -41,7 +41,6 @@ class TiddlerList
     excluded = fat.titles_excluded
     self._excluded = excluded
     self._all = names_from(html_path("_output", "")) - excluded
-    self._shadows = fat["ShadowTiddlersFinal"].content.split("\n")
     fat
   end
 
@@ -68,8 +67,6 @@ class TiddlerList
     key = full_path.split("/")[-1][0...-4].to_sym
     self[key] = File.read(full_path).split("\n")
   end
-
-  def self.shadows; self[:_shadows]; end
 
   def self.show(*names)
     names = @lists.keys if names.size == 0
