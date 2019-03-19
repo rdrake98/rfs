@@ -318,7 +318,7 @@ class Splitter
   end
 
   def external_link?(string)
-    !self[string] && string =~ /#{Regex.urlPattern}|[.\/#\\]/
+    !self[string] && string =~ /#{Regex.urlPattern}|[.\/]/
   end
 
   def write(suffix="_", ed_end = "r")
