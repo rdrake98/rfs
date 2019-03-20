@@ -6,12 +6,6 @@ require 'regex'
 require 'wiki_text'
 require 'time'
 
-module CGI::Util
-  def h4(string) # who knows
-    string.gsub(/[&\"]/, TABLE_FOR_ESCAPE_HTML__)
-  end
-end
-
 class Tiddler
   attr_reader :header, :title, :content
 

@@ -56,9 +56,10 @@ def snip(original_file)
 end
 
 module CGI::Util
-  def h2(string) # don't escape single quotes
-    string.gsub(/[&\"<>]/, TABLE_FOR_ESCAPE_HTML__)
-  end
+  def h_n(string, regex); string.gsub(regex, TABLE_FOR_ESCAPE_HTML__); end
+  def h2(string); h_n(string, /[&\"<>]/); end # don't escape single quotes
+  def h3(string); h_n(string, /[&<>]/); end
+  def h4(string); h_n(string, /[&\"]/); end
 end
 
 def capture_stdout

@@ -2,12 +2,6 @@
 
 require 'tiddler'
 
-module CGI::Util
-  def h3(string) # who knows
-    string.gsub(/[&<>]/, TABLE_FOR_ESCAPE_HTML__)
-  end
-end
-
 class RubyDOM
   def initialize(tag=nil, closing=tag)
     @tag = tag
