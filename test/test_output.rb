@@ -9,11 +9,13 @@ class TestOutput < MiniTest::Test
   wiki_path = "#{ENV['data']}/#{type}_.html"
   path = "#{ENV['data']}/#{type}_output.html"
   wiki = Splitter.new(wiki_path)
-  limit = few ? wiki["RubyTests"].tiddler_links.size - 1 : ARGV[1].to_i - 1
-  target = ARGV[1] if ARGV[1] && ARGV[1].to_i == 0
+  limit = few ? wiki["RubyTests"].tiddler_links.size - 1 : -1
+  one = ARGV[1]
+  all = !few && !one
   describe "all" do
-    Regex.scan_output(path)[0..limit].each do |name, output|
-      unless target && name != target
+    Regex.scan_output(path).each_with_index do |chunk, i|
+      name, output = chunk
+      if few && (i <= limit || name =~ /RFF\d\d/) || (one && name == one) || all
         it "output for '#{name}'" do
           assert_equal(output, wiki[name].output)
         end
@@ -21,6 +23,6 @@ class TestOutput < MiniTest::Test
     end
   end
   puts
-  puts "ruby -e 'require \"Splitter\"; Splitter.#{type}[\"#{target}\"].output;' dd" if target
+  puts "ruby -e 'require \"Splitter\"; Splitter.#{type}[\"#{one}\"].output;' dd" if one
   puts
 end
