@@ -15,7 +15,7 @@ class TestOutput < MiniTest::Test
   describe "all" do
     Regex.scan_output(path).each_with_index do |chunk, i|
       name, output = chunk
-      if few && (i <= limit || name =~ /RFF\d\d/) || (one && name == one) || all
+      if all || few && (i <= limit || name =~ /RFF\d\d/) || one && name == one
         it "output for '#{name}'" do
           assert_equal(output, wiki[name].output)
         end
