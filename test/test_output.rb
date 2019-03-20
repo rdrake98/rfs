@@ -9,7 +9,7 @@ class TestOutput < MiniTest::Test
   wiki_path = "#{ENV['data']}/#{type}_.html"
   path = "#{ENV['data']}/#{type}_output.html"
   wiki = Splitter.new(wiki_path)
-  limit = few ? wiki["RubyTests"].tiddler_links.size : -1
+  limit = few && wiki["RubyTests"].tiddler_links.size
   one = ARGV[1]
   all = !few && !one
   describe "all" do
