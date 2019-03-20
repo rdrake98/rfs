@@ -9,13 +9,13 @@ class TestOutput < MiniTest::Test
   wiki_path = "#{ENV['data']}/#{type}_.html"
   path = "#{ENV['data']}/#{type}_output.html"
   wiki = Splitter.new(wiki_path)
-  limit = few ? wiki["RubyTests"].tiddler_links.size - 1 : -1
+  limit = few ? wiki["RubyTests"].tiddler_links.size : -1
   one = ARGV[1]
   all = !few && !one
   describe "all" do
     Regex.scan_output(path).each_with_index do |chunk, i|
       name, output = chunk
-      if all || few && (i <= limit || name =~ /RFF\d\d/) || one && name == one
+      if all || few && (i < limit || name =~ /RFF\d\d/) || one && name == one
         it "output for '#{name}'" do
           assert_equal(output, wiki[name].output)
         end
