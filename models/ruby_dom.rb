@@ -38,12 +38,8 @@ class RubyDOM
     @closing ? "</#{@tag}>" : ""
   end
 
-  def strip
-    @strip = true
-  end
-
   def to_s
-    "#{open_tag}#{@strip ? inner.strip : inner}#{close_tag}"
+    "#{open_tag}#{inner}#{close_tag}"
   end
 
   def inner
