@@ -185,17 +185,12 @@ class Tiddler
     links.uniq
   end
 
-  def basic_content
-    WikiText.new(@content).basic_content
-  end
-
   def link(search_text, unlink, overlink)
     WikiText.new(@content).link(@wiki, search_text, unlink, overlink)
   end
 
-  def search_text
-    @content.gsub(/\/%((?:.|\n)*?)%\//,"").
-      gsub(/\{{3}((?:.|\n)*?)\}{3}/," #{$1} ")
+  def basic_content
+    WikiText.new(@content).basic_content
   end
 
   def tiddler_links
