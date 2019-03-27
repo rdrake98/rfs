@@ -26,7 +26,7 @@ def snip(original_file)
   code = file == "ww/dev/code/compiled/code.js"
   isDir = file[-1..-1] == "/"
   isMine = file != original_file
-  require_relative "../textmate/base_tm"
+  require_relative "/Users/rd/scripts/textmate/base_tm"
   selection = TMSelection.new
   text = selection.text
   line = selection.line
