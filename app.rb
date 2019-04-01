@@ -91,7 +91,8 @@ class App < Roda
 
     r.get "graph" do
       chartkick = Class.new.include(Chartkick::Helper).new
-      view('graph', locals: {chartkick: chartkick, repo: REPO})
+      data = REPO.graph_data(r.params["x"]&.to_i)
+      view('graph', locals: {chartkick: chartkick, data: data})
     end
 
     r.get "sync" do
