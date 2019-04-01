@@ -45,7 +45,8 @@ class App < Roda
       r.post "link" do
         response = {}
         p = r.params
-        type, title, name, edition = p['type'],p['title'],p['name'],p['edition']
+        type, title, name, target, edition =
+          p['type'], p['title'], p['name'], p['target'], p['edition']
         puts "#{p['action']} '#{name}' in #{title} in #{type}"
         wiki = WIKIS[type] || (w = Splitter.new(type); type = nil; w)
         clash = wiki.check_file_edition(edition)
@@ -56,7 +57,7 @@ class App < Roda
           wiki.add_tiddlers(p['changes'])
           unlink = p['unlink'] == "true"
           overlink = p['overlink'] == "true"
-          new_text = wiki[title].link(name, unlink, overlink)
+          new_text = wiki[title].link(name, target, unlink, overlink)
           same = new_text == p['newText']
           puts "** difference with JavaScript **" unless same
           response["compare"] = same ? "same" : "different"

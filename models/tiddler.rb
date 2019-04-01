@@ -193,8 +193,8 @@ class Tiddler
     @tiddler_links ||= Tiddler.parse_tiddler_links(basic_content, @wiki)
   end
 
-  def link(search_text, unlink, overlink)
-    WikiText.new(@content).link(@wiki, search_text, unlink, overlink)
+  def link(search_text, target, unlink, overlink)
+    WikiText.new(@content).link(@wiki, search_text, target, unlink, overlink)
   end
 
   def tiddlers_linked

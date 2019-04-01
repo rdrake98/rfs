@@ -48,7 +48,7 @@ class WikiText
     Names.new(name, _Name, justOne, wikiName, justWiki, minimalName)
   end
 
-  def link(wiki, searchText, unlink, overlink)
+  def link(wiki, searchText, target, unlink, overlink)
     names = queryNames(wiki, searchText)
     newText = @content
     startPos = 0
@@ -78,8 +78,9 @@ class WikiText
       if match
         wikiNameIndex = names.minimalName == names.wikiName ?
           textForLink =~ forWikiing : nil
-        replacer = wikiNameIndex && match.begin(0) - wikiNameIndex > -1 ?
-          names.wikiName : "[[" + match[0] + "]]"
+        replacer = target ? "[[" + match[0] + "|" + target + "]]" :
+          wikiNameIndex && match.begin(0) - wikiNameIndex > -1 ?
+            names.wikiName : "[[" + match[0] + "]]"
         textForLink = textForLink.sub(forBracketting, replacer)
       end
       newText = newText[0...startPos] + textForLink
