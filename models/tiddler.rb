@@ -1,8 +1,7 @@
 # tiddler.rb
 
 require 'base'
-require 'wikifier'
-require 'regex'
+require 'wikifier_null'
 require 'wiki_text'
 require 'time'
 
@@ -224,7 +223,7 @@ class Tiddler
     result = WikifierNull.new(@content, @wiki).wikify
     puts @content.size
     puts result.size
-    p "   " + @content
+    p "   " + @content.gsub('"""',"'''").gsub("\n"," ")
     result
   end
 

@@ -24,9 +24,9 @@ class WikifierNull < Wikifier
   def keep_inner(regex)
     @output << " " * matchText.size
     element = node_type.new("nulltag")
-    subWikifyTerm(element, regex)
+    termMatch = subWikifyTerm(element, regex)
     @output << element
-    # need to blank terminating string as well
+    @output << " " * termMatch[0].size
   end
 
   def self.formatters

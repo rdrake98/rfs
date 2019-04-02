@@ -448,6 +448,7 @@ class Wikifier
       end
     end
     @output = oldOutput
+    termMatch
   end
 
   def subWikify(source)
