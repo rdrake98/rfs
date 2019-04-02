@@ -528,9 +528,14 @@ class Splitter
     @before.scan(/<div title="(.*)">\n/).map(&:first)
   end
 
+  def remove_shadow(title)
+    @before.gsub!(/(<div title="(.*?)">.*?<\/div>\n)/m) do
+      $2 == title ? "" : $1
+    end
+  end
+
   def config_titles
-    (shadow_titles +
-      self["OptionsPanel"].content.split(/\W+/) +
+    (shadow_titles + self["OptionsPanel"].tiddler_links +
       %w[OpenTiddlers OpenTiddlersRaw RecentCreations DefaultTiddlers Search]
     ).uniq.sort
   end
