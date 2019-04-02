@@ -221,7 +221,11 @@ class Tiddler
   def test_null
     require 'wikifier_null'
     byebug if $dd
-    WikifierNull.new(@content, @wiki).wikify
+    result = WikifierNull.new(@content, @wiki).wikify
+    puts @content.size
+    puts result.size
+    p "   " + @content
+    result
   end
 
   def Tiddler.html(title, output)

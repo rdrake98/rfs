@@ -3,8 +3,8 @@
 require 'ruby_dom'
 require 'regex'
 
-X = $t1 && []
-XX = $t1 && Struct.new(:tiddler, :type)
+# X = $t1 && []
+# XX = $t1 && Struct.new(:tiddler, :type)
 require 'dd' if $dd
 require 'd' if $d
 
@@ -457,7 +457,7 @@ class Wikifier
       @matchText = match[0]
       @nextMatch = match.end(0)
       formatter = formatters[match[2..-1].index(&:itself)]
-      X << XX.new($t, formatter[:type]) if $t1
+      # X << XX.new($t, formatter[:type]) if $t1
       # binding.pry if $dd
       formatter[:handler].(self)
     end
