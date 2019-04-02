@@ -13,7 +13,7 @@ class Wikifier
   attr_accessor :nextMatch
 
   def self.node_type; RubyDOM; end
-  def node_type; RubyDOM; end
+  def node_type; self.class.node_type; end
 
   def add_element(tag, regex, output=@output)
     element = node_type.new(tag)
