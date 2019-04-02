@@ -218,6 +218,12 @@ class Tiddler
     @output ||= Tiddler.output(@content, @wiki)
   end
 
+  def test_null
+    require 'wikifier_null'
+    byebug if $dd
+    WikifierNull.new(@content, @wiki).wikify
+  end
+
   def Tiddler.html(title, output)
     "<h3>\n#{title}\n</h3>\n<div>\n#{output}\n</div> <!-- getOutput #{title} -->\n"
   end
