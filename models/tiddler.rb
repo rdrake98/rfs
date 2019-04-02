@@ -217,16 +217,6 @@ class Tiddler
     @output ||= Tiddler.output(@content, @wiki)
   end
 
-  def test_null
-    require 'wikifier_null'
-    # byebug if $dd
-    result = WikifierNull.new(@content, @wiki).wikify
-    puts @content.size
-    puts result.size
-    p "   " + @content.gsub('"""',"'''").gsub("\n"," ")
-    result
-  end
-
   def Tiddler.html(title, output)
     "<h3>\n#{title}\n</h3>\n<div>\n#{output}\n</div> <!-- getOutput #{title} -->\n"
   end
@@ -263,5 +253,15 @@ class Tiddler
     readable = readable.join("\n")
     File.write(filename, readable + "\n")
     readable
+  end
+
+  def test_null
+    require 'wikifier_null'
+    # byebug if $dd
+    result = WikifierNull.new(@content, @wiki).wikify
+    puts @content.size
+    puts result.size
+    p "   " + @content.gsub('"""',"'''").gsub("\n"," ")
+    result
   end
 end

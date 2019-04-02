@@ -10,10 +10,6 @@ require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
 class Splitter
   attr_accessor :code
 
-  def self.test_null(title)
-    dev[title].test_null
-  end
-
   def parent_dir
     # kludge to support rff testing
     parent_type = @filename.split("/")[-1][0..2]
@@ -573,5 +569,9 @@ class Splitter
 
   def write_sample(n, expand=false)
     write_selected(titles.sample(n), "sample", expand)
+  end
+
+  def self.test_null(title)
+    dev[title].test_null
   end
 end
