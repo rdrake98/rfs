@@ -79,7 +79,7 @@ class Wikifier
     @output << a
   end
 
-  @@formatters = [
+  @formatters = [
     {
       type: :table,
       match: "^\\|(?:[^\\n]*)\\|(?:\n|$)",
@@ -414,7 +414,12 @@ class Wikifier
       end
     },
   ]
-  @@regex = /(#{@@formatters.map{|f|"(#{f[:match]})"}.join("|")})/m
+  @big_regex = /(#{@formatters.map{|f|"(#{f[:match]})"}.join("|")})/m
+
+  def self.formatters; @formatters; end
+  def self.big_regex; @big_regex; end
+  def formatters; self.class.formatters; end
+  def big_regex; self.class.big_regex; end
 
   def initialize(source, wiki)
     @source = source
@@ -443,12 +448,12 @@ class Wikifier
   end
 
   def subWikify(source)
-    while match = @@regex.match(source, @nextMatch)
+    while match = big_regex.match(source, @nextMatch)
       @matchStart = match.begin(0)
       @output << source[@nextMatch...@matchStart] if @matchStart > @nextMatch
       @matchText = match[0]
       @nextMatch = match.end(0)
-      formatter = @@formatters[match[2..-1].index(&:itself)]
+      formatter = formatters[match[2..-1].index(&:itself)]
       X << XX.new($t, formatter[:type]) if $t1
       binding.pry if $dd
       formatter[:handler].(self)
