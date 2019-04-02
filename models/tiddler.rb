@@ -256,8 +256,6 @@ class Tiddler
   end
 
   def test_null
-    require 'wikifier_null'
-    # byebug if $dd
     result = WikifierNull.new(@content, @wiki).wikify
     puts @content.size
     puts result.size
