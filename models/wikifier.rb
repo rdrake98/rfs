@@ -12,15 +12,18 @@ class Wikifier
   attr_reader :output, :matchText, :source, :matchStart, :wiki
   attr_accessor :nextMatch
 
+  def self.node_type; RubyDOM; end
+  def node_type; RubyDOM; end
+
   def add_element(tag, regex, output=@output)
-    element = RubyDOM.new(tag)
+    element = node_type.new(tag)
     subWikifyTerm(element, regex)
     output << element
     element
   end
 
   def createExternalLink(text, link=text, image=false)
-    a = RubyDOM.new("a")
+    a = node_type.new("a")
     a.class = image ? "externalLink imageLink" : "externalLink"
     txmt_ = link.index("txmt://") == 0
     txmt = link.index("txmt://open?url=file://") == 0
@@ -50,7 +53,7 @@ class Wikifier
   end
 
   def createTiddlyLink(text, link=nil, image=false)
-    a = RubyDOM.new("a")
+    a = node_type.new("a")
     a.href = "javascript:;"
     link_text = link || text.strip
     tiddler = @wiki.referent(link_text)
@@ -79,21 +82,21 @@ class Wikifier
     @output << a
   end
 
-  @formatters = [
+  @@formatters = [
     {
       type: :table,
       match: "^\\|(?:[^\\n]*)\\|(?:\n|$)",
       handler: -> w do
         text = w.matchText
-        table = RubyDOM.new("table")
+        table = node_type.new("table")
         table.class = "twtable"
-        tbody = RubyDOM.new("tbody")
+        tbody = node_type.new("tbody")
         table << tbody
         regex = /^\|.*?\|$/
         even_row = true
         position = w.matchStart
         while (match = regex.match(w.source, position))&.begin(0) == position
-          tr = RubyDOM.new("tr")
+          tr = node_type.new("tr")
           tr.class = even_row ? "evenRow" : "oddRow"
           even_row = !even_row
           tbody << tr
@@ -106,7 +109,7 @@ class Wikifier
               colspan += 1
               w.nextMatch = td_match.end(0)
             else
-              td = RubyDOM.new(td_match[2] ? "th" : "td")
+              td = node_type.new(td_match[2] ? "th" : "td")
               tr << td
               w.nextMatch = td_match.begin(3)
               w.subWikifyTerm(td, / *\|/)
@@ -143,7 +146,7 @@ class Wikifier
       match: "^[*#]{1,2}",
       handler: -> w do
         type = w.matchText[0] == "*" ? "ul" : "ol"
-        list = RubyDOM.new(type)
+        list = node_type.new(type)
         regex = /^([*#]{1,2})(.*)$/
         latest1 = list
         old_level = 1
@@ -154,7 +157,7 @@ class Wikifier
           if new_level == 1
             latest1 = w.add_element("li", /$/, list)
           else
-            latest1 << (latest2 = RubyDOM.new(type)) if old_level == 1
+            latest1 << (latest2 = node_type.new(type)) if old_level == 1
             w.add_element("li", /$/, latest2)
           end
           old_level = new_level
@@ -174,7 +177,7 @@ class Wikifier
       match: "^>{1,2}",
       handler: -> w do
         # byebug if $dd and $t == "$$$#"
-        block = RubyDOM.new("blockquote")
+        block = node_type.new("blockquote")
         regex = /^(>{1,2})(.*)$/
         old_level = 1
         position = w.matchStart
@@ -183,11 +186,11 @@ class Wikifier
           new_level = match[1].size
           if new_level == 1
             w.subWikifyTerm(block, /(\n|$)/)
-            block << RubyDOM.single("br")
+            block << node_type.single("br")
           else
-            block << (block2 = RubyDOM.new("blockquote")) if old_level == 1
+            block << (block2 = node_type.new("blockquote")) if old_level == 1
             w.subWikifyTerm(block2, /(\n|$)/)
-            block2 << RubyDOM.single("br")
+            block2 << node_type.single("br")
           end
           old_level = new_level
           position = match.end(0) + 1
@@ -198,7 +201,7 @@ class Wikifier
     {
       type: :rule,
       match: "^----+$\\n?|<hr ?/?>\\n?",
-      handler: -> w {w.output << RubyDOM.single("hr")}
+      handler: -> w {w.output << node_type.single("hr")}
     },
     {
       type: :monospacedByLine,
@@ -207,7 +210,7 @@ class Wikifier
         regex = Regex.monospaced[w.matchText.chomp]
         match = regex.match(w.source, w.matchStart)
         if match&.begin(0) == w.matchStart
-          pre = RubyDOM.new("pre")
+          pre = node_type.new("pre")
           pre << match[1]
           w.output << pre
           w.nextMatch = match.end(0)
@@ -229,7 +232,7 @@ class Wikifier
         regex = /<<([^>\s]+)(?:\s*)((?:[^>]|(?:>(?!>)))*)>>/m
         match = regex.match(w.source, w.matchStart)
         if match&.begin(0) == w.matchStart
-          element = RubyDOM.new("span")
+          element = node_type.new("span")
           element << match[0]
           w.output << element
           w.nextMatch = match.end(0)
@@ -294,7 +297,7 @@ class Wikifier
         regex = /\[([<]?)(>?)[Ii][Mm][Gg]\[([^\[\]\|]+)\](?:\[([^\]]*)\])?\]/m
         match = regex.match(w.source, w.matchStart)
         if match&.begin(0) == w.matchStart
-          img = RubyDOM.single("img")
+          img = node_type.single("img")
           img.align = "left" if match[1].size > 0
           img.align = "right" if match[2].size > 0
           src = match[3].split(' ')
@@ -325,7 +328,7 @@ class Wikifier
         regex = /<[Hh][Tt][Mm][Ll]>((?:.|\n)*?)<\/[Hh][Tt][Mm][Ll]>/m
         match = regex.match(w.source, w.matchStart)
         if match&.begin(0) == w.matchStart
-          span = RubyDOM.new("span")
+          span = node_type.new("span")
           span.innerHTML(match[1])
           w.output << span
           w.nextMatch = match.end(0)
@@ -355,7 +358,7 @@ class Wikifier
         regex = /\{\{\{((?:.|\n)*?)\}\}\}/m
         match = regex.match(w.source, w.matchStart)
         if match&.begin(0) == w.matchStart
-          w.output << (RubyDOM.new("code") << match[1])
+          w.output << (node_type.new("code") << match[1])
           w.nextMatch = match.end(0)
         end
       end
@@ -380,7 +383,7 @@ class Wikifier
       type: :mdash,
       match: "--",
       handler: -> w do
-        span = RubyDOM.new("span")
+        span = node_type.new("span")
         span << "—"
         w.output << span
       end
@@ -388,7 +391,7 @@ class Wikifier
     {
       type: :lineBreak,
       match: "\\n|<br ?/?>",
-      handler: -> w {w.output << RubyDOM.single("br")}
+      handler: -> w {w.output << node_type.single("br")}
     },
     {
       type: :rawText,
@@ -397,7 +400,7 @@ class Wikifier
         regex = /(?:\"{3}|<nowiki>)((?:.|\n)*?)(?:\"{3}|<\/nowiki>)/m
         match = regex.match(w.source, w.matchStart)
         if match&.begin(0) == w.matchStart
-          element = RubyDOM.new("span")
+          element = node_type.new("span")
           element << match[1]
           w.output << element
           w.nextMatch = match.end(0)
@@ -408,15 +411,15 @@ class Wikifier
       type: :htmlEntitiesEncoding,
       match: Regex.html_entities_match,
       handler: -> w do
-        element = RubyDOM.new("span")
+        element = node_type.new("span")
         element.decode(w.matchText)
         w.output << element
       end
     },
   ]
-  @big_regex = /(#{@formatters.map{|f|"(#{f[:match]})"}.join("|")})/m
+  @big_regex = /(#{@@formatters.map{|f|"(#{f[:match]})"}.join("|")})/m
 
-  def self.formatters; @formatters; end
+  def self.formatters; @@formatters; end
   def self.big_regex; @big_regex; end
   def formatters; self.class.formatters; end
   def big_regex; self.class.big_regex; end
@@ -428,7 +431,7 @@ class Wikifier
   end
 
   def wikify
-    @output = RubyDOM.new
+    @output = node_type.new
     subWikify(@source)
     @output.to_s
   end
