@@ -459,7 +459,7 @@ class Wikifier
       @nextMatch = match.end(0)
       formatter = formatters[match[2..-1].index(&:itself)]
       # X << XX.new($t, formatter[:type]) if $t1
-      byebug if $dd
+      # byebug if $dd
       formatter[:handler].(self)
     end
     if @nextMatch < source.size

@@ -49,15 +49,16 @@ class WikiText
   end
 
   def link(wiki, searchText, target, unlink, overlink)
+    # byebug if $dd
     names = queryNames(wiki, searchText)
     newText = @content
-    startPos = 0
+    startPos = index = 0
     if unlink || overlink
       bracketted = /#{esc("[[")}(#{esc(names.name)})#{esc("]]")}/i
       bmatch = newText.match(bracketted)
       wikied = /#{Regex.startWikiWord}#{names.wikiName}#{Regex.endWord}/
       wmatch = names.wikiName && newText.match(wikied)
-      return newText if !bmatch && !wmatch
+      return [newText, ""] if !bmatch && !wmatch
       bmatch = nil if bmatch && wmatch && wmatch.begin(0) < bmatch.begin(0)
       replacer = bmatch ?
         bmatch[0] :
@@ -70,21 +71,23 @@ class WikiText
       startPos = (bmatch || wmatch).begin(0) + replacement.length if overlink
     end
     if !unlink
-      byebug if $dd
       forWikiing = /#{Regex.startWord}#{names.Name}#{Regex.endWord}/
       forBracketting = /#{esc(names.name)}/i
       textForLink = newText[startPos..-1]
-      match = textForLink.match(forBracketting)
+      offset = 0
+      blanked = WikifierNull.new(newText, wiki).wikify[startPos..-1]
+      match = blanked.match(forBracketting)
       if match
         wikiNameIndex = names.minimalName == names.wikiName ?
-          textForLink =~ forWikiing : nil
+          blanked =~ forWikiing : nil
+        offset = match.begin(0)
         replacer = target ? "[[" + match[0] + "|" + target + "]]" :
-          wikiNameIndex && match.begin(0) - wikiNameIndex > -1 ?
+          wikiNameIndex && offset - wikiNameIndex > -1 ?
             names.wikiName : "[[" + match[0] + "]]"
-        textForLink = textForLink.sub(forBracketting, replacer)
+        textForLink = textForLink[offset..-1].sub(forBracketting, replacer)
       end
-      newText = newText[0...startPos] + textForLink
+      newText = newText[0...startPos+offset] + textForLink
     end
-    newText
+    [newText, replacer]
   end
 end
