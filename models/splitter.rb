@@ -544,13 +544,14 @@ class Splitter
     (titles + (titles << "MainMenu").map{|t| titles_linked(t)}.flatten).uniq
   end
 
-  def write_tiny(hash, selected=[], file="empty", expand=false)
+  def write_tiny(hash, selected=[], file="empty", expand=false, censored=[], recent=[])
     tinys = {}
     hash.each do |key, content|
       title = key.to_s
       tinys[title] = Tiddler.new(self, title, content, self[title].splitname)
     end
     titles = (config_titles + (expand ? expanded(selected) : selected)).uniq
+    titles = titles + recent - censored
     divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
     tiny_wiki = @before + divs + @mid + @code + @after
     File.write("/Users/rd/rf/tinys/#{file}.html", tiny_wiki)
@@ -565,6 +566,13 @@ class Splitter
     titles = titles.map(&:to_s)
     configs = {DefaultTiddlers: titles.join("\n"), SiteTitle: "x"}
     write_tiny(configs, titles, file, expand)
+  end
+
+  def write_for_jem(file)
+    open_now = titles_linked("DefaultTiddlers")
+    recent = tiddlers.sort_by(&:modified).map(&:title)[-40..-2]
+    censored = titles_linked("CensorshipForJem") << "CensorshipForJem"
+    write_tiny({}, open_now, file, true, censored, recent)
   end
 
   def write_sample(n, expand=false)
