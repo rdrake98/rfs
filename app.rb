@@ -8,6 +8,7 @@ class App < Roda
   plugin :assets, js: ['Chart.bundle.min.js', 'chartkick.js']
   plugin :h
 
+  puts ENV["RUBYLIB"]
   WIKIS = {"fat" => Splitter.fat, "dev" => Splitter.dev}
   puts WIKIS["fat"].edition
   puts WIKIS["dev"].edition
@@ -33,13 +34,11 @@ class App < Roda
         message
       end
 
-      r.post "other_changes" do
+      r.post "save" do
         p = r.params
-        type = p['type']
-        wiki = WIKIS[type]
-        wiki = reload(type, false) if wiki.edition != wiki.read_file_edition
-        puts "serving changes from m#{wiki.other_host} for #{type} on startup"
-        wiki.other_changes
+        type, edition, changes = p['type'], p['edition'], p['changes']
+        wiki = WIKIS[type] || Splitter.new(type)
+        wiki.save(edition, changes) || reload(type, true, edition, changes)
       end
 
       r.post "link" do
@@ -70,11 +69,13 @@ class App < Roda
         response.to_json
       end
 
-      r.post "save" do
+      r.post "other_changes" do
         p = r.params
-        type, edition, changes = p['type'], p['edition'], p['changes']
-        wiki = WIKIS[type] || Splitter.new(type)
-        wiki.save(edition, changes) || reload(type, true, edition, changes)
+        type = p['type']
+        wiki = WIKIS[type]
+        wiki = reload(type, false) if wiki.edition != wiki.read_file_edition
+        puts "serving changes from m#{wiki.other_host} for #{type} on startup"
+        wiki.other_changes
       end
 
       r.post "seed" do
