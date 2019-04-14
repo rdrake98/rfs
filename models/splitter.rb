@@ -396,21 +396,6 @@ class Splitter
     write("")
   end
 
-  def self.dir
-    "/Users/rd/rf/tiddlers3"
-  end
-
-  def self.dir2
-    dir[-1] == "2" ? dir[0...-1] : dir + "2"
-  end
-
-  def self.mkdir(dir1=dir)
-    FileUtils.remove_dir(dir1) if Dir.exist?(dir1)
-    Dir.mkdir(dir1)
-    Dir.chdir(dir1)
-    `gin`
-  end
-
   def write_tiddlers(time=nil, noisy=true, message=edition)
     # byebug if $dd
     dir = Dir.pwd
@@ -427,16 +412,6 @@ class Splitter
       `gcaa #{message}`
     end
     Dir.chdir(dir)
-  end
-
-  def sync
-    Splitter.mkdir(Splitter.dir2)
-    root_wiki = Splitter.new("#{@backup_area}/#{@browser_edition}")
-    root_wiki.write_tiddlers
-    write_tiddlers
-    root_wiki.add_tiddlers(File.read(changes_file))
-    `git checkout HEAD^; git checkout -b clash`
-    root_wiki.write_tiddlers(nil, true, "unsaved changes")
   end
 
   def content_from(lines, dedup=false)

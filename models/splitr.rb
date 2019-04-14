@@ -82,6 +82,13 @@ class Splitr < Splitter
     end
   end
 
+  def self.mkdir(dir1="/Users/rd/rf/tiddlers3")
+    FileUtils.remove_dir(dir1) if Dir.exist?(dir1)
+    Dir.mkdir(dir1)
+    Dir.chdir(dir1)
+    `gin`
+  end
+
   def self.test_write
     mkdir
     write_sample('/Users/rd/rf/_history/_backup', 1, true)
