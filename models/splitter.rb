@@ -1,7 +1,6 @@
 # splitter.rb
 
 require 'tiddler'
-require 'tiddler_links'
 require 'json'
 require 'fileutils'
 require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
