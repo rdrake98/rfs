@@ -98,14 +98,5 @@ class App < Roda
       data = REPO.graph_data(r.params["x"]&.to_i)
       view('graph', locals: {chartkick: chartkick, data: data})
     end
-
-    r.get "sync" do
-      WIKIS["fat"].sync
-    end
-
-    r.get "force" do
-      reload # fat only for now
-      "hopefully not lost anything"
-    end
   end
 end
