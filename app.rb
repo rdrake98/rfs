@@ -29,7 +29,7 @@ class App < Roda
         wiki = WIKIS[type]
         message = "#{p['title']} #{p['action']} in #{type}"
         puts message
-        wiki.add_changes(p['changes'], p['shared'] == "true") if wiki
+        wiki&.add_changes(p['changes'], p['shared'] == "true")
         message
       end
 
