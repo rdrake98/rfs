@@ -69,7 +69,7 @@ class Tiddler
     self.changecount = changecount.to_i + 1
   end
 
-  def merge_content content, modified, changecount
+  def merge_content content, modified, changecount # not used but keep
     return if @content == content
     @content = content
     self.modifier = "RubyMerge"
