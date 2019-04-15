@@ -390,9 +390,10 @@ class Splitter
   def update_code(testing=false)
     puts "changing code for #{@filename}"
     puts @code.size
+    byebug if $dd
     @code = cstring("code")
     puts @code.size
-    inject_tests(testing) unless testing == :none
+    inject_tests(testing) if testing
     write("")
   end
 
