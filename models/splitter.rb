@@ -396,24 +396,6 @@ class Splitter
     write("")
   end
 
-  def write_tiddlers(time=nil, noisy=true, message=edition)
-    # byebug if $dd
-    dir = Dir.pwd
-    Dir.chdir(Splitter.dir)
-    FileUtils.rm Dir.glob('*.txt')
-    puts "writing #{message}" if noisy
-    tiddlers.each(&:write)
-    puts "committing #{message}" if noisy
-    if time
-      git_time = time.to_s[0..-7]
-      pre = "git add .; GIT_COMMITTER_DATE="
-      `#{pre}"#{git_time}" git commit -m #{message} --date "#{git_time}"`
-    else
-      `gcaa #{message}`
-    end
-    Dir.chdir(dir)
-  end
-
   def content_from(lines, dedup=false)
     lines = lines[7..-1]
     if dedup

@@ -56,6 +56,26 @@ class Splitr < Splitter
     end
   end
 
+  def self.dir; "/Users/rd/rf/tiddlers3"; end
+
+  def write_tiddlers(time=nil, noisy=true, message=edition)
+    # byebug if $dd
+    dir = Dir.pwd
+    Dir.chdir(Splitr.dir)
+    FileUtils.rm Dir.glob('*.txt')
+    puts "writing #{message}" if noisy
+    tiddlers.each(&:write)
+    puts "committing #{message}" if noisy
+    if time
+      git_time = time.to_s[0..-7]
+      pre = "git add .; GIT_COMMITTER_DATE="
+      `#{pre}"#{git_time}" git commit -m #{message} --date "#{git_time}"`
+    else
+      `gcaa #{message}`
+    end
+    Dir.chdir(dir)
+  end
+
   def self.write_sample(dir, step=1, writing=false, start_string=nil)
     $last_save ||= Time.new(0)
     Dir.chdir(dir)
@@ -82,7 +102,7 @@ class Splitr < Splitter
     end
   end
 
-  def self.mkdir(dir1="/Users/rd/rf/tiddlers3")
+  def self.mkdir(dir1=dir)
     FileUtils.remove_dir(dir1) if Dir.exist?(dir1)
     Dir.mkdir(dir1)
     Dir.chdir(dir1)
