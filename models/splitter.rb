@@ -386,10 +386,14 @@ class Splitter
   def update_code(testing=nil)
     puts "changing code for #{@filename}"
     puts @code.size
-    @code = File.read("#{ENV['compiled']}/code.js")
-    puts @code.size
+    new_code = File.read("#{ENV['compiled']}/code.js")
+    same = @code == new_code
+    @code = new_code
+    puts same ? "code unchanged" : @code.size
+    backup unless same
+    old_before = @before
     inject_tests(testing) unless testing == nil
-    write("")
+    write("") unless same && @before == old_before
   end
 
   def self.check_tiddlers(fixed=true)
