@@ -383,16 +383,12 @@ class Splitter
     @before = lines.join_n
   end
 
-  def cstring(source)
-    File.read("#{ENV['compiled']}/#{source}.js")
-  end
-
-  def update_code(testing=false)
+  def update_code(testing=nil)
     puts "changing code for #{@filename}"
     puts @code.size
-    @code = cstring("code")
+    @code = File.read("#{ENV['compiled']}/code.js")
     puts @code.size
-    inject_tests(testing) if testing
+    inject_tests(testing) unless testing == nil
     write("")
   end
 
