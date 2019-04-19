@@ -393,7 +393,9 @@ class Splitter
     backup unless same
     old_before = @before
     inject_tests(testing) unless testing == nil
-    write("") unless same && @before == old_before
+    same &&= @before == old_before
+    write("") unless same
+    !same
   end
 
   def self.check_tiddlers(fixed=true)
