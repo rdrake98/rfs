@@ -60,9 +60,6 @@ class App < Roda
           unlink = p['unlink'] == "true"
           overlink = p['overlink'] == "true"
           new_text, replacer = wiki[title].link(name, target, unlink, overlink)
-          same = new_text == p['newText']
-          puts "** difference with JavaScript **" unless same
-          response["compare"] = same ? "same" : "different"
           response["newText"] = new_text
           response["replacer"] = replacer
         end
