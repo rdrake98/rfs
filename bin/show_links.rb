@@ -3,7 +3,7 @@
 require 'external_link'
 require 'json'
 
-json = File.read('../link_data/s190811_213447.json')[2..-2]
+json = File.read('../link_data/backups/s190811_213447.json')[2..-2]
 puts "#{json.size} bytes of json"
 backup = JSON.parse(json)
 sessions = backup["sessions"]
