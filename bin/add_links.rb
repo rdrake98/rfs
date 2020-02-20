@@ -2,19 +2,22 @@
 
 require 'external_link'
 require 'json'
+require 'tiddler'
 
 Dir.chdir('../link_data/exports')
 names = Dir.glob("*.txt").reverse
-contents = names.map {|n| File.read(n)[2..-1]}
-target = contents.find {|c| c.lines[0].chomp == ARGV[0]}
-return unless target
-puts target&.size
-
-# puts "#{json.size} bytes of json"
-# backup = JSON.parse(json)
-# sessions = backup["sessions"]
-# puts "#{sessions.size} sessions"
-# sessions.group_by {|s| s["type"]}.each {|t, list| puts "#{t} #{list.size}"}
-# current = sessions[0]
-# windows = current["windows"]
-# puts "#{windows.size} windows in current session"
+name = names.find {|n| File.read(n).lines[0][2..-2] == ARGV[0]}
+print ARGV[0]
+unless name
+  puts(" not found")
+  return
+end
+puts
+puts name
+`cp #{name} ../steps/exports`
+lines = File.read(name).lines[1..-1]
+fml = lines.each_slice(3).map {|s| "[[#{s[1].strip}|#{s[2].strip}]]"}
+fml = fml.join("\n")
+tiddler_name = ARGV[1] || ARGV[0]
+Dir.chdir("../steps/fml")
+Tiddler.new(nil, tiddler_name, fml).write
