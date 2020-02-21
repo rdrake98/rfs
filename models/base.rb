@@ -20,6 +20,13 @@ def run(command)
   set_args(args)
 end
 
+def runl(command)
+ tokens = command.split /\s/
+ args = set_args(tokens[1..-1])
+ load tokens[0]
+ set_args(args)
+end
+
 def snip(original_file)
   original_file = ENV["TM_FILEPATH"] || original_file || ENV["PWD"] + "/"
   original_file = ENV["PWD"] + "/" + original_file if original_file[0..0] != "/"
