@@ -255,6 +255,16 @@ class Tiddler
     readable
   end
 
+  def write_mini
+    readable = []
+    readable << title
+    readable << modified
+    readable << ""
+    readable << content
+    readable = readable.join("\n")
+    File.write(filename, readable + "\n")
+  end
+
   def test_null
     result = WikifierNull.new(@content, @wiki).wikify
     puts @content.size

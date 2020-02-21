@@ -19,5 +19,5 @@ fml = lines.each_slice(3).map {|s| "[[#{s[1].strip}|#{s[2].strip}]]"}
 fml = fml.join("\n")
 tiddler_name = ARGV[1] || ARGV[0]
 Dir.chdir("../steps/fml")
-Tiddler.new(nil, tiddler_name, fml).write
+Tiddler.new(nil, tiddler_name, fml).write_mini
 puts tiddler_name
