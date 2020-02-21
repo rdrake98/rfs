@@ -260,9 +260,13 @@ class Splitter
     @host == "p" ? "g" : "p"
   end
 
-  def other_changes
-    commit_changes_file("before plusChanges* on startup", false)
-    File.read(shared_changes_file(other_host))
+  def other_changes(change_type)
+    if change_type == "wiki"
+      commit_changes_file("before plusChanges* on startup", false)
+      File.read(shared_changes_file(other_host))
+    else
+      "[]"
+    end
   end
 
   def commit_changes_file(message, blank_shared=true)
