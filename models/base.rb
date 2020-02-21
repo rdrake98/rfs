@@ -23,7 +23,7 @@ end
 def runl(command)
  tokens = command.split /\s/
  args = set_args(tokens[1..-1])
- load tokens[0]
+ load "bin/#{tokens[0]}.rb"
  set_args(args)
 end
 

@@ -255,11 +255,20 @@ class Tiddler
     readable
   end
 
-  def write_mini
+  def googleWords(title)
+    words = @wiki.splitName(title)
+    "[[#{words}|http://www.google.com/search?q=#{words.gsub(' ', '+')}]]"
+  end
+
+  def write_mini(googling)
     readable = []
     readable << title
     readable << modified
     readable << ""
+    if googling
+      readable << "Try googling for #{googleWords(title)}"
+      readable << ""
+    end
     readable << content
     readable = readable.join("\n")
     File.write(filename, readable + "\n")

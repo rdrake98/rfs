@@ -1,6 +1,5 @@
 # show_links.rb
 
-require 'external_link'
 require 'json'
 
 json = File.read('../link_data/backups/s190811_213447.json')[2..-2]
