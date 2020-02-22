@@ -219,6 +219,7 @@ class Tiddler
   def output
     $t = @title if $t1 || $d
     @output ||= Tiddler.output(@content, @wiki)
+    # puts @output if $dd
   end
 
   def Tiddler.html(title, output)

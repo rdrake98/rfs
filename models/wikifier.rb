@@ -45,6 +45,7 @@ class Wikifier
       end
     end
 
+    # byebug if $dd
     a.href = href
     a.title = "External link to #{link}"
     a.target = "_blank" if !txmt

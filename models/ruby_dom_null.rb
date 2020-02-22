@@ -1,4 +1,4 @@
-# ruby_dom.rb
+# ruby_dom_null.rb
 
 require 'ruby_dom'
 
