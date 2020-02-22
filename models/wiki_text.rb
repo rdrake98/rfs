@@ -32,7 +32,7 @@ class WikiText
     @blanked
   end
 
-  def isWikiLink(name)
+  def self.isWikiLink(name)
     name =~ /^#{Regex.wikiLink}$/
   end
 
@@ -41,8 +41,8 @@ class WikiText
     _Name = name.gsub(/\w+/) {|s| s[0] = s[0].upcase; s}
     justOne = name == _Name
     wikiName = _Name.gsub(/\W/,"")
-    wikiName = isWikiLink(wikiName) && wiki.splitName(wikiName) == _Name ?
-      wikiName : nil
+    wikiName = WikiText.isWikiLink(wikiName) &&
+      wiki.splitName(wikiName) == _Name ? wikiName : nil
     justWiki = wikiName == name
     minimalName = wikiName || _Name
     Names.new(name, _Name, justOne, wikiName, justWiki, minimalName)

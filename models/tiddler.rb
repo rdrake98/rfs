@@ -109,7 +109,11 @@ class Tiddler
       name[-1] == "=" && !args[0].nil? ? self[name[0..-2]] = args[0] : nil
   end
 
-  def wiki_link
+  def to_link
+    WikiText.isWikiLink(@title) ? @title : lazy_link
+  end
+
+  def lazy_link
     "[[#{splitname}]]"
   end
 
