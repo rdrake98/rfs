@@ -89,8 +89,7 @@ class App < Roda
         else
           `cp $#{type} #{ENV['data']}/#{type}_.html`
           File.write("#{ENV['data']}/#{type}_output.html", p['output'])
-          File.write("#{ENV['data']}/#{type}_links.txt", p['links'])
-          puts "#{type}_, #{type}_output and #{type}_links written"
+          puts "#{type}_ and #{type}_output written"
           "seed success"
         end
       end
