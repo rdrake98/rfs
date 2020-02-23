@@ -19,8 +19,8 @@ class RubyDOM
   end
 
   def []= name, value
-    full_escaping = name != "title" && name != "tiddlylink" && name != "href"
-    @attributes << " #{Tiddler.attribute_phrase name, value, full_escaping}"
+    no_escaping = name.in? %w[title tiddlylink href]
+    @attributes << " #{Tiddler.attribute_phrase name, value, !no_escaping}"
   end
 
   def [] name

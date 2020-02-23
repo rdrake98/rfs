@@ -115,6 +115,12 @@ def show_cmd(cmd, multi_line=nil)
   show cmd, `#{cmd}`, multi_line
 end
 
+class Object
+  def in?(collection)
+    collection.include?(self)
+  end
+end
+
 class String
   def wikiize
     self[0..0].upcase + self[1..-1]
