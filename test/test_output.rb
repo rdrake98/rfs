@@ -4,7 +4,7 @@ require 'minitest/autorun'
 require 'splitter'
 
 class TestOutput < MiniTest::Test
-  few = ARGV[0] == "few"
+  few = ARGV[0] == "few" || !ARGV[0]
   type = !few && ARGV[0] || "dev"
   wiki_path = "#{ENV['data']}/#{type}_.html"
   path = "#{ENV['data']}/#{type}_output.html"
