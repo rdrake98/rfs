@@ -4,14 +4,6 @@ require 'splitter'
 
 wiki_path = "#{ENV['data']}/fat_.html"
 path = "#{ENV['data']}/fat_output.html"
-if ARGV[0]&.downcase == "c"
-  if File.read(wiki_path) == File.read(ENV["fat"])
-    puts "#{wiki_path} is up to date"
-  else
-    puts "#{Splitter.fat.tiddlers.size} tiddlers in current fat"
-    puts "please seed from javascript"
-  end
-end
 wiki = Splitter.new(wiki_path)
 size = wiki.tiddlers.size
 puts "#{size} tiddlers"

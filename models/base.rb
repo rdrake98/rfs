@@ -21,10 +21,10 @@ def run(command)
 end
 
 def runl(command)
- tokens = command.split /\s/
- args = set_args(tokens[1..-1])
- load "bin/#{tokens[0]}.rb"
- set_args(args)
+  tokens = command.split /\s/
+  args = set_args(tokens[1..-1])
+  load "bin/#{tokens[0]}.rb"
+  set_args(args)
 end
 
 def snip(original_file)
