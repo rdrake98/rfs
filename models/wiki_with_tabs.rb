@@ -2,7 +2,7 @@
 
 require 'splitter'
 require 'link_analysis'
-require 'tiddler_links'
+require 'file_links'
 
 class WikiWithTabs
   attr_reader :wiki
@@ -22,22 +22,6 @@ class WikiWithTabs
 
   def WikiWithTabs.jan(wiki_file=nil)
     new("o160129", wiki_file)
-  end
-
-  def WikiWithTabs.oct(wiki_file=nil)
-    new("o161024", wiki_file)
-  end
-
-  def WikiWithTabs.jan17(wiki_file=nil)
-    new("t170129", wiki_file)
-  end
-
-  def WikiWithTabs.feb17a(wiki_file=nil)
-    new("t170204", wiki_file)
-  end
-
-  def WikiWithTabs.jun17(wiki_file=nil)
-    new("t170621", wiki_file, true)
   end
 
   def WikiWithTabs.today(wiki_file=nil)
