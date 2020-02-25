@@ -300,19 +300,6 @@ class Splitter
     self[title] = Tiddler.new(self, title, content, split) unless self[title]
   end
 
-  def reduce_externals(mg_list, mp_lists)
-    tiddler = self[mg_list]
-    external_links = TiddlerLinks.new(tiddler)
-    puts external_links.urls.size
-    mp_lists.each do |title|
-      urls = TiddlerLinks.new(self[title]).urls
-      puts "- #{urls.size}"
-      external_links.reduce(urls)
-      puts external_links.urls.size
-    end
-    tiddler.content = external_links.content
-  end
-
   def contents
     @before + tiddlers.map(&:div_text).join + @mid + @code + @after
   end

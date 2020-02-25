@@ -1,4 +1,4 @@
-# show_links.rb
+# add_links.rb
 
 require 'splitter'
 
