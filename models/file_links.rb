@@ -5,7 +5,7 @@ require 'external_link'
 class ContentLinks
   attr_accessor :lines
   def initialize(content)
-    @lines = content.lines.map { |line| ExternalLink.new(line) } # in
+    @lines = content.lines.map { |line| ExternalLinkLine.new(line) } # in
   end
 
   def urls

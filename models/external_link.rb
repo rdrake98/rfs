@@ -1,12 +1,11 @@
 # external_link.rb
 
 class ExternalLink
-  attr_reader :content, :url, :text
+  attr_reader :url, :text
   attr_accessor :wanted
 
-  def initialize(content)
-    @content = content
-    @url, @text = content =~ /^\[\[(.*)\|(.*)\]\]/ && [$2, $1]
+  def initialize(url, text)
+    @url, @text = url, text
     @wanted = !@url.nil?
   end
 
@@ -32,5 +31,15 @@ class ExternalLink
 
   def pre_hash_matches?(url2)
     pre_hash && url2.start_with?(@pre_hash) || before_hash(url2) == @url
+  end
+end
+
+class ExternalLinkLine < ExternalLink
+  attr_reader :content
+
+  def initialize(content)
+    @content = content
+    url, text = content =~ /^\[\[(.*)\|(.*)\]\]/ && [$2, $1]
+    super(url, text)
   end
 end

@@ -2,7 +2,7 @@
 
 require 'splitter'
 
-Dir.chdir('../link_data/exports')
+Dir.chdir('/Users/rd/Dropbox/_shared/link_data/exports')
 names = Dir.glob("*.txt").reverse
 googling = false
 ARGV.each_with_index do |arg, i|
@@ -22,11 +22,11 @@ name = names.find {|n| File.read(n).lines[0][2..-2] == ARGV[0]}
 print ARGV[0]
 unless name
   puts(" not found")
-  Dir.chdir("../../rfs")
+  Dir.chdir("/Users/rd/rf/rfs")
   return
 end
 puts "", name
-`cp #{name} ../steps/exports`
+`cp #{name} ~/rf/link_data/steps/exports`
 lines = File.read(name).lines[1..-1]
 fml = lines.each_slice(3).map {|s| "[[#{s[1].strip}|#{s[2].strip}]]"}
 fml = fml.join("\n")
@@ -38,6 +38,6 @@ if googling
   puts "dev" if dev
   wiki = dev ? Splitter.dev : Splitter.fat
 end
-Dir.chdir("../steps/fml")
+Dir.chdir("/Users/rd/rf/link_data/steps/fml")
 Tiddler.new(wiki, tiddler_name, fml).write_mini(googling)
 Dir.chdir("../../../rfs")
