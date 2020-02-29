@@ -23,7 +23,7 @@ end
 puts "", name
 `cp #{name} ~/rf/link_data/steps/exports`
 lines = File.read(name).lines[1..-1]
-fml = lines.each_slice(3).map {|s| s[1].strip.link(s[2].strip)}.join("\n")
+fml = lines.each_slice(3).map {|s| s[1].strip.link(s[2].strip)}.join_n
 tiddler_name = ARGV[1] || ARGV[0]
 puts tiddler_name
 wiki = nil
