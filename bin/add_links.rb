@@ -2,17 +2,17 @@
 
 require 'splitter'
 
-Dir.chdir('/Users/rd/Dropbox/_shared/link_data/exports')
-names = Dir.glob("*.txt").reverse
-googling = false
-dev = false
+googling = dev = false
 ARGV.each_with_index do |arg, i|
   if arg[0] == "-"
     googling = "g".in? arg
     dev = "d".in? arg
     ARGV.delete_at(i)
+    break
   end
 end
+Dir.chdir('/Users/rd/Dropbox/_shared/link_data/exports')
+names = Dir.glob("*.txt").reverse
 name = names.find {|n| File.read(n).lines[0][2..-2] == ARGV[0]}
 print ARGV[0]
 unless name
