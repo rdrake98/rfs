@@ -5,16 +5,11 @@ require 'splitter'
 Dir.chdir('/Users/rd/Dropbox/_shared/link_data/exports')
 names = Dir.glob("*.txt").reverse
 googling = false
-ARGV.each_with_index do |arg, i|
-  if arg == "-g"
-    googling = true
-    ARGV.delete_at(i)
-  end
-end
 dev = false
 ARGV.each_with_index do |arg, i|
-  if arg == "-d"
-    dev = true
+  if arg[0] == "-"
+    googling = "g".in? arg
+    dev = "d".in? arg
     ARGV.delete_at(i)
   end
 end
@@ -28,8 +23,7 @@ end
 puts "", name
 `cp #{name} ~/rf/link_data/steps/exports`
 lines = File.read(name).lines[1..-1]
-fml = lines.each_slice(3).map {|s| "[[#{s[1].strip}|#{s[2].strip}]]"}
-fml = fml.join("\n")
+fml = lines.each_slice(3).map {|s| s[1].strip.link(s[2].strip)}.join("\n")
 tiddler_name = ARGV[1] || ARGV[0]
 puts tiddler_name
 wiki = nil
