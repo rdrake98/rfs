@@ -271,7 +271,7 @@ class Splitter
           "title": lines[0].chomp,
           "modified": lines[1].chomp,
           "modifier": "RubyLinks",
-          "text": lines[3..-1].join.gsub(/\s+\z/, ""),
+          "text": lines[3..-1].join.gsub(/( +$|\s+\z)/, ""),
         }
       end.to_json
     end
