@@ -2,7 +2,8 @@
 
 require 'json'
 
-json = File.read('../link_data/backups/s190811_213447.json')[2..-2]
+dir = "/Users/rd/Dropbox/_shared/link_data_copy_2"
+json = File.read("#{dir}/backups/s190811_213447.json")[2..-2]
 puts "#{json.size} bytes of json"
 backup = JSON.parse(json)
 sessions = backup["sessions"]
