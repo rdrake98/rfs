@@ -8,7 +8,7 @@ class Splitr < Splitter
     @filename = filename
     @tiddler_hash = {}
     @tiddler_splits = {}
-    @host = mp? ? "p" : "g"
+    @host = hostc
     open(filename) do |file|
       @before = ""
       until (line = file.gets) =~ /<div id="storeArea">/

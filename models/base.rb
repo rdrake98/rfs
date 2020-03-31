@@ -4,6 +4,7 @@ require 'cgi'
 require 'stringio'
 
 def mp?; `hostname`[0..1] == "mp"; end
+def hostc; mp? ? "p" : "g"; end
 def jem?; Dir.pwd != "/Users/rd/rf/rfs"; end
 
 def set_args(args)

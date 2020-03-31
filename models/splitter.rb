@@ -25,7 +25,7 @@ class Splitter
     @tiddler_hash = {}
     @tiddler_splits = {}
     @store = ""
-    @host = mp? ? "p" : "g"
+    @host = hostc
     return unless filename
     open(filename) do |file|
       @before = ""
