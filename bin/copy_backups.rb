@@ -2,9 +2,7 @@
 
 require 'base'
 
-def s6(name, i)
-  name[i..i+1] + name[i+3..i+4] + name[i+6..i+7]
-end
+def s6(name, i); name[i..i+1] + name[i+3..i+4] + name[i+6..i+7]; end
 
 from = '/Users/rd/Downloads'
 to = "~/rf/link_data/copied"
