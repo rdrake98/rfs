@@ -2,12 +2,12 @@
 
 require 'json'
 
-dir = "/Users/rd/Dropbox/_shared/link_data"
-json = File.read("#{dir}/backups/s200402.232908p.js")[2..-1]
-puts "#{json.size} bytes of json"
+Dir.chdir("/Users/rd/Dropbox/_shared/link_data/backups")
+names = Dir.glob("s*p.js").sort.reverse
+json = File.read(names[0])[2..-1]
+puts "#{names[0][0..-4]}: #{(json.size/1000000.0).round(2)}MB"
 sessions = JSON.parse(json)["sessions"]
-puts "#{sessions.size} sessions"
 windows = sessions[0]["windows"]
-puts "#{windows.size} windows in current session"
+puts "#{sessions.size} sessions, #{windows.size} windows in current"
 tabs = windows[0]["tabs"]
 puts tabs[-1]
