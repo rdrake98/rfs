@@ -8,7 +8,7 @@ Dir.glob("s*p.js").sort.each do |name|
   sessions = JSON.parse(json)["sessions"]
   windows = sessions[0]["windows"]
   tab = windows[0]["tabs"][-1]
-  puts "#{name[0..-4]}: #{'%.3g' % (json.size/1000000.0)}MB, " +
-    "#{sessions.size} sessions, #{windows.size} windows in current"
+  puts "%s: %.3gMB, %s sessions, %s windows in current" %
+    [name[0..-4], (json.size/1000000.0), sessions.size, windows.size]
   puts [tab['windowId'], tab['index'], tab['id'], tab['title']].join(", "), ""
 end
