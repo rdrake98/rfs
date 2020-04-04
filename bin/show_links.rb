@@ -9,3 +9,5 @@ sessions = JSON.parse(json)["sessions"]
 puts "#{sessions.size} sessions"
 windows = sessions[0]["windows"]
 puts "#{windows.size} windows in current session"
+tabs = windows[0]["tabs"]
+puts tabs[-1]
