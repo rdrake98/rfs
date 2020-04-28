@@ -12,11 +12,4 @@ class WikiWithTabsSB < WikiWithTabs
     @file_links = windows.map {|window| FileLinksSB.new(window)}
     super(nil, wiki_file)
   end
-
-  def show_reductions
-    p initial_reduce
-    # p second_reduce
-    # p qs_reduce
-    # p hashes_reduce
-  end
 end
