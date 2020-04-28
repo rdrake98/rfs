@@ -8,12 +8,16 @@ class ContentLinks
     @lines = content.lines.map { |line| ExternalLinkLine.new(line) } # in
   end
 
+  def wanted_lines
+    @lines.select(&:wanted)
+  end
+
   def urls
-    @lines.select(&:wanted).map &:url
+    wanted_lines.map &:url
   end
 
   def content
-    @lines.select(&:wanted).collect(&:content).join
+    wanted_lines.collect(&:content).join
   end
 end
 
@@ -59,5 +63,9 @@ class FileLinksSB < ContentLinks
 
   def write
     print "#{@lines.size}, "
+  end
+
+  def purge
+    @lines = wanted_lines
   end
 end
