@@ -43,3 +43,9 @@ class ExternalLinkLine < ExternalLink
     super(url, text)
   end
 end
+
+class ExternalLinkSB < ExternalLink
+  def initialize(tab)
+    super(tab["url"], tab["title"])
+  end
+end

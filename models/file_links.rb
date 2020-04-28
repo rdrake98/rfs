@@ -51,3 +51,13 @@ class FileLinks < ContentLinks
     "#{group}#{number}"
   end
 end
+
+class FileLinksSB < ContentLinks
+  def initialize(window)
+    @lines = window["tabs"].map {|tab| ExternalLinkSB.new(tab)}
+  end
+
+  def write
+    print "#{@lines.size}, "
+  end
+end
