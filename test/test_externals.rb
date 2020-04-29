@@ -1,11 +1,12 @@
 # test_externals.rb
 
 require 'minitest/autorun'
-require 'wiki_with_tabs'
+require 'wiki_with_tabs_sb'
 
 class TestExternals < MiniTest::Test
 
-  wiki_with_tabs = WikiWithTabs.jan("#{ENV['data']}/f160117.041732g.html")
+  wiki_with_tabs = WikiWithTabs.jan("f160117.041732g")
+  wiki_with_tabs_sb = WikiWithTabsSB.new("s200428.013610p.js", "f200427.235854p")
   wiki = wiki_with_tabs.wiki
 
   describe "basics" do
@@ -33,6 +34,13 @@ class TestExternals < MiniTest::Test
         assert_equal [722, 120, 9], wiki_with_tabs.qs_reduce
         assert_equal [713, 61, 13], wiki_with_tabs.hashes_reduce
       end
+    end
+
+    it "should reduce internally and from wiki sb" do
+      assert_equal [148, 146, 141, 7], wiki_with_tabs_sb.initial_reduce
+      assert_equal [141, 103, 38], wiki_with_tabs_sb.second_reduce
+      assert_equal [103, 23, 7], wiki_with_tabs_sb.qs_reduce
+      assert_equal [96, 13, 3], wiki_with_tabs_sb.hashes_reduce
     end
   end
 end

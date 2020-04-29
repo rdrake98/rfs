@@ -62,7 +62,7 @@ class FileLinksSB < ContentLinks
   end
 
   def write
-    print "#{@lines.size}, "
+    # print "#{@lines.size}, "
   end
 
   def purge

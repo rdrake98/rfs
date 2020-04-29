@@ -8,7 +8,8 @@ class WikiWithTabs
   attr_reader :wiki
   def initialize(branch, wiki_file, two_level=false)
     @branch = branch
-    @wiki = wiki_file ? Splitter.new(wiki_file) : Splitter.fat
+    @wiki = wiki_file ?
+      Splitter.new("#{ENV['data']}/#{wiki_file}.html") : Splitter.fat
     @two_level = two_level
   end
 

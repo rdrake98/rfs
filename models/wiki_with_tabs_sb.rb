@@ -3,7 +3,7 @@
 require 'wiki_with_tabs'
 
 class WikiWithTabsSB < WikiWithTabs
-  def initialize(sb_file="s200428.013610p.js", wiki_file=nil)
+  def initialize(sb_file, wiki_file=nil)
     Dir.chdir("/Users/rd/Dropbox/_shared/link_data/backups")
     json = File.read(sb_file)[2..-1]
     windows = JSON.parse(json)["sessions"][0]["windows"]
