@@ -11,7 +11,7 @@ ARGV.each_with_index do |arg, i|
     break
   end
 end
-Dir.chdir('/Users/rd/Dropbox/_shared/link_data/exports')
+Dir.chdir(ENV['tab_exports'])
 names = Dir.glob("*.txt").reverse
 name = names.find {|n| File.read(n).lines[0][2..-2] == ARGV[0]}
 print ARGV[0]

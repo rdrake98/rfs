@@ -2,7 +2,7 @@
 
 require 'json'
 
-Dir.chdir("/Users/rd/Dropbox/_shared/link_data/backups")
+Dir.chdir(ENV['tab_backups'])
 Dir.glob("s*p.js").sort.each do |name|
   json = File.read(name)[2..-1]
   sessions = JSON.parse(json)["sessions"]

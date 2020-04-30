@@ -9,4 +9,4 @@ to = "~/rf/link_data/copied"
 Dir.glob("session_buddy_backup_*.json").sort.each do |name|
   `cp -p #{name} #{to}/s#{s6(name, 23)}.#{s6(name, 32)}#{hostc}.js`
 end
-puts `rsync -a --out-format=%n%L #{to}/* ~/Dropbox/_shared/link_data/backups/`
+puts `rsync -a --out-format=%n%L #{to}/* $tab_backups/`
