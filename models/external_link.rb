@@ -48,4 +48,8 @@ class ExternalLinkSB < ExternalLink
   def initialize(tab)
     super(tab["url"], tab["title"])
   end
+
+  def content
+    @text.link(@url)
+  end
 end
