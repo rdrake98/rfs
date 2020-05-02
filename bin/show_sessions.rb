@@ -1,4 +1,4 @@
-# show_links.rb
+# show_sessions.rb
 
 require 'json'
 
