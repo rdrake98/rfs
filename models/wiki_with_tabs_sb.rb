@@ -15,4 +15,10 @@ class WikiWithTabsSB < WikiWithTabs
   def file_links
     @file_links.each(&:purge)
   end
+
+  def show_tabs
+    sb = @wiki.write_sb
+    `open #{sb[0]}`
+    sb
+  end
 end

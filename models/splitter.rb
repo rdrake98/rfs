@@ -446,12 +446,17 @@ class Splitter
     titles = titles + recent - censored
     divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
     tiny_wiki = @before + divs + @mid + @code + @after
-    File.write("/Users/rd/rf/tinys/#{file}.html", tiny_wiki)
-    [titles.size, tiny_wiki.size]
+    filename = "#{ENV['tinys']}/#{file}.html"
+    File.write(filename, tiny_wiki)
+    [filename, titles.size, tiny_wiki.size]
   end
 
   def write_empty
     write_tiny(DefaultTiddlers: "GettingStarted", SiteTitle: "m")
+  end
+
+  def write_sb
+    write_tiny({DefaultTiddlers: "GettingStarted", SiteTitle: "sb"}, [], "sb")
   end
 
   def write_selected(titles, file, expand=false)
