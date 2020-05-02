@@ -50,6 +50,6 @@ class ExternalLinkSB < ExternalLink
   end
 
   def content
-    @text.link(@url)
+    @text.link(@url) + "\n"
   end
 end
