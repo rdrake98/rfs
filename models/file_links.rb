@@ -57,7 +57,9 @@ class FileLinks < ContentLinks
 end
 
 class FileLinksSB < ContentLinks
+  attr_accessor :id
   def initialize(window)
+    @id = window["id"]
     @lines = window["tabs"].map {|tab| ExternalLinkSB.new(tab)}
   end
 

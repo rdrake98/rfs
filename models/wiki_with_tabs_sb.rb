@@ -17,13 +17,18 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def show_tabs
-    sb = @wiki.write_sb
-    tabs_wiki = Splitter.new(sb[0])
+    file = @wiki.write_sb[0]
+    tabs_wiki = Splitter.new(file)
     file_links.each_with_index do |win, i|
-      tabs_wiki.create_new("SB#{i}", win.content)
+      tabs_wiki.create_new("W1D#{win.id}", win.content)
     end
     tabs_wiki.write("")
-    `open #{sb[0]}`
-    sb
+    `open #{file}`
+    [tabs_wiki.tiddlers.size, tabs_wiki.contents.size]
   end
 end
+
+# p initial_reduce
+# p second_reduce
+# p qs_reduce
+# p hashes_reduce
