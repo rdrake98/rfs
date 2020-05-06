@@ -445,7 +445,7 @@ class Splitter
     titles = (config_titles + (expand ? expanded(selected) : selected)).uniq
     titles = titles + recent - censored
     divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
-    tiny_wiki = @before + divs + @mid + @code + @after
+    tiny_wiki = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
     filename = "#{ENV['tinys']}/#{file}.html"
     File.write(filename, tiny_wiki)
     [filename, titles.size, tiny_wiki.size]
@@ -456,7 +456,7 @@ class Splitter
   end
 
   def write_sb
-    write_tiny({DefaultTiddlers: "GettingStarted", SiteTitle: "sb"}, [], "sb")
+    write_tiny({DefaultTiddlers: "OtherOptions", SiteTitle: "sb"}, [], "sb")
   end
 
   def write_selected(titles, file, expand=false)
