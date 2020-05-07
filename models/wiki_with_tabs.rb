@@ -162,9 +162,6 @@ class WikiWithTabs
       wanted_lines[i+1..-1].each {|line2| line2.wanted &&= line2.url != url}
     end
     tabs_pages.each &:write
-    # lines.each do |line|
-    #   puts line.content if line.url.start_with?("https://www.movegb.com")
-    # end
     stats << lines.select(&:wanted).size << lines.reject(&:wanted).size
   end
 end
