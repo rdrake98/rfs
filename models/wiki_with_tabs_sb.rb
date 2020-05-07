@@ -17,6 +17,28 @@ class WikiWithTabsSB < WikiWithTabs
     @file_links.each(&:purge)
   end
 
+  def show_final_tabs
+    file = @wiki.write_sb[0]
+    tabs_wiki = Splitter.new(file)
+    initial_reduce
+    second_reduce
+    qs_reduce
+    hashes_reduce
+    puts file_links.size
+    wins = file_links.filter {|win| win.content.size > 0}
+    puts wins.size
+    tiddlers = []
+    wins.each_with_index do |win, i|
+      name = "WIN%02i" % (i+1)
+      tabs_wiki.create_new(name, win.content)
+      tiddlers << name
+    end
+    tabs_wiki["DefaultTiddlers"].content = tiddlers.join("\n")
+    tabs_wiki.write("")
+    `open #{file}`
+    [tabs_wiki.tiddlers.size, tabs_wiki.contents.size]
+  end
+
   def show_tabs
     file = @wiki.write_sb[0]
     tabs_wiki = Splitter.new(file)
