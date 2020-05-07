@@ -10,8 +10,16 @@ class WikiWithTabs
     @branch = branch
     @wiki = wiki_file ?
       Splitter.new("#{ENV['data']}/#{wiki_file}.html") : Splitter.fat
-    @spec = Splitter.new("#{ENV['data']}/spec.html")
     @two_level = two_level
+    @spec = Splitter.new("#{ENV['data']}/spec.html")
+    @stop_list = spec_for("StopListInitial")
+    @preambles = spec_for("PreamblesInitial")
+    @hash_preambles = spec_for("HashPreambles")
+    @q_preambles = spec_for("QPreambles")
+  end
+
+  def spec_for(title)
+    @spec[title].content.lines.map(&:chomp)
   end
 
   def two_level
@@ -79,20 +87,6 @@ class WikiWithTabs
     tabs_pages.map(&:lines).flatten
   end
 
-  def spec_for(title)
-    @spec[title].content.lines.map(&:chomp)
-  end
-
-  HASH_PREAMBLES = %w{
-    http://climateaudit.org
-    https://climateaudit.org
-    https://wattsupwiththat.com
-    https://judithcurry.com
-    https://ipccreport.wordpress.com
-    https://cliscep.com
-    https://groups.google.com
-  }
-
   def find_hashes_from_pages(tabs_pages)
     tiddlers = @wiki.tiddlers
     lines = all_lines(tabs_pages)
@@ -100,7 +94,7 @@ class WikiWithTabs
     hashes.each_with_index do |line, i|
       url = line.url
       pre_hash = line.pre_hash
-      line.wanted = HASH_PREAMBLES.any?{|preamble| url.start_with?(preamble)} ||
+      line.wanted = @hash_preambles.any?{|preamble| url.start_with?(preamble)} ||
       (!tiddlers.any? do |tiddler|
         tiddler.external_links.any?{|link|line.pre_hash_matches?(link[1])}
       end && !hashes[0...i].any? {|line2| line2.pre_hash == pre_hash})
@@ -116,30 +110,13 @@ class WikiWithTabs
     stats[0..2]
   end
 
-  Q_PREAMBLES = %w{
-    https://www.google.co.uk/search
-    https://www.google.com/search
-    https://groups.google.com/forum/
-    https://www.youtube.com/watch
-    https://twitter.com/search
-    https://www.biblegateway.com/passage/
-    http://queue.acm.org/detail.cfm
-    http://us11.campaign-archive2.com/
-    http://us4.campaign-archive2.com/
-    http://us4.campaign-archive1.com/
-    http://www.eureferendum.com/blogview.aspx
-    http://eureferendum.com/blogview.aspx
-    https://news.ycombinator.com/item
-    http://e360.yale.edu/content/feature.msp
-  }
-
   def find_qs_from_pages(tabs_pages)
     tiddlers = @wiki.tiddlers
     lines = all_lines(tabs_pages)
     qs = lines.select &:preamble
     qs.each_with_index do |line, i|
       preamble = line.preamble
-      line.wanted = Q_PREAMBLES.include?(preamble) ||
+      line.wanted = @q_preambles.include?(preamble) ||
       (!tiddlers.any? do |tiddler|
         tiddler.external_links.any?{|link|line.preamble_matches?(link[1])}
       end && !qs[0...i].any? {|line2| line2.preamble == preamble})
@@ -170,21 +147,6 @@ class WikiWithTabs
   end
 
   def initial_reduce
-    stop_list = %w{
-      file:///Users/rd/Dropbox/fatword.html
-      https://twitter.com/
-      https://twitter.com/rdrake98
-      https://twitter.com/following
-      https://twitter.com/followers
-      http://www.bishop-hill.net/
-      http://climateaudit.org/
-      https://climateaudit.org/
-      http://www.dailymail.co.uk/home/index.html
-      http://www.bbc.co.uk/news
-      http://www.bbc.co.uk/sport/0/
-      http://www.bbc.co.uk/iplayer
-      http://www.jewishworldreview.com/cols/sowell1.asp
-    }
     preambles = %w{
       about:
       http://localhost
@@ -204,7 +166,7 @@ class WikiWithTabs
     stats = [lines.size]
     lines.each do |line|
       url = line.url
-      line.wanted = !stop_list.include?(url) && !url.start_with?(*preambles)
+      line.wanted = !@stop_list.include?(url) && !url.start_with?(*@preambles)
     end
     wanted_lines = lines.select &:wanted
     stats << wanted_lines.size
