@@ -10,7 +10,7 @@ Dir.glob("s*.js").sort.each do |name|
   windows = JSON.parse(File.read(name)[2..-1])["sessions"][0]["windows"]
   tabs = windows.map {|win| win["tabs"]}.flatten.size
   machine = "m#{name[14]}"
-  time = DateTime.parse("#{name[1..6]} #{name[8..13]}").strftime("%d %b %H:%M")
+  time = DateTime.parse(name[1..13].gsub('.',' ')).strftime("%d %b %H:%M")
   puts "%s %s: %2d windows, %3d tabs" % [time, machine, windows.size, tabs]
 end
 puts names.size, names.uniq.size, names[0]
