@@ -10,6 +10,7 @@ class WikiWithTabs
     @branch = branch
     @wiki = wiki_file ?
       Splitter.new("#{ENV['data']}/#{wiki_file}.html") : Splitter.fat
+    @spec = Splitter.new("#{ENV['data']}/spec.html")
     @two_level = two_level
   end
 
@@ -76,6 +77,10 @@ class WikiWithTabs
 
   def all_lines(tabs_pages)
     tabs_pages.map(&:lines).flatten
+  end
+
+  def spec_for(title)
+    @spec[title].content.lines.map(&:chomp)
   end
 
   HASH_PREAMBLES = %w{
