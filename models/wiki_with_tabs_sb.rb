@@ -6,10 +6,15 @@ class WikiWithTabsSB < WikiWithTabs
   def initialize(name=nil, wiki_file=nil, spec=nil)
     @file_links = []
     Dir.chdir(ENV['tab_backups'])
-    name ||= Dir.glob("s*p.js").sort[-1]
-    tiddler_name = "S#{name[1..6]}#{name[8..9]}#{name[14]}N"
-    windows = JSON.parse(File.read(name)[2..-1])["sessions"][0]["windows"]
-    @file_links += windows.map {|window| FileLinksSB.new(window, tiddler_name)}
+    start = name.is_a?(Integer) ? name : -1
+    name = nil unless start == -1
+    names = name ? [name] : Dir.glob("s*.js").sort[start..-1]
+    names.each do |name|
+      tiddler = "S#{name[1..6]}#{name[14]}N#{name[8..9]}"
+      windows = JSON.parse(File.read(name)[2..-1])["sessions"][0]["windows"]
+      @file_links += windows.map {|window| FileLinksSB.new(window, tiddler)}
+    end
+    puts @file_links.size
     spec ||= "spec" unless wiki_file
     super(nil, wiki_file, false, spec)
   end
@@ -21,19 +26,36 @@ class WikiWithTabsSB < WikiWithTabs
   def show_final_tabs
     file = @wiki.write_sb[0]
     tabs_wiki = Splitter.new(file)
-    initial_reduce
-    second_reduce
-    qs_reduce
-    hashes_reduce
-    puts file_links.size
+    p initial_reduce
+    p second_reduce
+    p qs_reduce
+    p hashes_reduce
     wins = file_links.filter {|win| win.content.size > 0}
+    puts file_links.size
     puts wins.size
     tiddlers = []
     wins.each_with_index do |win, i|
-      name = win.name + "%02i" % (i+1)
-      tabs_wiki.create_new(name, win.content)
-      tiddlers << name
+      skipped = false
+      content = win.content
+      lines = content.lines.size
+      if tiddlers.size > 0 && lines < 40
+        prev = tiddlers[-1]
+        if prev[0..-4] == win.name
+          lines_already = tabs_wiki[prev].content.lines.size
+          if lines + lines_already < 44
+            tabs_wiki[prev].content += "--\n" + content
+            skipped = true
+          end
+        end
+      end
+      unless skipped
+        name = win.name + "%03i" % (i+1)
+        split = name[0..7] + " " + name[8..-1]
+        tabs_wiki.create_new(name, content, split)
+        tiddlers << name
+      end
     end
+    puts tiddlers.size
     tabs_wiki["DefaultTiddlers"].content = tiddlers.join("\n")
     tabs_wiki.write("")
     `open #{file}`
