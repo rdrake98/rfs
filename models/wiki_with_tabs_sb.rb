@@ -3,13 +3,13 @@
 require 'wiki_with_tabs'
 
 class WikiWithTabsSB < WikiWithTabs
-  def initialize(sb_file=nil, wiki_file=nil, spec=nil)
+  def initialize(name=nil, wiki_file=nil, spec=nil)
+    @file_links = []
     Dir.chdir(ENV['tab_backups'])
-    sb_file ||= Dir.glob("s*p.js").sort[-1]
-    name = "S#{sb_file[1..6]}#{sb_file[8..9]}#{sb_file[14]}N"
-    json = File.read(sb_file)[2..-1]
-    windows = JSON.parse(json)["sessions"][0]["windows"]
-    @file_links = windows.map {|window| FileLinksSB.new(window, name)}
+    name ||= Dir.glob("s*p.js").sort[-1]
+    tiddler_name = "S#{name[1..6]}#{name[8..9]}#{name[14]}N"
+    windows = JSON.parse(File.read(name)[2..-1])["sessions"][0]["windows"]
+    @file_links += windows.map {|window| FileLinksSB.new(window, tiddler_name)}
     spec ||= "spec" unless wiki_file
     super(nil, wiki_file, false, spec)
   end
