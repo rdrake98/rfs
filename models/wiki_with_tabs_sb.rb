@@ -14,7 +14,6 @@ class WikiWithTabsSB < WikiWithTabs
       windows = JSON.parse(File.read(name)[2..-1])["sessions"][0]["windows"]
       @file_links += windows.map {|window| FileLinksSB.new(window, tiddler)}
     end
-    puts @file_links.size
     spec ||= "spec" unless wiki_file
     super(nil, wiki_file, false, spec)
   end
@@ -31,8 +30,6 @@ class WikiWithTabsSB < WikiWithTabs
     p qs_reduce
     p hashes_reduce
     wins = file_links.filter {|win| win.content.size > 0}
-    puts file_links.size
-    puts wins.size
     tiddlers = []
     wins.each_with_index do |win, i|
       skipped = false
@@ -55,11 +52,11 @@ class WikiWithTabsSB < WikiWithTabs
         tiddlers << name
       end
     end
-    puts tiddlers.size
     tabs_wiki["DefaultTiddlers"].content = tiddlers.join("\n")
     tabs_wiki.write("")
     `open #{file}`
-    [tabs_wiki.tiddlers.size, tabs_wiki.contents.size]
+    [file_links.size, wins.size, tiddlers.size,
+      tabs_wiki.tiddlers.size, tabs_wiki.contents.size]
   end
 
   def show_tabs_being_reduced
