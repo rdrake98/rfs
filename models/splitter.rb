@@ -455,13 +455,20 @@ class Splitter
     write_tiny(DefaultTiddlers: "GettingStarted", SiteTitle: "m")
   end
 
+  def write_spec
+    write_selected(
+      %w[StopListInitial PreamblesInitial HashPreambles QPreambles],
+      "spec", false, "spec"
+    )
+  end
+
   def write_sb
     write_tiny({DefaultTiddlers: "OtherOptions", SiteTitle: "sb"}, [], "sb")
   end
 
-  def write_selected(titles, file, expand=false)
+  def write_selected(titles, file, expand=false, title="x")
     titles = titles.map(&:to_s)
-    configs = {DefaultTiddlers: titles.join("\n"), SiteTitle: "x"}
+    configs = {DefaultTiddlers: titles.join("\n"), SiteTitle: title}
     write_tiny(configs, titles, file, expand)
   end
 
