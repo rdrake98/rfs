@@ -148,20 +148,6 @@ class WikiWithTabs
   end
 
   def initial_reduce
-    preambles = %w{
-      about:
-      http://localhost
-      https://mail.google.com
-      https://accounts.google.com
-      http://www.premierleague.com
-      http://www.bbc.co.uk/weather
-      https://twitter.com/rdrake98/lists
-      https://twitter.com/i/
-      https://twitter.com/login?
-      https://twitter.com/?
-      http://ruby-doc.org
-      https://www.movegb.com
-    }
     tabs_pages = file_links
     lines = all_lines(tabs_pages)
     stats = [lines.size]
