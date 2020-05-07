@@ -300,6 +300,17 @@ class Splitter
     self[title] = Tiddler.new(self, title, content, split) unless self[title]
   end
 
+  def compress(title, gap=1)
+    ts = titles
+    i1 = ts.find_index(title)
+    i2 = i1 + gap
+    content = tiddlers[i1..i2].map(&:content).join("--\n")
+    tiddlers[i1].content = content
+    ts[i1+1..i2].each {|t| delete(t)}
+    write
+    [i1, i2]
+  end
+
   def contents
     @before + tiddlers.map(&:div_text).join + @mid + @code + @after
   end

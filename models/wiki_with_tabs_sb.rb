@@ -10,7 +10,7 @@ class WikiWithTabsSB < WikiWithTabs
     name = nil unless start == -1
     names = name ? [name] : Dir.glob("s*.js").sort[start..-1]
     names.each do |name|
-      tiddler = "S#{name[1..6]}#{name[14]}N#{name[8..9]}"
+      tiddler = "S#{name[1..6]}N#{name[8..9]}#{name[14]}"
       windows = JSON.parse(File.read(name)[2..-1])["sessions"][0]["windows"]
       @file_links += windows.map {|window| FileLinksSB.new(window, tiddler)}
     end
@@ -37,7 +37,7 @@ class WikiWithTabsSB < WikiWithTabs
       lines = content.lines.size
       if tiddlers.size > 0 && lines < 40
         prev = tiddlers[-1]
-        if prev[0..-4] == win.name
+        if prev[0..-5] + prev[-1] == win.name
           lines_already = tabs_wiki[prev].content.lines.size
           if lines + lines_already < 44
             tabs_wiki[prev].content += "--\n" + content
@@ -46,8 +46,8 @@ class WikiWithTabsSB < WikiWithTabs
         end
       end
       unless skipped
-        name = win.name + "%03i" % (i+1)
-        split = name[0..7] + " " + name[8..-1]
+        name = win.name[0..-2] + "%03i" % (i+1) + win.name[-1]
+        split = name[0..6] + " " + name[7..-1]
         tabs_wiki.create_new(name, content, split)
         tiddlers << name
       end
