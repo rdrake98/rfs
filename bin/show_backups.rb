@@ -13,6 +13,4 @@ Dir.glob("s*.js").sort.each do |name|
   time = DateTime.parse("#{name[1..6]} #{name[8..13]}").strftime("%d %b %H:%M")
   puts "%s %s: %2d windows, %3d tabs" % [time, machine, windows.size, tabs]
 end
-puts names.size
-puts names.uniq.size
-puts names[0]
+puts names.size, names.uniq.size, names[0]
