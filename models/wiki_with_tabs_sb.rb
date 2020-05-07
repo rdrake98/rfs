@@ -10,7 +10,7 @@ class WikiWithTabsSB < WikiWithTabs
     windows = JSON.parse(json)["sessions"][0]["windows"]
     @file_links = windows.map {|window| FileLinksSB.new(window)}
     spec ||= "spec" unless wiki_file
-    super(nil, wiki_file, spec)
+    super(nil, wiki_file, false, spec)
   end
 
   def file_links
