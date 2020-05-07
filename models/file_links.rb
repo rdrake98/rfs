@@ -57,14 +57,14 @@ class FileLinks < ContentLinks
 end
 
 class FileLinksSB < ContentLinks
-  attr_accessor :id
-  def initialize(window)
+  attr_accessor :id, :name
+  def initialize(window, name)
+    @name = name
     @id = window["id"]
     @lines = window["tabs"].map {|tab| ExternalLinkSB.new(tab)}
   end
 
   def write
-    # print "#{@lines.size}, "
   end
 
   def purge

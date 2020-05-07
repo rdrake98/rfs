@@ -6,9 +6,10 @@ class WikiWithTabsSB < WikiWithTabs
   def initialize(sb_file=nil, wiki_file=nil, spec=nil)
     Dir.chdir(ENV['tab_backups'])
     sb_file ||= Dir.glob("s*p.js").sort[-1]
+    name = "S#{sb_file[1..6]}#{sb_file[8..9]}#{sb_file[14]}N"
     json = File.read(sb_file)[2..-1]
     windows = JSON.parse(json)["sessions"][0]["windows"]
-    @file_links = windows.map {|window| FileLinksSB.new(window)}
+    @file_links = windows.map {|window| FileLinksSB.new(window, name)}
     spec ||= "spec" unless wiki_file
     super(nil, wiki_file, false, spec)
   end
@@ -29,7 +30,7 @@ class WikiWithTabsSB < WikiWithTabs
     puts wins.size
     tiddlers = []
     wins.each_with_index do |win, i|
-      name = "WIN%02i" % (i+1)
+      name = win.name + "%02i" % (i+1)
       tabs_wiki.create_new(name, win.content)
       tiddlers << name
     end
@@ -39,7 +40,7 @@ class WikiWithTabsSB < WikiWithTabs
     [tabs_wiki.tiddlers.size, tabs_wiki.contents.size]
   end
 
-  def show_tabs
+  def show_tabs_being_reduced
     file = @wiki.write_sb[0]
     tabs_wiki = Splitter.new(file)
     file_links.each do |win|
