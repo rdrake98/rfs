@@ -227,9 +227,20 @@ class Splitter
     end
   end
 
-  def update_from(splitter, title)
-    tiddler = splitter[title]
-    change_tiddler(title, tiddler) if tiddler
+  def update_from(splitter, title, new_title=nil)
+    source = splitter[title]
+    if source
+      if new_title
+        target = self[new_title]
+        if target
+          target.content = source.content
+        else
+          create_new(new_title, source.content, splitName(new_title))
+        end
+      else
+        change_tiddler(title, source)
+      end
+    end
   end
 
   def changes_file
