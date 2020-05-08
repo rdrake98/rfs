@@ -352,6 +352,10 @@ class Splitter
     protect ? filename : nil
   end
 
+  def openc(suffix="_")
+    `open #{new_name(suffix)}`
+  end
+
   def read_file_edition
     open(@filename) do |file|
       until (line = file.gets) =~ /<div id="storeArea">/

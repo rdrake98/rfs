@@ -4,18 +4,22 @@ require 'wiki_with_tabs'
 
 class WikiWithTabsSB < WikiWithTabs
   def initialize(name=nil, wiki_file=nil, spec=nil)
-    @file_links = []
+    spec ||= "spec" unless wiki_file
+    super(nil, wiki_file, false, spec)
+    last_backup = @spec["LastBackup"]&.content&.chomp
     Dir.chdir(ENV['tab_backups'])
-    start = name.is_a?(Integer) ? name : -1
-    name = nil unless start == -1
-    names = name ? [name] : Dir.glob("s*.js").sort[start..-1]
+    all_names = Dir.glob("s*.js").sort
+    names = name.is_a?(Integer) ?
+      all_names[name..-1] :
+      name ?
+        [name] :
+        all_names[all_names.find_index(last_backup + ".js") + 1..-1]
+    @file_links = []
     names.each do |name|
       tiddler = "S#{name[1..6]}N#{name[8..9]}#{name[14]}"
       windows = JSON.parse(File.read(name)[2..-1])["sessions"][0]["windows"]
       @file_links += windows.map {|window| FileLinksSB.new(window, tiddler)}
     end
-    spec ||= "spec" unless wiki_file
-    super(nil, wiki_file, false, spec)
   end
 
   def WikiWithTabsSB.copy_202005_to_fat
@@ -34,13 +38,27 @@ class WikiWithTabsSB < WikiWithTabs
     fat.write
   end
 
+  def WikiWithTabsSB.copy_to_fat
+    fat = Splitter.fat
+    puts fat.tiddlers.size
+    sb = Splitter.new("#{ENV['tinys']}/sb_.html")
+    titles = sb.titles
+    puts titles.size
+    titles = titles.filter {|title| title =~ /^S2/}
+    puts titles.size
+    titles = titles.each {|title| fat.update_from(sb, title)}
+    fat["S2020M05a"].content += "\n" + titles.join("\n")
+    puts fat.tiddlers.size
+    fat.write
+    fat.openc
+  end
+
   def file_links
     @file_links.each(&:purge)
   end
 
   def show_final_tabs
-    file = @wiki.write_sb[0]
-    tabs_wiki = Splitter.new(file)
+    tabs_wiki = Splitter.new(@wiki.write_sb[0])
     p initial_reduce
     p second_reduce
     p qs_reduce
@@ -70,7 +88,7 @@ class WikiWithTabsSB < WikiWithTabs
     end
     tabs_wiki["DefaultTiddlers"].content = tiddlers.join("\n")
     tabs_wiki.write("")
-    `open #{file}`
+    tabs_wiki.openc("")
     [file_links.size, wins.size, tiddlers.size,
       tabs_wiki.tiddlers.size, tabs_wiki.contents.size]
   end
