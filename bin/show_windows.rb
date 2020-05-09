@@ -1,4 +1,5 @@
 # show_windows.rb
+# interesting to investigate but ignored in the Big Reduce May 20
 
 require 'json'
 
