@@ -43,22 +43,6 @@ class WikiWithTabsSB < WikiWithTabs
     end
   end
 
-  def WikiWithTabsSB.copy_202005_to_fat
-    fat = Splitter.fat
-    puts fat.tiddlers.size
-    sb = Splitter.new("#{ENV['tinys']}/b200507/sb_edit.html")
-    puts sb.tiddlers.size
-    fat.update_from(sb, "TiddlersByMonth", "S2020M05Top")
-    sb["CompressedTiddlers"].titles_linked.each do |title|
-      fat.update_from(sb, title)
-    end
-    sb["TiddlersByMonth"].titles_linked.each do |title|
-      fat.update_from(sb, title)
-    end
-    puts fat.tiddlers.size
-    fat.write
-  end
-
   def WikiWithTabsSB.copy_to_fat
     fat = Splitter.fat
     puts fat.tiddlers.size
