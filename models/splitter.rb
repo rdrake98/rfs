@@ -7,7 +7,7 @@ require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
 require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
 
 class Splitter
-  attr_accessor :code
+  attr_accessor :code, :filename
 
   def parent_dir
     # kludge to support rff testing

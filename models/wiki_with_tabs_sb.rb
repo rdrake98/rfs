@@ -6,14 +6,13 @@ class WikiWithTabsSB < WikiWithTabs
   def initialize(name=nil, wiki_file=nil, spec=nil)
     spec ||= "spec" unless wiki_file
     super(nil, wiki_file, false, spec)
-    last_backup = @spec["LastBackup"]&.content&.chomp
-    Dir.chdir(ENV['tab_backups'])
-    all_names = Dir.glob("s*.js").sort
+    last_backup = @spec["LastBackup"]&.content&.chomp # nil in old tests
+    all_names = read_all_names
     names = name.is_a?(Integer) ?
       all_names[name..-1] :
       name ?
         [name] :
-        all_names[all_names.find_index(last_backup + ".js") + 1..-1]
+        all_names[all_names.find_index(last_backup) + 1..-1]
     @file_links = []
     names.each do |name|
       tiddler = "S#{name[1..6]}N#{name[8..9]}#{name[14]}"
@@ -22,10 +21,29 @@ class WikiWithTabsSB < WikiWithTabs
     end
   end
 
+  def read_all_names
+    Dir.chdir(ENV['tab_backups'])
+    Dir.glob("s*.js").sort
+  end
+
+  def commit_mods(dir="b#{DateTime.now.strftime("%y%m%d")}")
+    last_backup = read_all_names[-1]
+    if @spec["LastBackup"].content != last_backup
+      puts `cd $tinys; mkdir -p #{dir}; rsync -t --out-format=%n%L s* #{dir}`
+      @spec["LastBackup"].content = last_backup
+      @spec.write("")
+      puts "LastBackup in #{@spec.filename} is now #{last_backup}"
+      @wiki.commit_mods
+    else
+      puts "LastBackup in #{@spec.filename} is already #{last_backup}"
+      puts "So not doing any committing"
+    end
+  end
+
   def WikiWithTabsSB.copy_202005_to_fat
     fat = Splitter.fat
     puts fat.tiddlers.size
-    sb = Splitter.new("#{ENV['tinys']}/s200507/sb_edit.html")
+    sb = Splitter.new("#{ENV['tinys']}/b200507/sb_edit.html")
     puts sb.tiddlers.size
     fat.update_from(sb, "TiddlersByMonth", "S2020M05Top")
     sb["CompressedTiddlers"].titles_linked.each do |title|
@@ -88,6 +106,7 @@ class WikiWithTabsSB < WikiWithTabs
     end
     tabs_wiki["DefaultTiddlers"].content = tiddlers.join("\n")
     tabs_wiki.write("")
+    tabs_wiki.write # make sure sb_ is ready for copy_to_fat
     tabs_wiki.openc("")
     [file_links.size, wins.size, tiddlers.size,
       tabs_wiki.tiddlers.size, tabs_wiki.contents.size]
