@@ -26,14 +26,17 @@ class WikiWithTabsSB < WikiWithTabs
     Dir.glob("s*.js").sort
   end
 
-  def commit_mods(dir="b#{DateTime.now.strftime("%y%m%d")}")
+  def commit_mods(suffix="")
     last_backup = read_all_names[-1]
     if @spec["LastBackup"].content != last_backup
-      puts `cd $tinys; mkdir -p #{dir}; rsync -t --out-format=%n%L s* #{dir}`
+      suffix = suffix.is_a?(Integer) ? "%02d" % suffix : suffix
+      dir="b#{DateTime.now.strftime("%y%m%d")}#{suffix}"
+      puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
       @spec["LastBackup"].content = last_backup
       @spec.write("")
       puts "LastBackup in #{@spec.filename} is now #{last_backup}"
-      @wiki.commit_mods
+      puts "Deleting..."
+      puts `cd $tinys; rm -v sb_.html`
     else
       puts "LastBackup in #{@spec.filename} is already #{last_backup}"
       puts "So not doing any committing"
@@ -59,7 +62,10 @@ class WikiWithTabsSB < WikiWithTabs
   def WikiWithTabsSB.copy_to_fat
     fat = Splitter.fat
     puts fat.tiddlers.size
-    sb = Splitter.new("#{ENV['tinys']}/sb_.html")
+    Dir.chdir(ENV['tinys'])
+    sb_file = Dir.glob("sb*.html").sort[-1]
+    puts "Using #{sb_file}"
+    sb = Splitter.new(sb_file)
     titles = sb.titles
     puts titles.size
     titles = titles.filter {|title| title =~ /^S2/}
@@ -106,7 +112,6 @@ class WikiWithTabsSB < WikiWithTabs
     end
     tabs_wiki["DefaultTiddlers"].content = tiddlers.join("\n")
     tabs_wiki.write("")
-    tabs_wiki.write # make sure sb_ is ready for copy_to_fat
     tabs_wiki.openc("")
     [file_links.size, wins.size, tiddlers.size,
       tabs_wiki.tiddlers.size, tabs_wiki.contents.size]
