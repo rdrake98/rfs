@@ -22,6 +22,22 @@ class WikiWithTabsSB < WikiWithTabs
     end
   end
 
+  def self.cleanup
+    Dir.chdir(ENV['tinys'])
+    Dir.chdir('backups')
+    dirs = Dir.glob "*"
+    dirs.each do |dir|
+      Dir.chdir(dir)
+      Dir.glob("sb*").each do |sb_file|
+        sb = Splitter.new(sb_file)
+        titles = sb.titles.filter {|title| title =~ /^S2/}
+        titles.each {|title| sb[title].write_simple}
+        `rm #{sb_file}`
+      end
+      Dir.chdir('..')
+    end
+  end
+
   def s6(name, i); name[i..i+1] + name[i+3..i+4] + name[i+6..i+7]; end
 
   def copy_backups

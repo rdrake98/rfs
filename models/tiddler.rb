@@ -260,6 +260,17 @@ class Tiddler
     readable
   end
 
+  def write_simple
+    readable = []
+    readable << splitname
+    readable << modified
+    readable << ""
+    readable << content
+    readable = readable.join("\n")
+    File.write("#{title}.txt", readable + "\n")
+    readable
+  end
+
   def googleWords(title)
     words = @wiki.splitName(title)
     "[[#{words}|http://www.google.com/search?q=#{words.gsub(' ', '+')}]]"
