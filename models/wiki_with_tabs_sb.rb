@@ -7,6 +7,7 @@ class WikiWithTabsSB < WikiWithTabs
     spec ||= "spec" unless wiki_file
     super(nil, wiki_file, false, spec)
     last_backup = @spec["LastBackup"]&.content&.chomp # nil in old tests
+    copy_backups
     all_names = read_all_names
     names = name.is_a?(Integer) ?
       all_names[name..-1] :
@@ -19,6 +20,17 @@ class WikiWithTabsSB < WikiWithTabs
       windows = JSON.parse(File.read(name)[2..-1])["sessions"][0]["windows"]
       @file_links += windows.map {|window| FileLinksSB.new(window, tiddler)}
     end
+  end
+
+  def s6(name, i); name[i..i+1] + name[i+3..i+4] + name[i+6..i+7]; end
+
+  def copy_backups
+    Dir.chdir('/Users/rd/Downloads')
+    to = "~/rf/link_data/copied"
+    Dir.glob("session_buddy_backup_*.json").sort.each do |name|
+      `cp -p #{name} #{to}/s#{s6(name, 23)}.#{s6(name, 32)}#{hostc}.js`
+    end
+    puts `rsync -t --out-format=%n%L #{to}/* $tab_backups/`
   end
 
   def read_all_names
