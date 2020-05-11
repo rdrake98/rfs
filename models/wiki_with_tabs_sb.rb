@@ -8,7 +8,7 @@ class WikiWithTabsSB < WikiWithTabs
     super(nil, wiki_file, false, spec)
     last_backup = @spec["LastBackup"]&.content&.chomp # nil in old tests
     copy_backups
-    all_names = read_all_names
+    all_names = self.class.read_all_names
     names = name.is_a?(Integer) ?
       all_names[name..-1] :
       name ?
@@ -33,28 +33,29 @@ class WikiWithTabsSB < WikiWithTabs
     puts `rsync -t --out-format=%n%L #{to}/* $tab_backups/`
   end
 
-  def read_all_names
+  def self.read_all_names
     Dir.chdir(ENV['tab_backups'])
     Dir.glob("s*.js").sort
   end
 
-  def commit_mods(suffix=1)
+  def self.commit_mods(suffix=1)
     last_backup = read_all_names[-1]
-    if @spec["LastBackup"].content != last_backup
+    spec = Splitter.new("#{ENV['tinys']}/spec.html")
+    if spec["LastBackup"].content != last_backup
       dir="backups/b#{DateTime.now.strftime("%y%m%d")}#{"%02d"%suffix}"
       puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
-      @spec["LastBackup"].content = last_backup
-      @spec.write("")
-      puts "LastBackup in #{@spec.filename} is now #{last_backup}"
+      spec["LastBackup"].content = last_backup
+      spec.write("")
+      puts "LastBackup in #{spec.filename} is now #{last_backup}"
       puts "Deleting..."
       puts `cd $tinys; rm -v sb_.html`
     else
-      puts "LastBackup in #{@spec.filename} is already #{last_backup}"
+      puts "LastBackup in #{spec.filename} is already #{last_backup}"
       puts "So not doing any committing"
     end
   end
 
-  def WikiWithTabsSB.copy_to_fat
+  def self.copy_to_fat
     fat = Splitter.fat
     puts fat.tiddlers.size
     Dir.chdir(ENV['tinys'])
