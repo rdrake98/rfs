@@ -26,11 +26,10 @@ class WikiWithTabsSB < WikiWithTabs
     Dir.glob("s*.js").sort
   end
 
-  def commit_mods(suffix="")
+  def commit_mods(suffix=1)
     last_backup = read_all_names[-1]
     if @spec["LastBackup"].content != last_backup
-      suffix = suffix.is_a?(Integer) ? "%02d" % suffix : suffix
-      dir="b#{DateTime.now.strftime("%y%m%d")}#{suffix}"
+      dir="backups/b#{DateTime.now.strftime("%y%m%d")}#{"%02d"%suffix}"
       puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
       @spec["LastBackup"].content = last_backup
       @spec.write("")
