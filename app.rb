@@ -1,5 +1,5 @@
 require 'roda'
-require 'splitter'
+require 'wiki_with_tabs_sb'
 require 'chartkick'
 require 'repo_compiled'
 
@@ -99,6 +99,10 @@ class App < Roda
       chartkick = Class.new.include(Chartkick::Helper).new
       data = REPO.graph_data(r.params["x"]&.to_i)
       view('graph', locals: {chartkick: chartkick, data: data})
+    end
+
+    r.get "tabs" do
+      WikiWithTabsSB.new.show_final_tabs.to_s
     end
   end
 end
