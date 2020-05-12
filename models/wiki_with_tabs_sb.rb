@@ -65,6 +65,7 @@ class WikiWithTabsSB < WikiWithTabs
       puts "LastBackup in #{spec.filename} is now #{last_backup}"
       puts "Deleting..."
       puts `cd $tinys; rm -v sb_.html`
+      cleanup # quick and dirty code -> slower execution
     else
       puts "LastBackup in #{spec.filename} is already #{last_backup}"
       puts "So not doing any committing"
