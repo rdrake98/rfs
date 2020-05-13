@@ -96,6 +96,14 @@ class WikiWithTabsSB < WikiWithTabs
 
   def show_final_tabs
     tabs_wiki = Splitter.new(@wiki.write_sb[0])
+    tiddlers = []
+    file_links.each_with_index do |win, i|
+      name = "WIN%02i" % (i+1)
+      tabs_wiki.create_new(name, win.content)
+      tiddlers << name
+    end
+    tabs_wiki.create_new("Windows", tiddlers.join("\n"))
+
     p initial_reduce
     p second_reduce
     p qs_reduce
