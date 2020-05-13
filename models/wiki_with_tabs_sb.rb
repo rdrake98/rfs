@@ -4,8 +4,7 @@ require 'wiki_with_tabs'
 
 class WikiWithTabsSB < WikiWithTabs
   def initialize(name=nil, wiki_file=nil, spec=nil)
-    spec ||= "spec" unless wiki_file
-    super(nil, wiki_file, false, spec)
+    super(nil, wiki_file, false, wiki_file ? spec : spec || "spec")
     last_backup = @spec["LastBackup"]&.content&.chomp # nil in old tests
     copy_backups
     all_names = self.class.read_all_names
