@@ -8,8 +8,8 @@ class WikiWithTabsSB < WikiWithTabs
     last_backup = @spec["LastBackup"]&.content&.chomp # nil in old tests
     copy_backups
     all_names = self.class.read_all_names
-    names = name.is_a?(Integer) ?
-      all_names[name..-1] :
+    names = name == 0 ?
+      [all_names[-1]] :
       name ?
         [name] :
         all_names[all_names.find_index(last_backup) + 1..-1]
