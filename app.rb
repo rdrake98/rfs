@@ -108,5 +108,16 @@ class App < Roda
     r.get "tabs_combined" do
       WikiWithTabsSB.new(0).show_final_tabs.to_s
     end
+
+    r.get "copy_tabs_to_fat" do
+      WikiWithTabsSB.copy_to_fat
+      "copy_to_fat complete"
+    end
+
+    r.get "commit_tabs_mods" do
+      s = WikiWithTabsSB.commit_mods
+      Splitter.fat.commit_mods;
+      s
+    end
   end
 end
