@@ -128,7 +128,8 @@ class String
   end
 
   def link(url)
-    "[[#{gsub("|",":").gsub("]]","))")}|#{url.gsub("]]","%5D%5D")}]]"
+    text = gsub("|",":").gsub("]]","))").gsub("\u00A0", " ") # nbsp
+    "[[#{text}|#{url.gsub("]]","%5D%5D")}]]"
   end
 
   def strip_semi
