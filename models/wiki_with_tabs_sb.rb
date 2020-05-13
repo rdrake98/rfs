@@ -12,7 +12,7 @@ class WikiWithTabsSB < WikiWithTabs
       [all_names[-1]] :
       name ?
         [name] :
-        all_names[all_names.find_index(last_backup) + 1..-1]
+        all_names[all_names.index(last_backup) + 1..-1]
     @file_links = []
     names.each do |name|
       tiddler = "S#{name[1..6]}N#{name[8..9]}#{name[14]}"
