@@ -53,18 +53,20 @@ class WikiWithTabsSB < WikiWithTabs
     Dir.glob("s*.js").sort
   end
 
-  def self.commit_mods(suffix=1)
+  def self.commit_mods
     last_backup = read_all_names[-1]
     spec = Splitter.new("#{ENV['tinys']}/spec.html")
     if spec["LastBackup"].content != last_backup
-      dir = "backups/b#{Time.now.ymd}%02d" % suffix
+      Dir.chdir(ENV['tinys'])
+      Dir.chdir('backups')
+      ymd = Time.new.ymd
+      last = Dir.glob("b#{ymd}*")[-1]&.[](-2..-1)&.to_i || 0
+      dir = "backups/b#{ymd}%02d" % (last + 1)
       puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
-      spec["LastBackup"].content = last_backup
-      spec.write("")
-      puts "LastBackup in #{spec.filename} is now #{last_backup}"
-      puts "Deleting..."
-      puts `cd $tinys; rm -v sb_.html`
-      cleanup # quick and dirty code -> slower execution
+      # spec["LastBackup"].content = last_backup
+      # spec.write("")
+      # puts "LastBackup in #{spec.filename} is now #{last_backup}"
+      cleanup # quick and dirty  -> slower execution
       "commit_mods done"
     else
       puts "LastBackup in #{spec.filename} is already #{last_backup}"

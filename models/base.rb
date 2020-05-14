@@ -170,3 +170,13 @@ class Time
     strftime pattern
   end
 end
+
+class Dir
+  class << self
+    alias :original_glob :glob
+
+    def glob(*args)
+      original_glob(*args).sort
+    end
+  end
+end

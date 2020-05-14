@@ -5,7 +5,7 @@ require 'json'
 
 Backup = Struct.new(:name, :windows)
 Dir.chdir(ENV['tab_backups'])
-backups = Dir.glob("s*p.js").sort.map do |name|
+backups = Dir.glob("s*p.js").map do |name|
   json = File.read(name)[2..-1]
   ids = JSON.parse(json)["sessions"][0]["windows"].map{|win| win['id']}
   Backup.new(name[0..-4], ids)
