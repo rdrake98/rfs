@@ -1,4 +1,4 @@
-# modify_fat.rb
+# modify_images.rb
 
 require 'splitter'
 
