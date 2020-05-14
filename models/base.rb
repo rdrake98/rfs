@@ -2,6 +2,7 @@
 
 require 'cgi'
 require 'stringio'
+require 'time'
 
 def mp?; `hostname`[0..1] == "mp"; end
 def hostc; mp? ? "p" : "g"; end
@@ -151,12 +152,16 @@ class Array
 end
 
 class Time
+  def ymd
+    strftime "%y%m%d"
+  end
+
   def Time.now_str(suffix="")
-    new.utc.strftime("%y%m%d#{suffix}")
+    new.utc.ymd + suffix
   end
 
   def Time.fov_str(i=1, date_now=now_str)
-    "FOv#{date_now}#{sprintf('%02i',i)}"
+    "FOv#{date_now}%02i" % i
   end
 
   def to_minute(day_size=false)

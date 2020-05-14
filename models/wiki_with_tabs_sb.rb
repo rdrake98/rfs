@@ -57,7 +57,7 @@ class WikiWithTabsSB < WikiWithTabs
     last_backup = read_all_names[-1]
     spec = Splitter.new("#{ENV['tinys']}/spec.html")
     if spec["LastBackup"].content != last_backup
-      dir="backups/b#{DateTime.now.strftime("%y%m%d")}#{"%02d"%suffix}"
+      dir = "backups/b#{Time.now.ymd}%02d" % suffix
       puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
       spec["LastBackup"].content = last_backup
       spec.write("")
