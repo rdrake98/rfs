@@ -6,7 +6,7 @@ class WikiWithTabsSB < WikiWithTabs
   def initialize(name=nil, wiki_file=nil, spec=nil)
     super(nil, wiki_file, false, wiki_file ? spec : spec || "spec")
     last_backup = @spec["LastBackup"]&.content&.chomp # nil in old tests
-    copy_backups
+    self.class.copy_backups
     all_names = self.class.read_all_names
     names = name == 0 ?
       [all_names[-1]] :
@@ -37,15 +37,26 @@ class WikiWithTabsSB < WikiWithTabs
     end
   end
 
-  def s6(name, i); name[i..i+1] + name[i+3..i+4] + name[i+6..i+7]; end
+  def self.s6(name, i); name[i..i+1] + name[i+3..i+4] + name[i+6..i+7]; end
 
-  def copy_backups
+  def self.copy_backups
     Dir.chdir('/Users/rd/Downloads')
     to = "~/rf/link_data/copied"
-    Dir.glob("session_buddy_backup_*.json").sort.each do |name|
+    Dir.glob("session_buddy_backup_*.json").each do |name|
       `cp -p #{name} #{to}/s#{s6(name, 23)}.#{s6(name, 32)}#{hostc}.js`
     end
     puts `rsync -t --out-format=%n%L #{to}/* $tab_backups/`
+  end
+
+  def self.unpeel
+    Dir.chdir('/Users/rd/Downloads')
+    name = Dir.glob("session_buddy_backup_*.json")[-1]
+    `rm #{name}`
+    puts name
+    name = "s#{s6(name, 23)}.#{s6(name, 32)}#{hostc}.js"
+    `rm ~/rf/link_data/copied/#{name}`
+    `cd $tab_backups; mv #{name} _rejected`
+    puts name
   end
 
   def self.read_all_names
@@ -63,10 +74,11 @@ class WikiWithTabsSB < WikiWithTabs
       last = Dir.glob("b#{ymd}*")[-1]&.[](-2..-1)&.to_i || 0
       dir = "backups/b#{ymd}%02d" % (last + 1)
       puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
-      # spec["LastBackup"].content = last_backup
-      # spec.write("")
-      # puts "LastBackup in #{spec.filename} is now #{last_backup}"
+      spec["LastBackup"].content = last_backup
+      spec.write("")
+      puts "LastBackup in #{spec.filename} is now #{last_backup}"
       cleanup # quick and dirty  -> slower execution
+      Splitter.fat.commit_mods;
       "commit_mods done"
     else
       puts "LastBackup in #{spec.filename} is already #{last_backup}"

@@ -115,9 +115,7 @@ class App < Roda
     end
 
     r.get "commit_tabs_mods" do
-      s = WikiWithTabsSB.commit_mods
-      Splitter.fat.commit_mods;
-      s
+      WikiWithTabsSB.commit_mods
     end
   end
 end
