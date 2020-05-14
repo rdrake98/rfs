@@ -157,7 +157,7 @@ class Time
   end
 
   def Time.now_str(suffix="")
-    new.utc.ymd + suffix
+    new.utc.strftime("%y%m%d#{suffix}")
   end
 
   def Time.fov_str(i=1, date_now=now_str)
