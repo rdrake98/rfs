@@ -4,7 +4,7 @@ require 'json'
 require 'base'
 
 names = []
-Dir.chdir(ENV['tab_backups'])
+Dir.chdir(:tab_backups)
 Dir.glob("s*.js").each do |name|
   names << name[1..6] + name[8..9] + name[14]
   unless ARGV[0]

@@ -87,7 +87,7 @@ class App < Roda
         if wiki.check_file_edition(p['edition'])
           "version clash"
         else
-          `cp $#{type} #{ENV['data']}/#{type}_.html`
+          `cp $#{type} $data/#{type}_.html`
           File.write("#{ENV['data']}/#{type}_output.html", p['output'])
           puts "#{type}_ and #{type}_output written"
           "seed success"

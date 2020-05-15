@@ -172,9 +172,21 @@ end
 class Dir
   class << self
     alias :original_glob :glob
-
     def glob(*args)
       original_glob(*args).sort
+    end
+
+    alias :original_chdir :chdir
+    def chdir(*args)
+      args[0].class == Symbol ?
+        original_chdir(ENV[args[0].to_s]) :
+        original_chdir(*args)
+    end
+
+    def method_missing(name, *args)
+      args.size == 0 ?
+        ENV[name.to_s] || super.method_missing(name) :
+        super.method_missing(name, *args)
     end
   end
 end
