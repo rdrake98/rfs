@@ -340,9 +340,8 @@ class Splitter
 
   def write(suffix="_", ed_end = "r")
     ed = edition
-    date_string = Time.now_str('.%H%M%S')
     ed =~ /^([a-z]+)\d+\.\d+([a-z]|).html$/
-    ed = $1 + date_string + ($2.size == 1 ? ed_end : '') + '.html'
+    ed = $1 + Time.now_str + ($2.size == 1 ? ed_end : '') + '.html'
     @before.gsub!(/^(var edition = ").*";$/, '\1' + ed + '";')
     bits = @filename.split("/")
     protect = bits[-2] == "_backup"

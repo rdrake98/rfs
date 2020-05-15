@@ -35,10 +35,6 @@ class WikiWithTabs
     new("o160129", wiki_file)
   end
 
-  def WikiWithTabs.today(wiki_file=nil)
-    new("t#{Time.now_str}", wiki_file, :new_format)
-  end
-
   include LinkAnalysis
 
   def do_reductions

@@ -1,8 +1,8 @@
 # base.rb
 
+require 'time'
 require 'cgi'
 require 'stringio'
-require 'time'
 
 def mp?; `hostname`[0..1] == "mp"; end
 def hostc; mp? ? "p" : "g"; end
@@ -84,7 +84,7 @@ end
 
 def share_output(&block)
   out = capture_stdout(&block)
-  File.write("/Users/rd/Dropbox/_shared/out#{Time.now_str('.%H%M%S')}.txt", out)
+  File.write("/Users/rd/Dropbox/_shared/out#{Time.now_str}.txt", out)
   puts out
 end
 
@@ -152,22 +152,16 @@ class Array
 end
 
 class Time
+  def Time.now_str
+    new.utc.strftime "%y%m%d.%H%M%S"
+  end
+
   def ymd
     strftime "%y%m%d"
   end
 
-  def Time.now_str(suffix="")
-    new.utc.strftime("%y%m%d#{suffix}")
-  end
-
-  def Time.fov_str(i=1, date_now=now_str)
-    "FOv#{date_now}%02i" % i
-  end
-
-  def to_minute(day_size=false)
-    pattern = "%-d %b %y %H:%M"
-    pattern.gsub!("-","") if day_size
-    strftime pattern
+  def to_minute(long_day=false)
+    strftime "%#{long_day ? '' : '-'}d %b %y %H:%M"
   end
 end
 

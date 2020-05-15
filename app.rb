@@ -117,5 +117,9 @@ class App < Roda
     r.get "commit_tabs_mods" do
       WikiWithTabsSB.commit_mods
     end
+
+    r.get "unpeel" do
+      WikiWithTabsSB.unpeel
+    end
   end
 end

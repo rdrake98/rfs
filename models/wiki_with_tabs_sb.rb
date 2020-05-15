@@ -55,8 +55,8 @@ class WikiWithTabsSB < WikiWithTabs
     puts name
     name = "s#{s6(name, 23)}.#{s6(name, 32)}#{hostc}.js"
     `rm ~/rf/link_data/copied/#{name}`
-    `cd $tab_backups; mv #{name} _rejected`
-    puts name
+    mv = "cd $tab_backups; mv #{name} _rejected"; `#{mv}`
+    mv
   end
 
   def self.read_all_names
@@ -71,15 +71,16 @@ class WikiWithTabsSB < WikiWithTabs
       Dir.chdir(ENV['tinys'])
       Dir.chdir('backups')
       ymd = Time.new.ymd
-      last = Dir.glob("b#{ymd}*")[-1]&.[](-2..-1)&.to_i || 0
-      dir = "backups/b#{ymd}%02d" % (last + 1)
+      suffix = Dir.glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1
+      dir = "backups/b" + ymd + suffix.to_s
       puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
       spec["LastBackup"].content = last_backup
       spec.write("")
-      puts "LastBackup in #{spec.filename} is now #{last_backup}"
+      message = "LastBackup in #{spec.filename} is now #{last_backup}"
+      puts message
       cleanup # quick and dirty  -> slower execution
       Splitter.fat.commit_mods;
-      "commit_mods done"
+      "commit_mods done: " + message
     else
       puts "LastBackup in #{spec.filename} is already #{last_backup}"
       puts "Not doing any committing"
@@ -140,7 +141,7 @@ class WikiWithTabsSB < WikiWithTabs
         end
       end
       unless skipped
-        name = win.name[0..-2] + "%02i" % (i+1) + win.name[-1]
+        name = win.name[0..-2] + (i+1).to_s + win.name[-1]
         split = name[0..6] + " " + name[7..-1]
         tabs_wiki.create_new(name, content, split)
         tiddlers << name
