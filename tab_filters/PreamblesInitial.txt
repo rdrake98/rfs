@@ -1,0 +1,29 @@
+Preambles Initial
+2020-05-07 11:47:00 +0100
+
+about:
+chrome:
+chrome-extension:
+http://localhost
+http://wp.localhost
+https://mail.google.com
+https://accounts.google.com
+http://www.premierleague.com
+http://www.bbc.co.uk/weather
+https://www.bbc.co.uk/weather
+https://twitter.com/rdrake98/lists
+https://twitter.com/i/
+https://twitter.com/login?
+https://twitter.com/?
+http://ruby-doc.org
+https://ruby-doc.org
+https://www.movegb.com
+https://www.bbc.co.uk/iplayer/live
+https://www.amazon.co.uk/ap/signin
+https://twitter.com/thatdankent/with_replies
+https://twitter.com/NataschaEngel/with_replies
+https://twitter.com/nonklatink/with_replies
+https://twitter.com/FondOfBeetles/with_replies
+https://twitter.com/NaomiOreskes/with_replies
+https://twitter.com/ClimateAudit/with_replies
+https://getpocket.com/login
