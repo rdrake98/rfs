@@ -2,8 +2,8 @@
 
 require 'splitter'
 
-wiki_path = "#{ENV['data']}/fat_.html"
-path = "#{ENV['data']}/fat_output.html"
+wiki_path = "#{Dir.data}/fat_.html"
+path = "#{Dir.data}/fat_output.html"
 wiki = Splitter.new(wiki_path)
 size = wiki.tiddlers.size
 puts "#{size} tiddlers"

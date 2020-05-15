@@ -1,5 +1,6 @@
 # repo_compiled.rb
 
+require 'base'
 require 'repo'
 
 Commit = Struct.new(:oid, :time, :message, :files, :size)
@@ -7,7 +8,7 @@ RepoFile = Struct.new(:name, :size)
 
 class RepoCompiled < Repo
   def initialize
-    super(ENV["compiled"])
+    super(Dir.compiled)
   end
 
   def summary

@@ -18,8 +18,8 @@ class Splitter
 
   def initialize(filename=nil, split=true)
     @filename = filename
-    @type = "dev" if @filename == ENV["dev"]
-    @type = "fat" if @filename == ENV["fat"]
+    @type = "dev" if @filename == Dir.dev
+    @type = "fat" if @filename == Dir.fat
     @backup_area = "#{@filename.split("/")[0..-2].join("/")}/_backup" if @type
     @split = split
     @tiddler_hash = {}
@@ -58,11 +58,11 @@ class Splitter
   end
 
   def Splitter.fat split=true
-    new ENV["fat"], split
+    new Dir.fat, split
   end
 
   def Splitter.dev split=true
-    new ENV["dev"], split
+    new Dir.dev, split
   end
 
   def Splitter.name_(name, suffix="_")
@@ -251,7 +251,7 @@ class Splitter
   end
 
   def changes_dir
-    "#{ENV['ww']}/_changes"
+    "#{Dir.ww}/_changes"
   end
 
   def changes_file_
@@ -413,7 +413,7 @@ class Splitter
   def update_code(testing=nil)
     puts "changing code for #{@filename}"
     puts @code.size
-    new_code = File.read("#{ENV['compiled']}/code.js")
+    new_code = File.read("#{Dir.compiled}/code.js")
     same = @code == new_code
     @code = new_code
     puts same ? "code unchanged" : @code.size
@@ -474,7 +474,7 @@ class Splitter
     titles = titles + recent - censored
     divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
     tiny_wiki = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
-    filename = "#{ENV['tinys']}/#{file}.html"
+    filename = "#{Dir.tinys}/#{file}.html"
     File.write(filename, tiny_wiki)
     [filename, titles.size, tiny_wiki.size]
   end

@@ -9,9 +9,9 @@ class WikiWithTabs
   def initialize(branch, wiki_file, two_level=false, spec=nil)
     @branch = branch
     @wiki = wiki_file ?
-      Splitter.new("#{ENV['data']}/#{wiki_file}.html") : Splitter.fat
+      Splitter.new("#{Dir.data}/#{wiki_file}.html") : Splitter.fat
     @two_level = two_level
-    spec_file = spec ? "#{ENV['tinys']}/#{spec}" : "#{ENV['data']}/spec"
+    spec_file = spec ? "#{Dir.tinys}/#{spec}" : "#{Dir.data}/spec"
     @spec = Splitter.new("#{spec_file}.html")
     @stop_list = spec_for("StopListInitial")
     @preambles = spec_for("PreamblesInitial")

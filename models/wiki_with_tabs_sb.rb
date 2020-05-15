@@ -25,7 +25,8 @@ class WikiWithTabsSB < WikiWithTabs
     file = dir + "/spec.html"
     return unless File.file? file
     wiki = Splitter.new(file)
-    Dir.chdir(ENV['rfs'] + "/tab_filters")
+    Dir.chdir(:rfs)
+    Dir.chdir("tab_filters")
     time = %w(
       StopListInitial
       PreamblesInitial
@@ -52,7 +53,7 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.cleanup
-    Dir.chdir(ENV['tinys'])
+    Dir.chdir(:tinys)
     Dir.chdir('backups')
     dirs = Dir.glob "*"
     dirs.each do |dir|
@@ -91,15 +92,15 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.read_all_names
-    Dir.chdir(ENV['tab_backups'])
+    Dir.chdir(:tab_backups)
     Dir.glob("s*.js").sort
   end
 
   def self.commit_mods
     last_backup = read_all_names[-1]
-    spec = Splitter.new("#{ENV['tinys']}/spec.html")
+    spec = Splitter.new("#{Dir.tinys}/spec.html")
     if spec["LastBackup"].content != last_backup
-      Dir.chdir(ENV['tinys'])
+      Dir.chdir(:tinys)
       Dir.chdir('backups')
       ymd = Time.new.ymd
       suffix = Dir.glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1
@@ -122,7 +123,7 @@ class WikiWithTabsSB < WikiWithTabs
   def self.copy_to_fat
     fat = Splitter.fat
     puts fat.tiddlers.size
-    Dir.chdir(ENV['tinys'])
+    Dir.chdir(:tinys)
     sb_file = Dir.glob("sb*.html").sort[-1]
     puts "Using #{sb_file}"
     sb = Splitter.new(sb_file)

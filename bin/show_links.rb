@@ -1,8 +1,9 @@
 # show_links.rb
 
+require 'base'
 require 'json'
 
-Dir.chdir(ENV['tab_backups'])
+Dir.chdir(:tab_backups)
 Dir.glob("s*p.js").each do |name|
   json = File.read(name)[2..-1]
   sessions = JSON.parse(json)["sessions"]

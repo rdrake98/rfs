@@ -32,7 +32,7 @@ end
 def snip(original_file)
   original_file = ENV["TM_FILEPATH"] || original_file || ENV["PWD"] + "/"
   original_file = ENV["PWD"] + "/" + original_file if original_file[0..0] != "/"
-  file = original_file.sub("#{ENV['HOME']}/", "")
+  file = original_file.sub("#{Dir.home}/", "")
   code = file == "ww/dev/code/compiled/code.js"
   isDir = file[-1..-1] == "/"
   isMine = file != original_file
