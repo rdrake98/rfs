@@ -84,7 +84,7 @@ end
 
 def share_output(&block)
   out = capture_stdout(&block)
-  File.write("/Users/rd/Dropbox/_shared/out#{Time.now_str}.txt", out)
+  File.write("/Users/rd/Dropbox/_shared/out#{Time.now_dotted}.txt", out)
   puts out
 end
 
@@ -152,8 +152,12 @@ class Array
 end
 
 class Time
-  def Time.now_str
-    new.utc.strftime "%y%m%d.%H%M%S"
+  def Time.now_dotted
+    new.utc.dotted
+  end
+
+  def dotted
+    strftime "%y%m%d.%H%M%S"
   end
 
   def ymd

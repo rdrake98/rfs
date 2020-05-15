@@ -21,6 +21,37 @@ class WikiWithTabsSB < WikiWithTabs
     end
   end
 
+  def self.write_all_filters
+    tinys = ENV["tinys"]
+    may7 = tinys + "/b200507"
+    dirs = [
+      ENV["data"],
+      [may7, 0],
+      [may7, 1],
+      may7,
+    ] + Dir.glob(tinys + "/backups/*")
+    dirs.each do |d|
+      d.size == 2 ? write_filters(d[0], d[1]) : write_filters(d)
+    end
+    tinys
+  end
+
+  def self.write_filters(dir, suffix="")
+    wiki = Splitter.new(dir + "/spec#{suffix}.html")
+    Dir.chdir(ENV['rfs'] + "/tab_filters")
+    times = %w(
+      StopListInitial
+      PreamblesInitial
+      HashPreambles
+      QPreambles
+    ).map do |name|
+      tiddler = wiki[name]
+      tiddler.write_simple
+      tiddler.modified
+    end
+    puts "#{wiki.tiddlers.size} #{times.max.dotted} #{dir} #{suffix}"
+  end
+
   def self.cleanup
     Dir.chdir(ENV['tinys'])
     Dir.chdir('backups')
