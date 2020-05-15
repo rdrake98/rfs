@@ -21,6 +21,16 @@ class WikiWithTabsSB < WikiWithTabs
     end
   end
 
+  def self.delete_specs
+    dirs = Dir.glob(ENV["tinys"] + "/backups/*")
+    dirs.each do |dir|
+      file = dir + "/spec.html"
+      puts file
+      `rm #{file}`
+    end
+    dirs.size
+  end
+
   def self.write_all_filters
     tinys = ENV["tinys"]
     may7 = tinys + "/b200507"
@@ -39,7 +49,7 @@ class WikiWithTabsSB < WikiWithTabs
   def self.write_filters(dir, suffix="")
     wiki = Splitter.new(dir + "/spec#{suffix}.html")
     Dir.chdir(ENV['rfs'] + "/tab_filters")
-    times = %w(
+    time = %w(
       StopListInitial
       PreamblesInitial
       HashPreambles
@@ -48,8 +58,15 @@ class WikiWithTabsSB < WikiWithTabs
       tiddler = wiki[name]
       tiddler.write_simple
       tiddler.modified
+    end.max.dotted
+    puts "#{wiki.tiddlers.size} #{time} #{dir} #{suffix}"
+    added = `git add -v .`
+    unless added.empty?
+      wiki["LastBackup"]&.write_simple
+      `git add .;git commit -m "#{time} after event"`
     end
-    puts "#{wiki.tiddlers.size} #{times.max.dotted} #{dir} #{suffix}"
+    Dir.chdir(dir)
+    wiki["LastBackup"]&.write_simple
   end
 
   def self.cleanup
