@@ -1,5 +1,5 @@
 Preambles Initial
-2020-05-07 11:47:00 +0100
+2020-05-07 15:17:00 +0100
 
 about:
 chrome:
@@ -27,3 +27,8 @@ https://twitter.com/FondOfBeetles/with_replies
 https://twitter.com/NaomiOreskes/with_replies
 https://twitter.com/ClimateAudit/with_replies
 https://getpocket.com/login
+https://xhamster.com
+https://twitter.com/messages
+https://wordpress.com/comment
+https://www.amazon.co.uk/kindle-dbs/thankYouPage
+file:///Users/rd/Dropbox/tinys

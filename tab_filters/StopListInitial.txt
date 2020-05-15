@@ -1,5 +1,5 @@
 Stop List Initial
-2020-05-07 11:33:00 +0100
+2020-05-07 15:23:00 +0100
 
 file:///Users/rd/Dropbox/fatword.html
 https://app.getpocket.com/
@@ -17,6 +17,7 @@ http://www.bbc.co.uk/news
 https://www.bbc.co.uk/news
 http://www.bbc.co.uk/sport/0/
 https://www.bbc.co.uk/sport
+https://www.bbc.co.uk/sport/football
 https://www.bbc.co.uk/sport/football/premier-league/table
 http://www.bbc.co.uk/iplayer
 https://www.bbc.co.uk/iplayer
@@ -26,3 +27,5 @@ https://wordpress.com/customize/cliscep.com
 http://www.eureferendum.com/Default.aspx
 file:///Users/rd/Dropbox/%7Chttps://cliscep.com/2020/03/15/dont-just-run-the-country-do-something/#comment-49682
 https://www.youtube.com/
+file:///Users/rd/rf/site/index.html
+https://circleci.com/vcs-authorize/
