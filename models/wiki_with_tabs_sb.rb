@@ -72,7 +72,7 @@ class WikiWithTabsSB < WikiWithTabs
       Dir.chdir('backups')
       ymd = Time.new.ymd
       suffix = Dir.glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1
-      dir = "backups/b" + ymd + suffix.to_s
+      dir = "backups/b#{ymd}%02d" % suffix
       puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
       spec["LastBackup"].content = last_backup
       spec.write("")
