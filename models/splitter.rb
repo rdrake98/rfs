@@ -78,8 +78,11 @@ class Splitter
   end
 
   def commit_mods
-    backup
-    `mv #{Splitter.name_(@filename)} #{@filename}`
+    new_one = Splitter.name_(@filename)
+    if File.file?(new_one)
+      backup
+      `mv #{new_one} #{@filename}`
+    end
   end
 
   def Splitter.test_same(filename2, small=true)

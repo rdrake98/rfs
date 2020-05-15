@@ -22,7 +22,9 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.write_filters(dir)
-    wiki = Splitter.new(dir + "/spec.html")
+    file = dir + "/spec.html"
+    return unless File.file? file
+    wiki = Splitter.new(file)
     Dir.chdir(ENV['rfs'] + "/tab_filters")
     time = %w(
       StopListInitial
@@ -34,7 +36,7 @@ class WikiWithTabsSB < WikiWithTabs
       tiddler.write_simple
       tiddler.modified
     end.max.dotted
-    puts "#{wiki.tiddlers.size} #{time} #{dir} #{suffix}"
+    puts "#{wiki.tiddlers.size} #{time} #{dir}"
     added = `git add -v .`
     unless added.empty?
       wiki["LastBackup"].write_simple
