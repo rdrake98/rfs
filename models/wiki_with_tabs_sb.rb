@@ -21,33 +21,8 @@ class WikiWithTabsSB < WikiWithTabs
     end
   end
 
-  def self.delete_specs
-    dirs = Dir.glob(ENV["tinys"] + "/backups/*")
-    dirs.each do |dir|
-      file = dir + "/spec.html"
-      puts file
-      `rm #{file}`
-    end
-    dirs.size
-  end
-
-  def self.write_all_filters
-    tinys = ENV["tinys"]
-    may7 = tinys + "/b200507"
-    dirs = [
-      ENV["data"],
-      [may7, 0],
-      [may7, 1],
-      may7,
-    ] + Dir.glob(tinys + "/backups/*")
-    dirs.each do |d|
-      d.size == 2 ? write_filters(d[0], d[1]) : write_filters(d)
-    end
-    tinys
-  end
-
-  def self.write_filters(dir, suffix="")
-    wiki = Splitter.new(dir + "/spec#{suffix}.html")
+  def self.write_filters(dir)
+    wiki = Splitter.new(dir + "/spec.html")
     Dir.chdir(ENV['rfs'] + "/tab_filters")
     time = %w(
       StopListInitial
@@ -62,11 +37,14 @@ class WikiWithTabsSB < WikiWithTabs
     puts "#{wiki.tiddlers.size} #{time} #{dir} #{suffix}"
     added = `git add -v .`
     unless added.empty?
-      wiki["LastBackup"]&.write_simple
-      `git add .;git commit -m "#{time} after event"`
+      wiki["LastBackup"].write_simple
+      bash = "git add tab_filters; git commit -m '#{time} recently'"
+      puts bash
+      `#{bash}`
     end
     Dir.chdir(dir)
-    wiki["LastBackup"]&.write_simple
+    wiki["LastBackup"].write_simple
+    `rm spec.html`
   end
 
   def self.cleanup
@@ -81,6 +59,7 @@ class WikiWithTabsSB < WikiWithTabs
         titles.each {|title| sb[title].write_simple}
         `rm #{sb_file}`
       end
+      write_filters(Dir.pwd)
       Dir.chdir('..')
     end
   end
