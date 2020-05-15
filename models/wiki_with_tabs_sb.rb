@@ -43,6 +43,8 @@ class WikiWithTabsSB < WikiWithTabs
       bash = "git add tab_filters; git commit -m '#{time} recently'"
       puts bash
       `#{bash}`
+    else
+      puts "no new filters to commit"
     end
     Dir.chdir(dir)
     wiki["LastBackup"].write_simple
