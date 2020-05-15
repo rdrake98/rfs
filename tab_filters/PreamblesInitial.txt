@@ -1,5 +1,5 @@
 Preambles Initial
-2020-05-12 02:06:00 +0100
+2020-05-13 04:01:00 +0100
 
 about:
 chrome:
@@ -31,6 +31,7 @@ https://getpocket.com/login
 https://xhamster.com
 https://twitter.com/messages
 https://wordpress.com/comment
+https://wordpress.com/post/cliscep.com
 https://www.amazon.co.uk/kindle-dbs/thankYouPage
 file:///Users/rd/Dropbox/tinys
 https://www.bbc.co.uk/bbc
