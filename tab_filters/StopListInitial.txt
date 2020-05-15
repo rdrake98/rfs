@@ -1,5 +1,5 @@
 Stop List Initial
-2020-05-07 15:23:00 +0100
+2020-05-07 21:10:00 +0100
 
 file:///Users/rd/Dropbox/fatword.html
 https://app.getpocket.com/
@@ -21,6 +21,9 @@ https://www.bbc.co.uk/sport/football
 https://www.bbc.co.uk/sport/football/premier-league/table
 http://www.bbc.co.uk/iplayer
 https://www.bbc.co.uk/iplayer
+https://www.bbc.co.uk/tv/bbcnews
+https://www.bbc.co.uk/tv/bbcparliament
+https://www.bbc.co.uk/iplayer/guide
 http://www.jewishworldreview.com/cols/sowell1.asp
 https://cliscep.com/
 https://wordpress.com/customize/cliscep.com
