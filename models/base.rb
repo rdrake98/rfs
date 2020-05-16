@@ -118,9 +118,9 @@ def show_cmd(cmd, multi_line=nil)
 end
 
 class Object
-  def in?(collection)
-    collection.include?(self)
-  end
+  def in?(collection); collection.include?(self); end
+
+  def taps; tap{|s| puts s}; end
 end
 
 class String
@@ -152,17 +152,11 @@ class Array
 end
 
 class Time
-  def Time.now_dotted
-    new.utc.dotted
-  end
+  def Time.now_dotted; new.utc.dotted; end
 
-  def dotted
-    strftime "%y%m%d.%H%M%S"
-  end
+  def dotted; strftime "%y%m%d.%H%M%S"; end
 
-  def ymd
-    strftime "%y%m%d"
-  end
+  def ymd; strftime "%y%m%d"; end
 
   def to_minute(long_day=false)
     strftime "%#{long_day ? '' : '-'}d %b %y %H:%M"
