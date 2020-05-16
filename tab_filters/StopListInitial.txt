@@ -1,5 +1,5 @@
 Stop List Initial
-2020-05-07 21:10:00 +0100
+2020-05-16 20:06:00 +0100
 
 file:///Users/rd/Dropbox/fatword.html
 https://app.getpocket.com/
@@ -13,6 +13,7 @@ http://climateaudit.org/
 https://climateaudit.org/
 http://www.dailymail.co.uk/home/index.html
 https://www.dailymail.co.uk/home/index.html
+https://www.dailymail.co.uk/ushome/index.html
 http://www.bbc.co.uk/news
 https://www.bbc.co.uk/news
 http://www.bbc.co.uk/sport/0/
