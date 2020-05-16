@@ -88,35 +88,6 @@ def share_output(&block)
   puts out
 end
 
-def show(name, result, multi_line)
-  puts "#{name}:#{multi_line ? "\n" : " "}#{result}"
-end
-
-def show_global(name, multi_line=nil)
-  if multi_line
-    puts name
-    eval("puts #{name}")
-  else
-    result = eval(name)
-    puts "#{name}: #{result}"
-  end
-end
-
-def split(result, separator)
-  result && result.split(separator).join("\n") || ""
-end
-
-def show_env(name, multi_line=nil)
-  result = ENV[name]
-  separator = multi_line && multi_line != :m && (multi_line == :c ? ":" : " ")
-  result = split(result, separator) if separator
-  show name, result, multi_line
-end
-
-def show_cmd(cmd, multi_line=nil)
-  show cmd, `#{cmd}`, multi_line
-end
-
 class Object
   def in?(collection); collection.include?(self); end
 
@@ -124,10 +95,6 @@ class Object
 end
 
 class String
-  def wikiize
-    self[0..0].upcase + self[1..-1]
-  end
-
   def link(url)
     text = gsub("|",":").gsub("]]","))").gsub("\u00A0", " ") # nbsp
     "[[#{text}|#{url.gsub("]]","%5D%5D")}]]"
