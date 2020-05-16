@@ -78,13 +78,12 @@ class WikiWithTabsSB < WikiWithTabs
     Dir.glob("session_buddy_backup_*.json").each do |name|
       `cp -p #{name} #{Copied}#{short_name(name)}`
     end
-    `rsync -t --out-format=%n%L #{Copied}* $tab_backups/`.tap{|s| puts s}
+    `rsync -t --out-format=%n%L #{Copied}* $tab_backups/`.taps
   end
 
   def self.unpeel
     Dir.chdir('/Users/rd/Downloads')
-    name = Dir.glob("session_buddy_backup_*.json")[-1]
-    puts name
+    name = Dir.glob("session_buddy_backup_*.json")[-1].taps
     copied_local = Copied + (short_name = short_name(name))
     if File.file? copied_local
       `rm #{name}`
@@ -92,7 +91,7 @@ class WikiWithTabsSB < WikiWithTabs
       `cd $tab_backups; mv -v #{short_name} _rejected`
     else
       "#{copied_local} doesn't exist so no unpeel"
-    end.tap{|s| puts s}
+    end.taps
   end
 
   def self.read_all_names
