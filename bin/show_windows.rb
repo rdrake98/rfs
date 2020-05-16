@@ -4,8 +4,8 @@
 require 'base'
 require 'json'
 
+Dir.cd :tab_backups
 Backup = Struct.new(:name, :windows)
-Dir.cd(:tab_backups)
 backups = Dir.glob("s*p.js").map do |name|
   json = File.read(name)[2..-1]
   ids = JSON.parse(json)["sessions"][0]["windows"].map{|win| win['id']}
