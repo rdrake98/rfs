@@ -25,7 +25,7 @@ class WikiWithTabsSB < WikiWithTabs
     file = dir + "/spec.html"
     return unless File.file? file
     wiki = Splitter.new(file)
-    Dir.cd(:rfs).cd("tab_filters")
+    Dir.cd :rfs, "tab_filters"
     time = %w(
       StopListInitial
       PreamblesInitial
@@ -40,9 +40,9 @@ class WikiWithTabsSB < WikiWithTabs
     added = `git add -v .`
     unless added.empty?
       wiki["LastBackup"].write_simple
-      bash = "git add tab_filters; git commit -m '#{time} recently'"
-      puts bash
-      `#{bash}`
+      Dir.cd :rfs
+      bash = "git add tab_filters; git commit -m '#{time} recent'".taps
+      puts `#{bash}`
     else
       puts "no new filters to commit"
     end
@@ -52,17 +52,17 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.cleanup
-    Dir.cd(:tinys).cd('backups')
+    Dir.cd :tinys, 'backups'
     Dir.glob("*").each do |dir|
-      Dir.chdir(dir) do |dir|
-        Dir.glob("sb*").each do |sb_file|
-          sb = Splitter.new(sb_file)
-          titles = sb.titles.filter {|title| title =~ /^S2/}
-          titles.each {|title| sb[title].write_simple}
-          `rm #{sb_file}`
-        end
-        write_filters(dir)
+      Dir.chdir(dir)
+      Dir.glob("sb*").each do |sb_file|
+        sb = Splitter.new(sb_file)
+        titles = sb.titles.filter {|title| title =~ /^(S2|WIN|Windows)/}
+        titles.each {|title| sb[title].write_simple}
+        `rm #{sb_file}`
       end
+      write_filters(Dir.pwd)
+      Dir.chdir('..')
     end
   end
 
@@ -100,7 +100,7 @@ class WikiWithTabsSB < WikiWithTabs
     last_backup = read_all_names[-1]
     spec = Splitter.new("#{Dir.tinys}/spec.html")
     if spec["LastBackup"].content != last_backup
-      Dir.cd(:tinys).cd('backups')
+      Dir.cd(:tinys, 'backups')
       ymd = Time.new.ymd
       suffix = Dir.glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1
       dir = "backups/b#{ymd}%02d" % suffix
@@ -109,7 +109,7 @@ class WikiWithTabsSB < WikiWithTabs
       spec.write("")
       message = "LastBackup in #{spec.filename} is now #{last_backup}"
       puts message
-      cleanup # quick and dirty  -> slower execution
+      cleanup # slow and dirty
       Splitter.fat.commit_mods;
       "commit_mods done: " + message
     else

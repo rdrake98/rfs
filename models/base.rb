@@ -92,9 +92,9 @@ class Dir
       original_glob(*args).sort
     end
 
-    def cd(sym)
-      chdir(sym.class == Symbol && ENV[sym.to_s] || sym.to_s)
-      self
+    def cd(dir, subdir=nil)
+      dir = dir.is_a?(Symbol) && ENV[dir.to_s] || dir
+      chdir("#{dir}#{subdir && '/' + subdir}")
     end
 
     def method_missing(name, *args)
