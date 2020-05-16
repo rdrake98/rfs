@@ -29,42 +29,6 @@ def runl(command)
   set_args(args)
 end
 
-def snip(original_file)
-  original_file = ENV["TM_FILEPATH"] || original_file || ENV["PWD"] + "/"
-  original_file = ENV["PWD"] + "/" + original_file if original_file[0..0] != "/"
-  file = original_file.sub("#{Dir.home}/", "")
-  code = file == "ww/dev/code/compiled/code.js"
-  isDir = file[-1..-1] == "/"
-  isMine = file != original_file
-  require_relative "/Users/rd/scripts/textmate/base_tm"
-  selection = TMSelection.new
-  text = selection.text
-  line = selection.line
-  url_end = line < 10 ? "" : "&line=#{line}"
-  prefix = isMine ? "../" : ""
-
-  bits = file.split('/')
-  if isDir then
-    puts bits[-1].link("#{prefix}#{file[0..-2]}")
-  else
-    fileURL = "txmt://open?url=file://#{file}#{url_end}"
-    if code
-      puts "[[compiled/code.js]] " + "line #{line}".link(fileURL)
-    else
-      dirLink = bits[-2] ?
-        bits[-2].link("#{prefix}#{bits[0..-2].join('/')}") + "/" :
-        ""
-      fileURL = "#{prefix}#{file}" if ARGV[1]
-      puts dirLink + bits.last.link(fileURL)
-    end
-    if text
-      puts "{{{"
-      puts text
-      puts "}}}"
-    end
-  end
-end
-
 module CGI::Util
   def h_n(string, regex); string.gsub(regex, TABLE_FOR_ESCAPE_HTML__); end
   def h2(string); h_n(string, /[&\"<>]/); end # don't escape single quotes
@@ -148,6 +112,42 @@ class Dir
       args.size == 0 ?
         ENV[name.to_s] || super.method_missing(name) :
         super.method_missing(name, *args)
+    end
+  end
+end
+
+def snip(original_file)
+  original_file = ENV["TM_FILEPATH"] || original_file || ENV["PWD"] + "/"
+  original_file = ENV["PWD"] + "/" + original_file if original_file[0..0] != "/"
+  file = original_file.sub("#{Dir.home}/", "")
+  code = file == "ww/dev/code/compiled/code.js"
+  isDir = file[-1..-1] == "/"
+  isMine = file != original_file
+  require_relative "/Users/rd/scripts/textmate/base_tm"
+  selection = TMSelection.new
+  text = selection.text
+  line = selection.line
+  url_end = line < 10 ? "" : "&line=#{line}"
+  prefix = isMine ? "../" : ""
+
+  bits = file.split('/')
+  if isDir then
+    puts bits[-1].link("#{prefix}#{file[0..-2]}")
+  else
+    fileURL = "txmt://open?url=file://#{file}#{url_end}"
+    if code
+      puts "[[compiled/code.js]] " + "line #{line}".link(fileURL)
+    else
+      dirLink = bits[-2] ?
+        bits[-2].link("#{prefix}#{bits[0..-2].join('/')}") + "/" :
+        ""
+      fileURL = "#{prefix}#{file}" if ARGV[1]
+      puts dirLink + bits.last.link(fileURL)
+    end
+    if text
+      puts "{{{"
+      puts text
+      puts "}}}"
     end
   end
 end
