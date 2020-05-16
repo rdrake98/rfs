@@ -101,12 +101,20 @@ class App < Roda
       view('graph', locals: {chartkick: chartkick, data: data})
     end
 
+    r.get "copy_backups" do
+      WikiWithTabsSB.copy_backups
+    end
+
     r.get "tabs" do
       WikiWithTabsSB.new.show_final_tabs.to_s
     end
 
     r.get "tabs_combined" do
       WikiWithTabsSB.new(0).show_final_tabs.to_s
+    end
+
+    r.get "unpeel" do
+      WikiWithTabsSB.unpeel
     end
 
     r.get "copy_tabs_to_fat" do
@@ -116,10 +124,6 @@ class App < Roda
 
     r.get "commit_tabs_mods" do
       WikiWithTabsSB.commit_mods
-    end
-
-    r.get "unpeel" do
-      WikiWithTabsSB.unpeel
     end
   end
 end

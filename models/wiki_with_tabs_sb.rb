@@ -70,25 +70,30 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.s6(name, i); name[i..i+1] + name[i+3..i+4] + name[i+6..i+7]; end
+  def self.short_name(name); "s#{s6(name, 23)}.#{s6(name, 32)}#{hostc}.js"; end
+  Copied = Dir.home + "/rf/link_data/copied/"
 
   def self.copy_backups
     Dir.chdir('/Users/rd/Downloads')
     to = "~/rf/link_data/copied"
     Dir.glob("session_buddy_backup_*.json").each do |name|
-      `cp -p #{name} #{to}/s#{s6(name, 23)}.#{s6(name, 32)}#{hostc}.js`
+      `cp -p #{name} #{Copied}#{short_name(name)}`
     end
-    puts `rsync -t --out-format=%n%L #{to}/* $tab_backups/`
+    `rsync -t --out-format=%n%L #{Copied}* $tab_backups/`.tap{|s| puts s}
   end
 
   def self.unpeel
     Dir.chdir('/Users/rd/Downloads')
     name = Dir.glob("session_buddy_backup_*.json")[-1]
-    `rm #{name}`
     puts name
-    name = "s#{s6(name, 23)}.#{s6(name, 32)}#{hostc}.js"
-    `rm ~/rf/link_data/copied/#{name}`
-    mv = "cd $tab_backups; mv #{name} _rejected"; `#{mv}`
-    mv
+    copied_local = Copied + (short_name = short_name(name))
+    if File.file? copied_local
+      `rm #{name}`
+      puts `rm -v #{copied_local}`
+      `cd $tab_backups; mv -v #{short_name} _rejected`
+    else
+      "#{copied_local} doesn't exist so no unpeel"
+    end.tap{|s| puts s}
   end
 
   def self.read_all_names
