@@ -25,8 +25,7 @@ class WikiWithTabsSB < WikiWithTabs
     file = dir + "/spec.html"
     return unless File.file? file
     wiki = Splitter.new(file)
-    Dir.chdir(:rfs)
-    Dir.chdir("tab_filters")
+    Dir.cd(:rfs).cd("tab_filters")
     time = %w(
       StopListInitial
       PreamblesInitial
@@ -53,19 +52,17 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.cleanup
-    Dir.chdir(:tinys)
-    Dir.chdir('backups')
-    dirs = Dir.glob "*"
-    dirs.each do |dir|
-      Dir.chdir(dir)
-      Dir.glob("sb*").each do |sb_file|
-        sb = Splitter.new(sb_file)
-        titles = sb.titles.filter {|title| title =~ /^S2/}
-        titles.each {|title| sb[title].write_simple}
-        `rm #{sb_file}`
+    Dir.cd(:tinys).cd('backups')
+    Dir.glob("*").each do |dir|
+      Dir.chdir(dir) do |dir|
+        Dir.glob("sb*").each do |sb_file|
+          sb = Splitter.new(sb_file)
+          titles = sb.titles.filter {|title| title =~ /^S2/}
+          titles.each {|title| sb[title].write_simple}
+          `rm #{sb_file}`
+        end
+        write_filters(dir)
       end
-      write_filters(Dir.pwd)
-      Dir.chdir('..')
     end
   end
 
@@ -74,7 +71,7 @@ class WikiWithTabsSB < WikiWithTabs
   Copied = Dir.home + "/rf/link_data/copied/"
 
   def self.copy_backups
-    Dir.chdir('/Users/rd/Downloads')
+    Dir.chdir(Downloads)
     Dir.glob("session_buddy_backup_*.json").each do |name|
       `cp -p #{name} #{Copied}#{short_name(name)}`
     end
@@ -82,7 +79,7 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.unpeel
-    Dir.chdir('/Users/rd/Downloads')
+    Dir.chdir(Downloads)
     name = Dir.glob("session_buddy_backup_*.json")[-1].taps
     copied_local = Copied + (short_name = short_name(name))
     if File.file? copied_local
@@ -95,7 +92,7 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.read_all_names
-    Dir.chdir(:tab_backups)
+    Dir.cd :tab_backups
     Dir.glob("s*.js").sort
   end
 
@@ -103,8 +100,7 @@ class WikiWithTabsSB < WikiWithTabs
     last_backup = read_all_names[-1]
     spec = Splitter.new("#{Dir.tinys}/spec.html")
     if spec["LastBackup"].content != last_backup
-      Dir.chdir(:tinys)
-      Dir.chdir('backups')
+      Dir.cd(:tinys).cd('backups')
       ymd = Time.new.ymd
       suffix = Dir.glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1
       dir = "backups/b#{ymd}%02d" % suffix
@@ -126,7 +122,7 @@ class WikiWithTabsSB < WikiWithTabs
   def self.copy_to_fat
     fat = Splitter.fat
     puts fat.tiddlers.size
-    Dir.chdir(:tinys)
+    Dir.cd :tinys
     sb_file = Dir.glob("sb*.html").sort[-1]
     puts "Using #{sb_file}"
     sb = Splitter.new(sb_file)

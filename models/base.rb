@@ -4,6 +4,8 @@ require 'time'
 require 'cgi'
 require 'stringio'
 
+Downloads = Dir.home + "/Downloads"
+
 def mp?; `hostname`[0..1] == "mp"; end
 def hostc; mp? ? "p" : "g"; end
 def jem?; Dir.pwd != "/Users/rd/rf/rfs"; end
@@ -90,11 +92,9 @@ class Dir
       original_glob(*args).sort
     end
 
-    alias :original_chdir :chdir
-    def chdir(*args)
-      args[0].class == Symbol ?
-        original_chdir(ENV[args[0].to_s]) :
-        original_chdir(*args)
+    def cd(sym)
+      chdir(sym.class == Symbol && ENV[sym.to_s] || sym.to_s)
+      self
     end
 
     def method_missing(name, *args)
