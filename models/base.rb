@@ -63,17 +63,6 @@ class String
     text = gsub("|",":").gsub("]]","))").gsub("\u00A0", " ") # nbsp
     "[[#{text}|#{url.gsub("]]","%5D%5D")}]]"
   end
-
-  def strip_semi
-    stripped = rstrip
-    if stripped =~ /^(.*);\s+(\/\/.*)$/
-      stripped = $1 + " " + $2
-    elsif stripped[-1] == ";"
-      stripped = stripped[0..-2]
-      stripped.rstrip!
-    end
-    stripped += "\n"
-  end
 end
 
 class Array
