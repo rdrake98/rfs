@@ -75,7 +75,6 @@ class WikiWithTabsSB < WikiWithTabs
 
   def self.copy_backups
     Dir.chdir('/Users/rd/Downloads')
-    to = "~/rf/link_data/copied"
     Dir.glob("session_buddy_backup_*.json").each do |name|
       `cp -p #{name} #{Copied}#{short_name(name)}`
     end
