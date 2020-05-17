@@ -98,8 +98,8 @@ class Dir
     end
 
     def method_missing(name, *args)
-      args.size == 0 ?
-        ENV[name.to_s] || super.method_missing(name) :
+      (dir = ENV[name.to_s]) ?
+        ([dir] + args).join("/") :
         super.method_missing(name, *args)
     end
   end
