@@ -410,7 +410,7 @@ class Splitter
     @before = lines.join_n
   end
 
-  def update_code(testing=nil)
+  def update_code(testing=nil, suffix="")
     puts "changing code for #{@filename}"
     puts @code.size
     new_code = File.read("#{Dir.compiled}/code.js")
@@ -421,7 +421,7 @@ class Splitter
     old_before = @before
     inject_tests(testing) unless testing == nil
     same &&= @before == old_before
-    write("") unless same
+    write(suffix) unless same
     !same
   end
 
