@@ -58,7 +58,7 @@ class WikiWithTabsSB < WikiWithTabs
         titles.each {|title| sb[title].write_simple}
         `rm #{sb_file}`
       end
-      write_filters(dir)
+      write_filters(Dir.pwd)
       Dir.chdir('..')
     end
   end
