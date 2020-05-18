@@ -87,7 +87,7 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.read_all_names
-    Dir.cd(:tab_backups).glob("s*.js").sort
+    Dir.cd(:tab_backups).glob("s*.js")
   end
 
   def self.commit_mods
@@ -103,7 +103,7 @@ class WikiWithTabsSB < WikiWithTabs
       message = "LastBackup in #{spec.filename} is now #{last_backup}"
       puts message
       cleanup # slow and dirty
-      Splitter.fat.commit_mods;
+      Splitter.fat.commit_mods
       "commit_mods done: " + message
     else
       puts "LastBackup in #{spec.filename} is already #{last_backup}"
