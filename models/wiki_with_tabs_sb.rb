@@ -99,7 +99,7 @@ class WikiWithTabsSB < WikiWithTabs
     if spec["LastBackup"].content != last_backup
       ymd = Time.new.ymd
       dir = "backups/b#{ymd}%02d" %
-        Dir.cd(:tinys, 'backups').glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1
+        (Dir.cd(:tinys, 'backups').glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1)
       puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
       spec["LastBackup"].content = last_backup
       spec.write("")
