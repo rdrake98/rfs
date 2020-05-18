@@ -40,8 +40,7 @@ class WikiWithTabsSB < WikiWithTabs
     added = `git add -v .`
     unless added.empty?
       wiki["LastBackup"].write_simple
-      Dir.cd :rfs
-      bash = "git add tab_filters; git commit -m '#{time} recent'".taps
+      bash = "cd $rfs; git add tab_filters; git commit -m '#{time} recent'".taps
       puts `#{bash}`
     else
       puts "no new filters to commit"
@@ -52,10 +51,8 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.cleanup
-    Dir.cd :tinys, 'backups'
-    Dir.glob("*").each do |dir|
-      Dir.chdir(dir)
-      Dir.glob("sb*").each do |sb_file|
+    Dir.cd(:tinys, 'backups').glob("*").each do |dir|
+      Dir.cd(dir).glob("sb*").each do |sb_file|
         sb = Splitter.new(sb_file)
         titles = sb.titles.filter {|title| title =~ /^(S2|WIN|Windows)/}
         titles.each {|title| sb[title].write_simple}
