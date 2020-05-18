@@ -61,7 +61,7 @@ class WikiWithTabsSB < WikiWithTabs
         titles.each {|title| sb[title].write_simple}
         `rm #{sb_file}`
       end
-      write_filters(Dir.pwd)
+      write_filters(dir)
       Dir.chdir('..')
     end
   end
@@ -71,16 +71,14 @@ class WikiWithTabsSB < WikiWithTabs
   Copied = Dir.home + "/rf/link_data/copied/"
 
   def self.copy_backups
-    Dir.chdir(Downloads)
-    Dir.glob("session_buddy_backup_*.json").each do |name|
+    Dir.cd(Downloads).glob("session_buddy_backup_*.json").each do |name|
       `cp -p #{name} #{Copied}#{short_name(name)}`
     end
     `rsync -t --out-format=%n%L #{Copied}* $tab_backups/`.taps
   end
 
   def self.unpeel
-    Dir.chdir(Downloads)
-    name = Dir.glob("session_buddy_backup_*.json")[-1].taps
+    name = Dir.cd(Downloads).glob("session_buddy_backup_*.json")[-1].taps
     copied_local = Copied + (short_name = short_name(name))
     if File.file? copied_local
       `rm #{name}`
@@ -92,18 +90,16 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.read_all_names
-    Dir.cd :tab_backups
-    Dir.glob("s*.js").sort
+    Dir.cd(:tab_backups).glob("s*.js").sort
   end
 
   def self.commit_mods
     last_backup = read_all_names[-1]
-    spec = Splitter.new("#{Dir.tinys}/spec.html")
+    spec = Splitter.new(Dir.tinys "spec.html")
     if spec["LastBackup"].content != last_backup
-      Dir.cd(:tinys, 'backups')
       ymd = Time.new.ymd
-      suffix = Dir.glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1
-      dir = "backups/b#{ymd}%02d" % suffix
+      dir = "backups/b#{ymd}%02d" %
+        Dir.cd(:tinys, 'backups').glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1
       puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
       spec["LastBackup"].content = last_backup
       spec.write("")
@@ -122,8 +118,7 @@ class WikiWithTabsSB < WikiWithTabs
   def self.copy_to_fat
     fat = Splitter.fat
     puts fat.tiddlers.size
-    Dir.cd :tinys
-    sb_file = Dir.glob("sb*.html").sort[-1]
+    sb_file = Dir.cd(:tinys).glob("sb*.html")[-1]
     puts "Using #{sb_file}"
     sb = Splitter.new(sb_file)
     titles = sb.titles

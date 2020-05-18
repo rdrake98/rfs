@@ -94,7 +94,7 @@ class Dir
 
     def cd(dir, subdir=nil)
       dir = dir.is_a?(Symbol) && ENV[dir.to_s] || dir
-      chdir("#{dir}#{subdir && '/' + subdir}")
+      chdir("#{dir}#{subdir && '/' + subdir}") == 0 ? self : nil
     end
 
     def method_missing(name, *args)
@@ -110,7 +110,6 @@ def snip(original_file)
   original_file = ENV["PWD"] + "/" + original_file if original_file[0..0] != "/"
   file = original_file.sub("#{Dir.home}/", "")
   code = file == "ww/dev/code/compiled/code.js"
-  isDir = file[-1..-1] == "/"
   isMine = file != original_file
   require_relative "/Users/rd/scripts/textmate/base_tm"
   selection = TMSelection.new
@@ -120,7 +119,7 @@ def snip(original_file)
   prefix = isMine ? "../" : ""
 
   bits = file.split('/')
-  if isDir then
+  if file[-1] == "/" then
     puts bits[-1].link("#{prefix}#{file[0..-2]}")
   else
     fileURL = "txmt://open?url=file://#{file}#{url_end}"

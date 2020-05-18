@@ -2,7 +2,6 @@
 
 require 'tiddler'
 require 'json'
-require 'fileutils'
 require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
 require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
 
@@ -251,7 +250,7 @@ class Splitter
   end
 
   def changes_dir
-    "#{Dir.ww}/_changes"
+    Dir.ww "_changes"
   end
 
   def changes_file_
@@ -413,7 +412,7 @@ class Splitter
   def update_code(testing=nil, suffix="")
     puts "changing code for #{@filename}"
     puts @code.size
-    new_code = File.read("#{Dir.compiled}/code.js")
+    new_code = File.read(Dir.compiled "code.js")
     same = @code == new_code
     @code = new_code
     puts same ? "code unchanged" : @code.size
@@ -474,7 +473,7 @@ class Splitter
     titles = titles + recent - censored
     divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
     tiny_wiki = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
-    filename = "#{Dir.tinys}/#{file}.html"
+    filename = Dir.tinys "#{file}.html"
     File.write(filename, tiny_wiki)
     [filename, titles.size, tiny_wiki.size]
   end

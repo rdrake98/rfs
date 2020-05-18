@@ -60,27 +60,25 @@ class Splitr < Splitter
 
   def write_tiddlers(time=nil, noisy=true, message=edition)
     # byebug if $dd
-    dir = Dir.pwd
-    Dir.chdir(Splitr.dir)
-    FileUtils.rm Dir.glob('*.txt')
-    puts "writing #{message}" if noisy
-    tiddlers.each(&:write)
-    puts "committing #{message}" if noisy
-    if time
-      git_time = time.to_s[0..-7]
-      pre = "git add .; GIT_COMMITTER_DATE="
-      `#{pre}"#{git_time}" git commit -m #{message} --date "#{git_time}"`
-    else
-      `gcaa #{message}`
+    Dir.chdir(Splitr.dir) do
+      `rm *.txt`
+      puts "writing #{message}" if noisy
+      tiddlers.each(&:write)
+      puts "committing #{message}" if noisy
+      if time
+        git_time = time.to_s[0..-7]
+        pre = "git add .; GIT_COMMITTER_DATE="
+        `#{pre}"#{git_time}" git commit -m #{message} --date "#{git_time}"`
+      else
+        `gcaa #{message}`
+      end
     end
-    Dir.chdir(dir)
   end
 
   def self.write_sample(dir, step=1, writing=false, start_string=nil)
     $last_save ||= Time.new(0)
-    Dir.chdir(dir)
     puts dir
-    glob = Dir.glob "whiteword*.html"
+    glob = Dir.cd(dir).glob "whiteword*.html"
     glob = Dir.glob "f*.html" if glob.size == 0
     start = (start_string && glob.index {|f| f[start_string]}) || 0
     puts "#{glob.size} starting at #{start} with step #{step}"
@@ -103,10 +101,7 @@ class Splitr < Splitter
   end
 
   def self.mkdir(dir1=dir)
-    FileUtils.remove_dir(dir1) if Dir.exist?(dir1)
-    Dir.mkdir(dir1)
-    Dir.chdir(dir1)
-    `gin`
+    `mkdir -p #{dir1}; cd #{dir1}; gin`
   end
 
   def self.test_write

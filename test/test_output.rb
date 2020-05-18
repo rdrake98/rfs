@@ -6,8 +6,8 @@ require 'splitter'
 class TestOutput < MiniTest::Test
   few = ARGV[0] == "few" || !ARGV[0]
   type = !few && ARGV[0] || "dev"
-  wiki_path = "#{Dir.data}/#{type}_.html"
-  path = "#{Dir.data}/#{type}_output.html"
+  wiki_path = Dir.data "#{type}_.html"
+  path = Dir.data "#{type}_output.html"
   wiki = Splitter.new(wiki_path)
   limit = few && wiki["RubyTests"].tiddler_links.size
   one = ARGV[1]

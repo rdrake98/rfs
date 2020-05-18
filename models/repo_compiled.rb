@@ -8,7 +8,7 @@ RepoFile = Struct.new(:name, :size)
 
 class RepoCompiled < Repo
   def initialize
-    super(Dir.compiled)
+    super Dir.compiled
   end
 
   def summary
