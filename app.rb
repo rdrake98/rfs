@@ -9,15 +9,15 @@ class App < Roda
   plugin :h
 
   puts ENV["RUBYLIB"]
-  WIKIS = {"fat" => Splitter.fat, "dev" => Splitter.dev}
-  puts WIKIS["fat"].edition
-  puts WIKIS["dev"].edition
-  REPO = RepoCompiled.new
+  Wikis = {"fat" => Splitter.fat, "dev" => Splitter.dev}
+  puts Wikis["fat"].edition
+  puts Wikis["dev"].edition
+  RepoC = RepoCompiled.new
 
   def reload(type="fat", saving=true, edition=nil, changes=nil)
     puts "reloading #{type} into server from file"
     wiki = type == "fat" ? Splitter.fat : Splitter.dev
-    WIKIS[type] = wiki
+    Wikis[type] = wiki
     saving ? edition ? wiki.save(edition, changes) : wiki.do_save : wiki
   end
 
@@ -27,7 +27,7 @@ class App < Roda
       r.post "change_tiddler" do
         p = r.params
         type = p['type']
-        wiki = WIKIS[type]
+        wiki = Wikis[type]
         message = "#{p['title']} #{p['action']} in #{type}"
         puts message
         wiki&.add_changes(p['changes'], p['shared'] == "true")
@@ -37,7 +37,7 @@ class App < Roda
       r.post "save" do
         p = r.params
         type, edition, changes = p['type'], p['edition'], p['changes']
-        wiki = WIKIS[type] || Splitter.new(type)
+        wiki = Wikis[type] || Splitter.new(type)
         wiki.save(edition, changes) || reload(type, true, edition, changes)
       end
 
@@ -50,7 +50,7 @@ class App < Roda
         target = nil if target == ""
         insert = target ? ' with ' + target : ''
         puts "#{p['action']} '#{name}'#{insert} in #{title} in #{type}"
-        wiki = WIKIS[type] || (w = Splitter.new(type); type = nil; w)
+        wiki = Wikis[type] || (w = Splitter.new(type); type = nil; w)
         clash = wiki.check_file_edition(edition)
         if clash
           response["clash"] = clash.split(",")[0]
@@ -70,7 +70,7 @@ class App < Roda
         p = r.params
         type = p['type']
         change_type = p['change_type']
-        wiki = WIKIS[type]
+        wiki = Wikis[type]
         wiki = reload(type, false) if wiki.edition != wiki.read_file_edition
         if change_type == "wiki"
           puts "serving changes from m#{wiki.other_host} for #{type} on startup"
@@ -83,7 +83,7 @@ class App < Roda
       r.post "seed" do
         p = r.params
         type = p['type']
-        wiki = WIKIS[type] # type is checked in javascript
+        wiki = Wikis[type] # type is checked in javascript
         if wiki.check_file_edition(p['edition'])
           "version clash"
         else
@@ -97,7 +97,7 @@ class App < Roda
 
     r.get "graph" do
       chartkick = Class.new.include(Chartkick::Helper).new
-      data = REPO.graph_data(r.params["x"]&.to_i)
+      data = RepoC.graph_data(r.params["x"]&.to_i)
       view('graph', locals: {chartkick: chartkick, data: data})
     end
 
