@@ -32,8 +32,13 @@ class RepoRfs < Repo
     end
   end
 
-  def graph_data(points=nil)
-    data = summary.map{|c| [c.time, c.size]}
-    points ? data[0..points] : data
+  def graph_data(n=nil, last_oid=nil)
+    i = last_oid && commits.index{|c| c.oid =~ /^#{last_oid}/} || 0
+    commits = summary[i..n||-1]
+    c = commits[0]
+    puts "", c.oid, c.time.to_minute, c.message, c.size, ""
+    c = commits[-1]
+    puts c.oid, c.time.to_minute, c.message, c.size, ""
+    commits.map{|c| [c.time, c.size]}
   end
 end

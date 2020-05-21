@@ -105,7 +105,7 @@ class App < Roda
 
     r.get "graphr" do
       chartkick = Class.new.include(Chartkick::Helper).new
-      data = RepoR.graph_data(r.params["x"]&.to_i)
+      data = RepoR.graph_data(r.params["x"]&.to_i, "869129a")
       view('graph', locals: {chartkick: chartkick, data: data})
     end
 
