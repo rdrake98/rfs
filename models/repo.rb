@@ -2,6 +2,9 @@
 
 require 'rugged'
 
+Commit = Struct.new(:oid, :time, :message, :files, :size)
+RepoFile = Struct.new(:name, :size)
+
 class Repo
   def initialize(dir, limit=999999)
     @repo = Rugged::Repository.new(dir)
