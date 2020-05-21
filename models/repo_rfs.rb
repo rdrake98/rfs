@@ -10,7 +10,7 @@ class RepoRfs < Repo
 
   def summary
     return @summary if @summary
-    @summary = commits[5..-1].map do |c|
+    @summary = commits[6..-1].map do |c|
       tree = c.tree
       files = tree.map do |f|
         name = f[:name]
