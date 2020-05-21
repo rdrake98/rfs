@@ -55,11 +55,6 @@ class RepoCompiled < Repo
     end
     names
   end
-
-  def graph_data(points)
-    data = summary.map{|c| [c.time, c.size]}
-    points ? data[0...points] : data
-  end
 end
 
 __END__
