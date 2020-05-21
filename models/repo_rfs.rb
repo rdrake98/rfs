@@ -10,14 +10,10 @@ class RepoRfs < Repo
 
   def summary
     return @summary if @summary
-    # puts commits.size
     @summary = commits[5..-1].map do |c|
       tree = c.tree
-      # puts
-      # puts ("%03i " % n) + c.time.dotted #, c.message
       files = tree.map do |f|
         name = f[:name]
-        # puts name
         lf = lookup(f)
         lf.is_a?(Rugged::Tree) ?
           name == "assets" ?
@@ -25,7 +21,6 @@ class RepoRfs < Repo
             lf.map do |f|
               name = f[:name]
               lf = lookup(f)
-              # puts name if lf.is_a?(Rugged::Tree)
               lf.is_a?(Rugged::Tree) ? nil : RepoFile.new(name, lf.size)
             end :
           name =~ /.txt$/ ?
