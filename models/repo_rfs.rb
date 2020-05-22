@@ -10,6 +10,7 @@ class RepoRfs < Repo
 
   def summary
     return @summary if @summary
+    names = Set.new
     @summary = commits.map do |c|
       tree = c.tree
       files = tree.map do |f|
@@ -17,16 +18,20 @@ class RepoRfs < Repo
         lf = lookup(f)
         lf.is_a?(Rugged::Tree) ?
           name == "assets" || name == "tab_filters" ?
-            nil :
+            names.add(name) && nil :
             lf.map do |f|
               name = f[:name]
               lf = lookup(f)
-              lf.is_a?(Rugged::Tree) ? nil : RepoFile.new(name, lf.size)
+              lf.is_a?(Rugged::Tree) ?
+                names.add(name) && nil :
+                RepoFile.new(name, lf.size)
             end :
           RepoFile.new(name, lf.size)
       end.flatten.compact
       size = files.map(&:size).inject(0, &:+)
       Commit.new(c.oid, c.time, c.message, files, size)
     end
+    puts names
+    @summary
   end
 end
