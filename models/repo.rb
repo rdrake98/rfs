@@ -6,9 +6,9 @@ Commit = Struct.new(:oid, :time, :message, :files, :size)
 RepoFile = Struct.new(:name, :size)
 
 class Repo
-  def initialize(dir, limit=999999)
+  def initialize(dir, unwanted_dir=nil)
     @repo = Rugged::Repository.new(dir)
-    @limit = limit
+    @unwanted_dir = unwanted_dir
   end
 
   def commits
@@ -20,7 +20,7 @@ class Repo
     walker = Rugged::Walker.new(@repo)
     walker.push(@repo.head.target_id)
     @commits = []
-    walker.each { |c| @commits << c; break if @commits.size >= @limit }
+    walker.each { |c| @commits << c; break if @commits.size >= 999999 }
     @commits
   end
 
@@ -29,10 +29,18 @@ class Repo
       name = f[:name]
       lf = lookup(f)
       lf.is_a?(Rugged::Tree) ?
-        name == "assets" || name == "tab_filters" || name == "foo" ?
+        name =~ @unwanted_dir ?
           nil :
           summary_for_tree(lf) :
         RepoFile.new(name, lf.size)
+    end
+  end
+
+  def summary
+    return @summary if @summary
+    @summary = commits.map do |c|
+      files = summary_for_tree(c.tree).flatten.compact
+      Commit.new(c.oid, c.time, c.message, files, files.map(&:size).sum)
     end
   end
 
