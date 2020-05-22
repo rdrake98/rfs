@@ -15,6 +15,10 @@ class TestRepos < MiniTest::Test
         [87413, 87457, 87453, 87459, 87488, 87486, 87728, 87713, 87725, 87727],
         RepoR.graph_data(10, "869129a").map(&:last)
       )
+      assert_equal(
+        [17510, 17542, 17510, 17523, 18439, 18354, 18326, 18301, 18307, 18568],
+        RepoR.graph_data(10, "6e64015").map(&:last)
+      )
     end
 
     it "compiled" do
