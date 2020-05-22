@@ -5,6 +5,6 @@ require 'repo'
 
 class RepoRfs < Repo
   def initialize
-    super Dir.rfs, /^(assets|tab_filters|foo)$/
+    super Dir.rfs, /^(assets|tab_filters)$/
   end
 end
