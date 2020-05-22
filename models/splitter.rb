@@ -469,8 +469,8 @@ class Splitter
       title = key.to_s
       tinys[title] = Tiddler.new(self, title, content, self[title].splitname)
     end
-    titles = (config_titles + (expand ? expanded(selected) : selected)).uniq
-    titles = titles + recent - censored
+    titles = config_titles + (expand ? expanded(selected) : selected)
+    titles = (titles + recent - censored).uniq
     divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
     tiny_wiki = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
     filename = Dir.tinys "#{file}.html"
@@ -484,16 +484,14 @@ class Splitter
 
   def write_spec
     write_selected(
-      %w[StopListInitial PreamblesInitial HashPreambles QPreambles],
-      "spec", false, "spec"
-    )
+      %w[StopListInitial PreamblesInitial HashPreambles QPreambles], "spec")
   end
 
   def write_sb
-    write_tiny({DefaultTiddlers: "OtherOptions", SiteTitle: "sb"}, [], "sb")
+    write_selected([:ExternalURLs], "sb")
   end
 
-  def write_selected(titles, file, expand=false, title="x")
+  def write_selected(titles, file, expand=false, title=file)
     titles = titles.map(&:to_s)
     configs = {DefaultTiddlers: titles.join("\n"), SiteTitle: title}
     write_tiny(configs, titles, file, expand)
@@ -507,7 +505,7 @@ class Splitter
   end
 
   def write_sample(n, expand=false)
-    write_selected(titles.sample(n), "sample", expand)
+    write_selected(titles.sample(n), "sample", expand, "x")
   end
 
   def self.test_null(title)

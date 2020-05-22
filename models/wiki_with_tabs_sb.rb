@@ -148,7 +148,7 @@ class WikiWithTabsSB < WikiWithTabs
     p qs_reduce
     p hashes_reduce
     wins = file_links.filter {|win| win.content.size > 0}
-    tiddlers = []
+    tiddlers = ["ExternalURLs"]
     wins.each_with_index do |win, i|
       skipped = false
       content = win.content
