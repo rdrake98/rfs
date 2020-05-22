@@ -24,8 +24,7 @@ class RepoRfs < Repo
     return @summary if @summary
     @summary = commits.map do |c|
       files = summary_for_tree(c.tree).flatten.compact
-      size = files.map(&:size).inject(0, &:+)
-      Commit.new(c.oid, c.time, c.message, files, size)
+      Commit.new(c.oid, c.time, c.message, files, files.map(&:size).sum)
     end
   end
 end
