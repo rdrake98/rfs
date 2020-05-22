@@ -2,12 +2,11 @@
 
 require 'minitest/autorun'
 require 'repo_compiled'
-require 'repo_rfs'
 
 class TestRepos < MiniTest::Test
 
   RepoC = RepoCompiled.new
-  RepoR = RepoRfs.new
+  RepoR = Repo.new Dir.rfs, /^(assets|tab_filters)$/
 
   describe "selection sizes" do
     it "rfs" do

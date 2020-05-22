@@ -1,5 +1,6 @@
 # repo.rb
 
+require 'base'
 require 'rugged'
 
 Commit = Struct.new(:oid, :time, :message, :files, :size)
