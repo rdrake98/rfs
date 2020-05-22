@@ -24,6 +24,18 @@ class Repo
     @commits
   end
 
+  def summary_for_tree(tree)
+    files = tree.map do |f|
+      name = f[:name]
+      lf = lookup(f)
+      lf.is_a?(Rugged::Tree) ?
+        name == "assets" || name == "tab_filters" || name == "foo" ?
+          nil :
+          summary_for_tree(lf) :
+        RepoFile.new(name, lf.size)
+    end
+  end
+
   def graph_data(n=nil, last_oid=nil)
     i = last_oid && commits.index{|c| c.oid =~ /^#{last_oid}/} || 0
     subset = summary[i..(n ? i+n-1 : -1)]

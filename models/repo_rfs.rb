@@ -8,18 +8,6 @@ class RepoRfs < Repo
     super Dir.rfs
   end
 
-  def summary_for_tree(tree)
-    files = tree.map do |f|
-      name = f[:name]
-      lf = lookup(f)
-      lf.is_a?(Rugged::Tree) ?
-        name == "assets" || name == "tab_filters" || name == "foo" ?
-          nil :
-          summary_for_tree(lf) :
-        RepoFile.new(name, lf.size)
-    end
-  end
-
   def summary
     return @summary if @summary
     @summary = commits.map do |c|
