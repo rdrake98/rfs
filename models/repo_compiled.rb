@@ -30,7 +30,7 @@ class RepoCompiled < Repo
   end
 
   def calc_files(c)
-    files = summary_for_tree(c.tree).flatten.compact
+    files = super
     unless files.map(&:name).include?("code.js")
       files << RepoFile.new("code.js", 278112)
     end
