@@ -7,9 +7,10 @@ Commit = Struct.new(:oid, :time, :message, :files, :size)
 RepoFile = Struct.new(:name, :size)
 
 class Repo
-  def initialize(dir, unwanted_dir=nil)
+  def initialize(dir, unwanted_dir=nil, unwanted_file=nil)
     @repo = Rugged::Repository.new(dir)
     @unwanted_dir = unwanted_dir
+    @unwanted_file = unwanted_file
   end
 
   def commits
@@ -30,10 +31,8 @@ class Repo
       name = f[:name]
       lf = lookup(f)
       lf.is_a?(Rugged::Tree) ?
-        name =~ @unwanted_dir ?
-          nil :
-          summary_for_tree(lf) :
-        RepoFile.new(name, lf.size)
+        name =~ @unwanted_dir ? nil : summary_for_tree(lf) :
+        name =~ @unwanted_file ? nil : RepoFile.new(name, lf.size)
     end
   end
 
