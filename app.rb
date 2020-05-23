@@ -13,7 +13,7 @@ class App < Roda
   puts Wikis["fat"].edition
   puts Wikis["dev"].edition
   RepoC = RepoCompiled.new
-  RepoR = Repo.new Dir.rfs, /^(assets|tab_filters)$/
+  RepoR = Repo.new Dir.rfs, /^assets$/, /\.txt$/
   RepoS = Repo.new Dir.home + "/scripts", /^_data$/, /\.txt$/
 
   def reload(type="fat", saving=true, edition=nil, changes=nil)

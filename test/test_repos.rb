@@ -6,7 +6,7 @@ require 'repo_compiled'
 class TestRepos < MiniTest::Test
 
   RepoC = RepoCompiled.new
-  RepoR = Repo.new Dir.rfs, /^(assets|tab_filters)$/
+  RepoR = Repo.new Dir.rfs, /^assets$/, /\.txt$/
 
   describe "selection sizes" do
     it "rfs" do
