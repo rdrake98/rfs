@@ -42,7 +42,7 @@ class RepoCompiled < Repo
       unless files.map(&:name).include?("code.js")
         files << RepoFile.new("code.js", 278112)
       end
-      size = files.map(&:size).inject(0, &:+)
+      size = files.map(&:size).sum
       Commit.new(c.oid, c.time, c.message, files, size)
     end
   end
