@@ -4,6 +4,10 @@ require 'base'
 require 'repo'
 
 class RepoCompiled < Repo
+  def initialize
+    super Dir.compiled
+  end
+
   @@stop_words = [
     ".gitignore",
     "loadspeed.js", "render.js", "test.js", "tests.js", "runner.js",
@@ -25,13 +29,8 @@ class RepoCompiled < Repo
     "code281.js"
   ]
 
-  def initialize
-    super Dir.compiled
-  end
-
   def calc_files(c)
-    files = super
-    unless files.map(&:name).include?("code.js")
+    unless (files = super).map(&:name).include?("code.js")
       files << RepoFile.new("code.js", 278112)
     end
     files

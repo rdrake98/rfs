@@ -31,16 +31,14 @@ class TestRepos < MiniTest::Test
           338794, 338815, 338611, 338285, 338729],
         RepoC.graph_data.map(&:last)[-10..-1]
       )
-      if ARGV[0]
-        subset = RepoC.subset "cd6903f"
-        content = subset.map do |c|
-          [c.oid[0..6], c.time.to_minute(true), c.size.to_s].join ","
-        end.join "\n"
-        dir = Dir.db "data/repo"
-        prev_content = File.read(dir + "/compiled.txt")
-        File.write dir + "/compiled_.txt", content
-        assert_equal prev_content, content
-      end
+      subset = RepoC.subset "cd6903f"
+      content = subset.map do |c|
+        [c.oid[0..6], c.time.to_minute(true), c.size.to_s].join ","
+      end.join "\n"
+      dir = Dir.db "data/repo"
+      prev_content = File.read(dir + "/compiled.txt")
+      File.write dir + "/compiled_.txt", content
+      assert_equal prev_content, content
     end
   end
 end
