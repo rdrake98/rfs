@@ -26,20 +26,28 @@ class Repo
     @commits
   end
 
+  def file_unwanted?(name, size)
+    name =~ @unwanted_file
+  end
+
   def summary_for_tree(tree)
-    files = tree.map do |f|
+    tree.map do |f|
       name = f[:name]
       lf = lookup(f)
       lf.is_a?(Rugged::Tree) ?
         name =~ @unwanted_dir ? nil : summary_for_tree(lf) :
-        name =~ @unwanted_file ? nil : RepoFile.new(name, lf.size)
+        file_unwanted?(name, lf.size) ? nil : RepoFile.new(name, lf.size)
     end
+  end
+
+  def calc_files(c)
+    summary_for_tree(c.tree).flatten.compact
   end
 
   def summary
     return @summary if @summary
     @summary = commits.map do |c|
-      files = summary_for_tree(c.tree).flatten.compact
+      files = calc_files(c)
       Commit.new(c.oid, c.time, c.message, files, files.map(&:size).sum)
     end
   end
