@@ -1,20 +1,11 @@
 require 'roda'
 require 'wiki_with_tabs_sb'
-require 'chartkick'
-require 'repo_compiled'
 
 class App < Roda
-  plugin :render
-  plugin :assets, js: ['Chart.bundle.min.js', 'chartkick.js']
-  plugin :h
-
   puts ENV["RUBYLIB"]
   Wikis = {"fat" => Splitter.fat, "dev" => Splitter.dev}
   puts Wikis["fat"].edition
   puts Wikis["dev"].edition
-  RepoC = RepoCompiled.new
-  RepoR = Repo.new Dir.rfs, /^assets$/, /\.txt$/
-  RepoS = Repo.new Dir.home + "/scripts", /^_data$/, /\.txt$/
 
   def reload(type="fat", saving=true, edition=nil, changes=nil)
     puts "reloading #{type} into server from file"
@@ -24,7 +15,6 @@ class App < Roda
   end
 
   route do |r|
-    r.assets
     r.on "public" do
       r.post "change_tiddler" do
         p = r.params
@@ -95,24 +85,6 @@ class App < Roda
           "seed success"
         end
       end
-    end
-
-    r.get "graph" do
-      chartkick = Class.new.include(Chartkick::Helper).new
-      data = RepoC.graph_data(r.params["x"]&.to_i)
-      view('graph', locals: {chartkick: chartkick, data: data})
-    end
-
-    r.get "graphr" do
-      chartkick = Class.new.include(Chartkick::Helper).new
-      data = RepoR.graph_data(r.params["x"]&.to_i, "869129a")
-      view('graph', locals: {chartkick: chartkick, data: data})
-    end
-
-    r.get "graphs" do
-      chartkick = Class.new.include(Chartkick::Helper).new
-      data = RepoS.graph_data(r.params["x"]&.to_i)
-      view('graph', locals: {chartkick: chartkick, data: data})
     end
 
     r.get "copy_backups" do
