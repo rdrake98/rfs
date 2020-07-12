@@ -123,7 +123,7 @@ class WikiWithTabsSB < WikiWithTabs
     titles = titles.filter {|title| title =~ /^S2/}
     puts titles.size
     titles = titles.each {|title| fat.update_from(sb, title)}
-    fat["S2020M06"].content += "\n" + titles.join("\n")
+    fat["S2020M07"].content += "\n" + titles.join("\n")
     puts fat.tiddlers.size
     fat.write
     fat.openc
