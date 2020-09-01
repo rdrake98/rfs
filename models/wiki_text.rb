@@ -37,7 +37,7 @@ class WikiText
   end
 
   def queryNames(wiki, searchText)
-    name = searchText.gsub(/(^\,|\,$)/,"").gsub(/\,/," ")
+    name = searchText.gsub(/(^\,|\,$)/,"")
     _Name = name.gsub(/\w+/) {|s| s[0] = s[0].upcase; s}
     justOne = name == _Name
     wikiName = _Name.gsub(/\W/,"")
