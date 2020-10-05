@@ -123,7 +123,12 @@ class WikiWithTabsSB < WikiWithTabs
     titles = titles.filter {|title| title =~ /^S2/}
     puts titles.size
     titles = titles.each {|title| fat.update_from(sb, title)}
-    fat["S2020M09"].content += "\n" + titles.join("\n")
+    name = Time.now.strftime "S%YM%m"
+    if fat[name]
+      fat[name].content += "\n" + titles.join("\n")
+    else
+      # do in Nov 20
+    end
     puts fat.tiddlers.size
     fat.write
     fat.openc
