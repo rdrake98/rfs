@@ -87,9 +87,8 @@ end
 
 class Dir
   class << self
-    alias :original_glob :glob
-    def glob(*args)
-      original_glob(*args).sort
+    def glob_(arg)
+      glob(arg).sort
     end
 
     def cd(dir, subdir=nil)

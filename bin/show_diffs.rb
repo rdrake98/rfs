@@ -5,7 +5,7 @@ require 'splitter'
 name = "current"
 titles = Splitter.fat.titles
 dir = "#{mp? ? '/Volumes/SH1' : '/Users/rd'}/_backup"
-names = Dir.cd(dir).glob("*.html").reverse
+names = Dir.cd(dir).glob_("*.html").reverse
 puts names.size
 limit = ARGV[0]&.to_i || names.size
 puts limit

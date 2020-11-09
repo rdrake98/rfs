@@ -51,8 +51,8 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.cleanup
-    Dir.cd(:tinys, 'backups').glob("*").each do |dir|
-      Dir.cd(dir).glob("sb*").each do |sb_file|
+    Dir.cd(:tinys, 'backups').glob_("*").each do |dir|
+      Dir.cd(dir).glob_("sb*").each do |sb_file|
         sb = Splitter.new(sb_file)
         titles = sb.titles.filter {|title| title =~ /^(S2|WIN|Windows)/}
         titles.each {|title| sb[title].write_simple}
@@ -68,14 +68,14 @@ class WikiWithTabsSB < WikiWithTabs
   Copied = Dir.home + "/rf/link_data/copied/"
 
   def self.copy_backups
-    Dir.cd(Downloads).glob("session_buddy_backup_*.json").each do |name|
+    Dir.cd(Downloads).glob_("session_buddy_backup_*.json").each do |name|
       `cp -p #{name} #{Copied}#{short_name(name)}`
     end
     `rsync -t --out-format=%n%L #{Copied}* $tab_backups/`.taps
   end
 
   def self.unpeel
-    name = Dir.cd(Downloads).glob("session_buddy_backup_*.json")[-1].taps
+    name = Dir.cd(Downloads).glob_("session_buddy_backup_*.json")[-1].taps
     copied_local = Copied + (short_name = short_name(name))
     if File.file? copied_local
       `rm #{name}`
@@ -87,7 +87,7 @@ class WikiWithTabsSB < WikiWithTabs
   end
 
   def self.read_all_names
-    Dir.cd(:tab_backups).glob("s*.js")
+    Dir.cd(:tab_backups).glob_("s*.js")
   end
 
   def self.commit_mods
@@ -96,7 +96,7 @@ class WikiWithTabsSB < WikiWithTabs
     if spec["LastBackup"].content != last_backup
       ymd = Time.new.ymd
       dir = "backups/b#{ymd}%02d" %
-        (Dir.cd(:tinys, 'backups').glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1)
+        (Dir.cd(:tinys, 'backups').glob_("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1)
       puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
       spec["LastBackup"].content = last_backup
       spec.write("")
@@ -115,7 +115,7 @@ class WikiWithTabsSB < WikiWithTabs
   def self.copy_to_fat
     fat = Splitter.fat
     puts fat.tiddlers.size
-    sb_file = Dir.cd(:tinys).glob("sb*.html")[-1]
+    sb_file = Dir.cd(:tinys).glob_("sb*.html")[-1]
     puts "Using #{sb_file}"
     sb = Splitter.new(sb_file)
     titles = sb.titles
