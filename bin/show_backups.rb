@@ -5,7 +5,7 @@ require 'json'
 
 names = []
 Dir.cd :tab_backups
-Dir.glob_("s*.js").each do |name|
+Dir.glob("s*.js").each do |name|
   names << name[1..6] + name[8..9] + name[14]
   unless ARGV[0]
     windows = JSON.parse(File.read(name)[2..-1])["sessions"][0]["windows"]

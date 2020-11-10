@@ -46,7 +46,7 @@ class Splitr < Splitter
 
   def self.write_history(n=13, just_one=false, step=100, writing=false)
     mkdir
-    dirs = Dir.glob_ "/Volumes/SH1/fatword/*"
+    dirs = Dir.glob "/Volumes/SH1/fatword/*"
     range = just_one ? (n..n) : (n...dirs.size)
     range.each {|n| puts "", n; write_sample(dirs[n], step, writing)}
     unless just_one && n < dirs.size
@@ -78,8 +78,8 @@ class Splitr < Splitter
   def self.write_sample(dir, step=1, writing=false, start_string=nil)
     $last_save ||= Time.new(0)
     puts dir
-    glob = Dir.cd(dir).glob_ "whiteword*.html"
-    glob = Dir.glob_ "f*.html" if glob.size == 0
+    glob = Dir.cd(dir).glob "whiteword*.html"
+    glob = Dir.glob "f*.html" if glob.size == 0
     start = (start_string && glob.index {|f| f[start_string]}) || 0
     puts "#{glob.size} starting at #{start} with step #{step}"
     (start...glob.size).step(step).map{|i| glob[i]}.each do |f|

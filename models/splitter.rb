@@ -278,7 +278,7 @@ class Splitter
       commit_changes_file("before plusChanges* on startup", false)
       File.read(shared_changes_file(other_host))
     else
-      Dir.glob_("../link_data/steps/fml/*.txt").map do |name|
+      Dir.glob("../link_data/steps/fml/*.txt").map do |name|
         lines = File.read(name).lines
         {
           "title": lines[0].chomp,

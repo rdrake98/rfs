@@ -3,7 +3,7 @@
 require 'base'
 require 'json'
 
-Dir.cd(:tab_backups).glob_("s*p.js").each do |name|
+Dir.cd(:tab_backups).glob("s*p.js").each do |name|
   json = File.read(name)[2..-1]
   sessions = JSON.parse(json)["sessions"]
   windows = sessions[0]["windows"]
