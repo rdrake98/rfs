@@ -3097,16 +3097,9 @@ String.prototype.startsWith = function(prefix)
 // Returns the first value of the given named parameter.
 function getParam(params,name,defaultValue)
 {
-  if(!params)
-    return defaultValue
+  if(!params) return defaultValue
   var p = params[0][name]
   return p ? p[0] : defaultValue
-}
-
-// Returns the first value of the given boolean named parameter.
-function getFlag(params,name,defaultValue)
-{
-  return !!getParam(params,name,defaultValue)
 }
 
 //--
