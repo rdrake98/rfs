@@ -2,10 +2,9 @@ require 'roda'
 require 'wiki_with_tabs_sb'
 
 class App < Roda
+  puts "restarting rfs"
   puts ENV["RUBYLIB"]
-  Wikis = {"fat" => Splitter.fat, "dev" => Splitter.dev}
-  puts Wikis["fat"].edition
-  puts Wikis["dev"].edition
+  Wikis = {}
 
   def reload(type="fat", saving=true, edition=nil, changes=nil)
     puts "reloading #{type} into server from file"
@@ -14,22 +13,37 @@ class App < Roda
     saving ? edition ? wiki.save(edition, changes) : wiki.do_save : wiki
   end
 
+  def wrong_edition?(wiki, latest_edition=nil)
+    return true unless wiki
+    wiki.edition != (latest_edition || wiki.read_file_edition)
+  end
+
+  def wiki(type, strict=false)
+    return Wikis[type] if Wikis[type]
+    wiki = (type == "fat" ?
+      Splitter.fat :
+      type == "dev" ?
+        Splitter.dev :
+        strict ? nil : Splitter.new(type))
+    Wikis[type] = wiki if wiki
+    wiki
+  end
+
   route do |r|
     r.on "public" do
       r.post "change_tiddler" do
         p = r.params
         type = p['type']
-        wiki = Wikis[type]
         message = "#{p['title']} #{p['action']} in #{type}"
         puts message
-        wiki&.add_changes(p['changes'], p['shared'] == "true")
+        wiki(type, true)&.add_changes(p['changes'], p['shared'] == "true")
         message
       end
 
       r.post "save" do
         p = r.params
         type, edition, changes = p['type'], p['edition'], p['changes']
-        wiki = Wikis[type] || Splitter.new(type)
+        wiki = wiki(type)
         wiki.save(edition, changes) || reload(type, true, edition, changes)
       end
 
@@ -42,12 +56,13 @@ class App < Roda
         target = nil if target == ""
         insert = target ? ' with ' + target : ''
         puts "#{p['action']} '#{name}'#{insert} in #{title} in #{type}"
-        wiki = Wikis[type] || (w = Splitter.new(type); type = nil; w)
+        normal = wiki(type, true)
+        wiki = wiki(type)
         clash = wiki.check_file_edition(edition)
         if clash
           response["clash"] = clash.split(",")[0]
         else
-          wiki = reload(type, false) if type && edition != wiki.edition
+          wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
           wiki.add_tiddlers(p['changes'])
           unlink = p['unlink'] == "true"
           overlink = p['overlink'] == "true"
@@ -62,8 +77,8 @@ class App < Roda
         p = r.params
         type = p['type']
         change_type = p['change_type']
-        wiki = Wikis[type]
-        wiki = reload(type, false) if wiki.edition != wiki.read_file_edition
+        wiki = wiki(type, true)
+        wiki = reload(type, false) if wrong_edition?(wiki)
         if change_type == "wiki"
           puts "serving changes from m#{wiki.other_host} for #{type} on startup"
         else
@@ -75,7 +90,7 @@ class App < Roda
       r.post "seed" do
         p = r.params
         type = p['type']
-        wiki = Wikis[type] # type is checked in javascript
+        wiki = wiki(type) # type is checked in javascript
         if wiki.check_file_edition(p['edition'])
           "version clash"
         else
