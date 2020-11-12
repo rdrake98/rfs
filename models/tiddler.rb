@@ -16,7 +16,7 @@ class Tiddler
       self.title = title
       if content.is_a?(String)
         self.content = content
-        self.creator = modifier
+        self.creator = self.modifier
         self.created = self["modified"]
         self.splitname = header_or_split || title
       else
