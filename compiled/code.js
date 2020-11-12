@@ -4093,19 +4093,48 @@ function queryNames() {
 
 commands.link.handler = function(event,src,title)
 {
-  if (searchRegex && !config.options.chkRegExp) {
-    var medit = event.altKey
-    var unlink = event.metaKey
-    var overlink = event.shiftKey
-    var action = medit ? "Medit" :
-      unlink ? "Unlink" : overlink ? "Overlink" : "Link"
+  if (event.altKey) {
+    var action = "Medit"
     var t = store.getTiddler(title)
-    var names = queryNames()
-    ajaxPost(medit ? 'medit' : 'link', {
+    ajaxPost('medit', {
         type: wikiType(),
         edition: edition,
         title: title,
-        name: names.name,
+        changes: jsonChanges(),
+      },
+      function success(response) {
+        var json = JSON.parse(response)
+        var clash = json.clash
+        if(clash) {
+          _dump("clash between browser edition " + edition + " and " + clash)
+          displayMessage("edition clash")
+        } else
+          if (json.newText != t.text) {
+            t.text = json.newText
+            t.changed()
+            var tt = t.title
+            store.saveTiddler(tt,tt,t.text,"LinkMaker",new Date(),t.fields)
+            message = action + "ed " + json.replacer + " in " + title
+            dumpM(message)
+          }
+      },
+      function fail(data, status) {
+        _dump(action + ' failed in ruby for ' + title)
+        displayMessage(action + ' failed in ruby')
+      }
+    )
+    return
+  }
+  if (searchRegex && !config.options.chkRegExp) {
+    var unlink = event.metaKey
+    var overlink = event.shiftKey
+    var action = unlink ? "Unlink" : overlink ? "Overlink" : "Link"
+    var t = store.getTiddler(title)
+    ajaxPost('link', {
+        type: wikiType(),
+        edition: edition,
+        title: title,
+        name: queryNames().name,
         target: linkTarget,
         unlink: unlink,
         overlink: overlink,
