@@ -213,11 +213,6 @@ class Splitter
     @prettySplits = nil if tiddler.title == "NamePatches"
   end
 
-  def change_tiddler(title, tiddler)
-    delete(title) # because splitname may have changed
-    self[title] = tiddler
-  end
-
   def delete(title, noisy=false)
     tiddler = self[title]
     if tiddler
@@ -284,7 +279,8 @@ class Splitter
       # byebug if $dd
       title = hash["title"]
       if title
-        change_tiddler(title, Tiddler.new(self, title, hash))
+        delete(title) # because splitname may have changed
+        self[title] = Tiddler.new(self, title, hash)
         puts title if loud
       else
         puts "#{hash} wants deleting" if loud
