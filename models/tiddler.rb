@@ -201,8 +201,7 @@ class Tiddler
   end
 
   def medit
-    newText = @content[0] == "…" ? @content[1..-1] : "…" + @content
-    [newText, "…"]
+    [@content[0] == "…" ? @content[1..-1] : "…" + @content, "…"]
   end
 
   def tiddlers_linked
