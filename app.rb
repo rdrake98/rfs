@@ -20,11 +20,9 @@ class App < Roda
 
   def wiki(type, strict=false)
     return Wikis[type] if Wikis[type]
-    wiki = (type == "fat" ?
-      Splitter.fat :
-      type == "dev" ?
-        Splitter.dev :
-        strict ? nil : Splitter.new(type))
+    wiki = (type == "fat" ? Splitter.fat :
+      type == "dev" ? Splitter.dev :
+      strict ? nil : Splitter.new(type))
     Wikis[type] = wiki if wiki
     wiki
   end
@@ -43,8 +41,8 @@ class App < Roda
       r.post "save" do
         p = r.params
         type, edition, changes = p['type'], p['edition'], p['changes']
-        wiki = wiki(type)
-        wiki.save(edition, changes) || reload(type, true, edition, changes)
+        wiki(type).save(edition, changes) ||
+          reload(type, true, edition, changes)
       end
 
       r.post "link" do
