@@ -4071,10 +4071,10 @@ bulk_change = function(title) {
         _dump("clash between browser edition " + edition + " and " + clash)
         displayMessage("edition clash")
       } else  {
-        t.text = json.newText
-        t.changed()
-        store.saveTiddler(title,title,t.text,"Bulk",new Date(),t.fields)
-        dumpM("Medited … in " + title)
+        // t.text = json.newText
+        // t.changed()
+        // store.saveTiddler(title,title,t.text,"Bulk",new Date(),t.fields)
+        dumpM(json.newText)
       }
     },
     function fail(data, status) {

@@ -201,7 +201,9 @@ class Tiddler
   end
 
   def bulk_change
-    @content[0] == "…" ? @content[1..-1] : "…" + @content
+    from, to, scope = @content.lines[0].split(", ")
+    links = @wiki[scope].tiddler_links
+    links.join(" ")
   end
 
   def tiddlers_linked

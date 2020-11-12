@@ -85,8 +85,7 @@ class App < Roda
         else
           wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
           wiki.add_tiddlers(p['changes'])
-          new_text = wiki[title].bulk_change
-          response["newText"] = new_text
+          response["newText"] = wiki[title].bulk_change
         end
         response.to_json
       end
