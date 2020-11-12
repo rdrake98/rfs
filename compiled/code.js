@@ -4056,8 +4056,38 @@ commands.roll.handler = function(event,src,title)
   }
 }
 
+bulk_change = function(title) {
+  var action = "Medit"
+  var t = store.getTiddler(title)
+  ajaxPost('medit', {
+      type: wikiType(),
+      edition: edition,
+      title: title,
+      changes: jsonChanges(),
+    },
+    function success(response) {
+      var json = JSON.parse(response)
+      var clash = json.clash
+      if(clash) {
+        _dump("clash between browser edition " + edition + " and " + clash)
+        displayMessage("edition clash")
+      } else  {
+        t.text = json.newText
+        t.changed()
+        store.saveTiddler(title,title,t.text,"Meditor",new Date(),t.fields)
+        dumpM("Medited … in " + title)
+      }
+    },
+    function fail(data, status) {
+      _dump(action + ' failed in ruby for ' + title)
+      displayMessage(action + ' failed in ruby')
+    }
+  )
+}
+
 commands.expand.handler = function(e,src,title)
 {
+  if (e.altKey) {bulk_change(title); return}
   var titles = story.getLinks(title).filter(i => i !== title)
   if(e.metaKey)
     for(var t = 0; t < titles.length; t++) story.closeTiddler(titles[t])
@@ -4093,35 +4123,6 @@ function queryNames() {
 
 commands.link.handler = function(event,src,title)
 {
-  if (event.altKey) {
-    var action = "Medit"
-    var t = store.getTiddler(title)
-    ajaxPost('medit', {
-        type: wikiType(),
-        edition: edition,
-        title: title,
-        changes: jsonChanges(),
-      },
-      function success(response) {
-        var json = JSON.parse(response)
-        var clash = json.clash
-        if(clash) {
-          _dump("clash between browser edition " + edition + " and " + clash)
-          displayMessage("edition clash")
-        } else  {
-          t.text = json.newText
-          t.changed()
-          store.saveTiddler(title,title,t.text,"Meditor",new Date(),t.fields)
-          dumpM("Medited … in " + title)
-        }
-      },
-      function fail(data, status) {
-        _dump(action + ' failed in ruby for ' + title)
-        displayMessage(action + ' failed in ruby')
-      }
-    )
-    return
-  }
   if (searchRegex && !config.options.chkRegExp) {
     var unlink = event.metaKey
     var overlink = event.shiftKey
