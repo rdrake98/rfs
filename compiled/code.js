@@ -4123,7 +4123,7 @@ commands.link.handler = function(event,src,title)
             t.changed()
             var tt = t.title
             store.saveTiddler(tt,tt,t.text,"LinkMaker",new Date(),t.fields)
-            message = action + "ed " + replacer + " in " + title
+            message = action + "ed " + json.replacer + " in " + title
             dumpM(message)
           }
       },
