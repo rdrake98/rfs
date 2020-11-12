@@ -4057,9 +4057,8 @@ commands.roll.handler = function(event,src,title)
 }
 
 bulk_change = function(title) {
-  var action = "Medit"
   var t = store.getTiddler(title)
-  ajaxPost('medit', {
+  ajaxPost('bulk_change', {
       type: wikiType(),
       edition: edition,
       title: title,
@@ -4074,13 +4073,13 @@ bulk_change = function(title) {
       } else  {
         t.text = json.newText
         t.changed()
-        store.saveTiddler(title,title,t.text,"Meditor",new Date(),t.fields)
+        store.saveTiddler(title,title,t.text,"Bulk",new Date(),t.fields)
         dumpM("Medited … in " + title)
       }
     },
     function fail(data, status) {
-      _dump(action + ' failed in ruby for ' + title)
-      displayMessage(action + ' failed in ruby')
+      _dump('Bulk change failed in ruby for ' + title)
+      displayMessage('Bulk change failed in ruby')
     }
   )
 }

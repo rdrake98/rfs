@@ -200,7 +200,7 @@ class Tiddler
     WikiText.new(@content).link(@wiki, search_text, target, unlink, overlink)
   end
 
-  def medit
+  def bulk_change
     @content[0] == "…" ? @content[1..-1] : "…" + @content
   end
 

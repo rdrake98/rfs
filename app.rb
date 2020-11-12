@@ -71,12 +71,12 @@ class App < Roda
         response.to_json
       end
 
-      r.post "medit" do
+      r.post "bulk_change" do
         # byebug if $dd
         response = {}
         p = r.params
         type, title, edition = p['type'], p['title'], p['edition']
-        puts "medit on #{title} in #{type}"
+        puts "bulk change on #{title} in #{type}"
         normal = wiki(type, true)
         wiki = wiki(type)
         clash = wiki.check_file_edition(edition)
@@ -85,7 +85,7 @@ class App < Roda
         else
           wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
           wiki.add_tiddlers(p['changes'])
-          new_text = wiki[title].medit
+          new_text = wiki[title].bulk_change
           response["newText"] = new_text
         end
         response.to_json
