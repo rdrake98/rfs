@@ -4093,14 +4093,15 @@ function queryNames() {
 
 commands.link.handler = function(event,src,title)
 {
-  if(event.altKey) dumpM("altKey")
   if (searchRegex && !config.options.chkRegExp) {
+    var medit = event.altKey
     var unlink = event.metaKey
     var overlink = event.shiftKey
-    var action = unlink ? "Unlink" : overlink ? "Overlink" : "Link"
+    var action = medit ? "Medit" :
+      unlink ? "Unlink" : overlink ? "Overlink" : "Link"
     var t = store.getTiddler(title)
     var names = queryNames()
-    ajaxPost(event.altKey ? 'medit' : 'link', {
+    ajaxPost(medit ? 'medit' : 'link', {
         type: wikiType(),
         edition: edition,
         title: title,

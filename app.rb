@@ -75,9 +75,7 @@ class App < Roda
         # byebug if $dd
         response = {}
         p = r.params
-        type, title, name, target, edition =
-          p['type'], p['title'], p['name'], p['target'], p['edition']
-        target = nil if target == ""
+        type, title, edition = p['type'], p['title'], p['edition']
         puts "medit on #{title} in #{type}"
         normal = wiki(type, true)
         wiki = wiki(type)
@@ -87,9 +85,7 @@ class App < Roda
         else
           wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
           wiki.add_tiddlers(p['changes'])
-          unlink = p['unlink'] == "true"
-          overlink = p['overlink'] == "true"
-          new_text, replacer = wiki[title].link(name, target, unlink, overlink)
+          new_text, replacer = wiki[title].medit
           response["newText"] = new_text
           response["replacer"] = replacer
         end

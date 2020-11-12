@@ -200,6 +200,11 @@ class Tiddler
     WikiText.new(@content).link(@wiki, search_text, target, unlink, overlink)
   end
 
+  def medit
+    newText = @content[0] == "…" ? @content[1..-1] : "…" + @content
+    [newText, "…"]
+  end
+
   def tiddlers_linked
     tiddler_links.map{|s|@wiki.referent(s)}.compact.uniq
   end
