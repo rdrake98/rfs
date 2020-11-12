@@ -4108,15 +4108,12 @@ commands.link.handler = function(event,src,title)
         if(clash) {
           _dump("clash between browser edition " + edition + " and " + clash)
           displayMessage("edition clash")
-        } else
-          if (json.newText != t.text) {
-            t.text = json.newText
-            t.changed()
-            var tt = t.title
-            store.saveTiddler(tt,tt,t.text,"LinkMaker",new Date(),t.fields)
-            message = action + "ed " + json.replacer + " in " + title
-            dumpM(message)
-          }
+        } else  {
+          t.text = json.newText
+          t.changed()
+          store.saveTiddler(title,title,t.text,"Meditor",new Date(),t.fields)
+          dumpM("Medited … in " + title)
+        }
       },
       function fail(data, status) {
         _dump(action + ' failed in ruby for ' + title)
@@ -4147,15 +4144,13 @@ commands.link.handler = function(event,src,title)
         if(clash) {
           _dump("clash between browser edition " + edition + " and " + clash)
           displayMessage("edition clash")
-        } else
-          if (json.newText != t.text) {
-            t.text = json.newText
-            t.changed()
-            var tt = t.title
-            store.saveTiddler(tt,tt,t.text,"LinkMaker",new Date(),t.fields)
-            message = action + "ed " + json.replacer + " in " + title
-            dumpM(message)
-          }
+        } else if (json.newText != t.text) {
+          t.text = json.newText
+          t.changed()
+          store.saveTiddler(title,title,t.text,"LinkMaker",new Date(),t.fields)
+          message = action + "ed " + json.replacer + " in " + title
+          dumpM(message)
+        }
       },
       function fail(data, status) {
         _dump(action + ' failed in ruby for ' + title)
