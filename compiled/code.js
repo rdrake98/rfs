@@ -4061,7 +4061,6 @@ bulk_change = function(title) {
             store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
               h.fields,new Date(h.created),h.creator)
         })
-        story.refreshAllTiddlers
       }
     },
     function fail(data, status) {
