@@ -27,6 +27,8 @@ class Tiddler
         self.modified = jsontime(content["modified"])
         self.splitname = content["fields"]["splitname"]
         self.changecount = content["fields"]["changecount"]
+        medited = content["fields"]["medited"]
+        self.medited = jsontime(medited) if medited
       end
     else
       @content = content
@@ -187,8 +189,8 @@ class Tiddler
 
   def bulk_change
     from, to, scope = @content.lines[0].split(", ")
-    links = @wiki[scope].tiddler_links
-    links.join(" ")
+    targets = @wiki[scope].tiddlers_linked
+    targets.size
   end
 
   def tiddlers_linked

@@ -1807,6 +1807,8 @@ internalizeTiddler = function(tiddler,title,node)
     var name = attrs[i].name
     if(name == "splitname" || name == "changecount")
       fields[name] = attrs[i].value
+    if(name == "medited")
+      fields["medited"] = Date.convertFromYYYYMMDDHHMMSS(attrs[i].value)
   }
   tiddler.assign(title,text,modified,modifier,created,creator,fields)
 }
