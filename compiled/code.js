@@ -1757,7 +1757,6 @@ ajaxChangeTiddler = function(title, action, unshared) {
   )
 }
 
-// Store tiddler in TiddlyWiki instance
 TiddlyWiki.prototype.saveTiddler = function(title,newTitle,newBody,modifier,
   modified,fields,created,creator,unshared)
 {
@@ -1792,6 +1791,52 @@ TiddlyWiki.prototype.loadFromDiv = function(src,idPrefix)
   this.idPrefix = idPrefix
   loadTiddlers(this, document.getElementById(src).childNodes)
   this.setDirty(false)
+}
+
+loadTiddlers = function(store,nodes)
+{
+  var tiddlers = []
+  for(var t = 0; t < nodes.length; t++)
+    this.loadTiddler(store,nodes[t],tiddlers)
+  return tiddlers
+}
+
+loadTiddler = function(store,node,tiddlers)
+{
+  var title = null
+  if(node.getAttribute) title = node.getAttribute("title")
+  if(!title && node.id) {
+    var lenPrefix = store.idPrefix.length
+    if(node.id.substr(0,lenPrefix) == store.idPrefix)
+      title = node.id.substr(lenPrefix)
+  }
+  if(title) {
+    var tiddler = store.createTiddler(title)
+    this.internalizeTiddler(store,tiddler,title,node)
+    tiddlers.push(tiddler)
+  }
+}
+
+internalizeTiddler = function(store,tiddler,title,node)
+{
+  var e = node.firstChild
+  while(e.nodeName!="PRE" && e.nodeName!="pre") e = e.nextSibling
+  var text = e.innerHTML.replace(/\r/mg,"").htmlDecode()
+  var creator = node.getAttribute("creator")
+  var modifier = node.getAttribute("modifier")
+  var c = node.getAttribute("created")
+  var m = node.getAttribute("modified")
+  var created = c ? Date.convertFromYYYYMMDDHHMMSS(c) : version.date
+  var modified = m ? Date.convertFromYYYYMMDDHHMMSS(m) : created
+  var fields = {}
+  var attrs = node.attributes
+  for(var i = attrs.length-1; i >= 0; i--) {
+    var name = attrs[i].name
+    if(name == "splitname" || name == "changecount")
+      fields[name] = attrs[i].value.unescapeLineBreaks()
+  }
+  tiddler.assign(title,text,modifier,modified,created,fields,creator)
+  return tiddler
 }
 
 TiddlyWiki.prototype.updateTiddlers = function()
@@ -3370,53 +3415,6 @@ function isDescendant(e,ancestor)
   return false
 }
 
-// loading
-
-loadTiddlers = function(store,nodes)
-{
-  var tiddlers = []
-  for(var t = 0; t < nodes.length; t++)
-    this.loadTiddler(store,nodes[t],tiddlers)
-  return tiddlers
-}
-
-loadTiddler = function(store,node,tiddlers)
-{
-  var title = null
-  if(node.getAttribute) title = node.getAttribute("title")
-  if(!title && node.id) {
-    var lenPrefix = store.idPrefix.length
-    if(node.id.substr(0,lenPrefix) == store.idPrefix)
-      title = node.id.substr(lenPrefix)
-  }
-  if(title) {
-    var tiddler = store.createTiddler(title)
-    this.internalizeTiddler(store,tiddler,title,node)
-    tiddlers.push(tiddler)
-  }
-}
-
-internalizeTiddler = function(store,tiddler,title,node)
-{
-  var e = node.firstChild
-  while(e.nodeName!="PRE" && e.nodeName!="pre") e = e.nextSibling
-  var text = e.innerHTML.replace(/\r/mg,"").htmlDecode()
-  var creator = node.getAttribute("creator")
-  var modifier = node.getAttribute("modifier")
-  var c = node.getAttribute("created")
-  var m = node.getAttribute("modified")
-  var created = c ? Date.convertFromYYYYMMDDHHMMSS(c) : version.date
-  var modified = m ? Date.convertFromYYYYMMDDHHMMSS(m) : created
-  var fields = {}
-  var attrs = node.attributes
-  for(var i = attrs.length-1; i >= 0; i--) {
-    var name = attrs[i].name
-    if(name == "splitname" || name == "changecount")
-      fields[name] = attrs[i].value.unescapeLineBreaks()
-  }
-  tiddler.assign(title,text,modifier,modified,created,fields,creator)
-  return tiddler
-}
 
 function loadHotkeys() {
  /*
