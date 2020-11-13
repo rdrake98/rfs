@@ -187,10 +187,27 @@ class Tiddler
     WikiText.new(@content).link(@wiki, search_text, target, unlink, overlink)
   end
 
+  def to_h
+    h = {
+      "title" => title,
+      "text" => content,
+      "creator" => creator,
+      "modifier" => modifier,
+      "splitname" => splitname,
+      "changecount" => changecount,
+      "modified" => modified,
+      "created" => time_from(created),
+    }
+    h["medited"] = time_from(medited) if medited
+    h
+  end
+
   def bulk_change
     from, to, scope = @content.lines[0].split(", ")
     targets = @wiki[scope].tiddlers_linked
-    targets.size
+    size = targets.size
+    self.content = @content + "\n--\n#{size}"
+    [to_h].to_json
   end
 
   def tiddlers_linked

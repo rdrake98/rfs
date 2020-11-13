@@ -47,7 +47,6 @@ class App < Roda
 
       r.post "bulk_change" do
         # byebug if $dd
-        response = {}
         p = r.params
         type, title, edition = p['type'], p['title'], p['edition']
         puts "bulk change based on #{title} in #{type}"
@@ -55,13 +54,12 @@ class App < Roda
         wiki = wiki(type)
         clash = wiki.check_file_edition(edition)
         if clash
-          response["clash"] = clash.split(",")[0]
+          {"clash" => clash.split(",")[0]}.to_json
         else
           wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
           wiki.add_tiddlers(p['changes'])
-          response["newText"] = wiki[title].bulk_change
+          wiki[title].bulk_change
         end
-        response.to_json
       end
 
       r.post "link" do

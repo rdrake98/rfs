@@ -4034,16 +4034,26 @@ bulk_change = function(title) {
       changes: jsonChanges(),
     },
     function success(response) {
-      var json = JSON.parse(response)
-      var clash = json.clash
+      var changes = JSON.parse(response)
+      var clash = changes.clash
       if(clash) {
         _dump("clash between browser edition " + edition + " and " + clash)
         displayMessage("edition clash")
       } else  {
-        // t.text = json.newText
-        // t.changed()
-        // store.saveTiddler(title,title,t.text,"Bulk",new Date(),t.fields)
-        dumpM(json.newText)
+        console.log(changes)
+        dumpM("number of changes: " + changes.length)
+        changes.forEach(function(h) {
+          title = h.title
+          var t = store.getTiddler(title)
+          if(!t || h.text != t.text) {
+            action = t ? "changed" : "added"
+            var modified = new Date(h.modified)
+              store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
+                h.fields,new Date(h.created),h.creator,true)
+          } else action = "unchanged"
+          dumpM(title + " " + action)
+        })
+        story.refreshAllTiddlers // to be on safe side
       }
     },
     function fail(data, status) {
