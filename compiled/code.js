@@ -199,11 +199,11 @@ function main()
   story = new Story("tiddlerDisplay","tiddler")
   addEvent(document,"click",Popup.onDocumentClick)
   var shadows = new TiddlyWiki()
-  shadows.loadFromDiv("shadowArea","shadows")
+  shadows.loadFromDiv("shadowArea")
   shadows.forEachTiddler(function(title,tiddler){
     config.shadowTiddlers[title] = tiddler.text
   })
-  store.loadFromDiv("storeArea","store")
+  store.loadFromDiv("storeArea")
   loadOptions()
   loadHotkeys()
   $(document).bind('keydown','ctrl+f',findSelectionOuter)
@@ -1786,9 +1786,8 @@ TiddlyWiki.prototype.saveTiddler = function(title,newTitle,newBody,modifier,
 }
 
 // Load contents of a TiddlyWiki from an HTML DIV
-TiddlyWiki.prototype.loadFromDiv = function(src,idPrefix)
+TiddlyWiki.prototype.loadFromDiv = function(src)
 {
-  this.idPrefix = idPrefix
   var nodes = document.getElementById(src).childNodes
   for(var t = 0; t < nodes.length; t++) {
     var node = nodes[t]
