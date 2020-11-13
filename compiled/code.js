@@ -4058,7 +4058,6 @@ bulk_change = function(title) {
             macros.unsavedChanges.addChange(title, true)
             ajaxChangeTiddler(title, "medited", false)
             store.notify(title)
-            store.setDirty(true)
           } else
             store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
               h.fields,new Date(h.created),h.creator)
