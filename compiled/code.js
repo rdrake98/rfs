@@ -192,9 +192,6 @@ function main()
   $(window).on('beforeunload', function() {
     return store.isDirty() || story.hasAnyChanges() || undefined
   })
-  $(window).on('unload', function() {
-    // save DefaultTiddlers and commit current changes
-  })
   store = new TiddlyWiki()
   story = new Story("tiddlerDisplay","tiddler")
   addEvent(document,"click",Popup.onDocumentClick)

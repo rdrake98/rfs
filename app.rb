@@ -50,7 +50,7 @@ class App < Roda
         response = {}
         p = r.params
         type, title, edition = p['type'], p['title'], p['edition']
-        puts "bulk change on #{title} in #{type}"
+        puts "bulk change based on #{title} in #{type}"
         normal = wiki(type, true)
         wiki = wiki(type)
         clash = wiki.check_file_edition(edition)
