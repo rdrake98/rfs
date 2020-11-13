@@ -4044,7 +4044,6 @@ bulk_change = function(title) {
         _dump("clash between browser edition " + edition + " and " + clash)
         displayMessage("edition clash")
       } else  {
-        console.log(changes)
         dumpM("number of changes: " + changes.length)
         changes.forEach(function(h) {
           title = h.title
