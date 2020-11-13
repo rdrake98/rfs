@@ -4051,10 +4051,9 @@ bulk_change = function(title) {
           var t = store.getTiddler(title)
           dumpM(title)
           var modified = new Date(h.modified)
-          if (modified.equals(t.modified)) {
+          if (modified.equals(t.modified)) { // medited
             t.text = h.text
             t.fields = h.fields
-            t.changed()
             macros.unsavedChanges.addChange(title, true)
             ajaxChangeTiddler(title, "medited", false)
             store.notify(title)
@@ -4062,7 +4061,7 @@ bulk_change = function(title) {
             store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
               h.fields,new Date(h.created),h.creator)
         })
-        story.refreshAllTiddlers // ???
+        story.refreshAllTiddlers
       }
     },
     function fail(data, status) {
