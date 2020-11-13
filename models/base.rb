@@ -109,7 +109,7 @@ def snip(original_file)
   original_file = ENV["TM_FILEPATH"] || original_file || ENV["PWD"] + "/"
   original_file = ENV["PWD"] + "/" + original_file if original_file[0..0] != "/"
   file = original_file.sub("#{Dir.home}/", "")
-  code = file == "ww/dev/code/compiled/code.js"
+  code = original_file == Dir.compiled("code.js")
   isMine = file != original_file
   require_relative "/Users/rd/scripts/textmate/base_tm"
   selection = TMSelection.new
