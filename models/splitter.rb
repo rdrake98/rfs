@@ -15,15 +15,13 @@ class Splitter
     (filename ? filename.split("/")[0..-2].join("/") : "unknown") + "/"
   end
 
-  def initialize(filename=nil, split=true)
+  def initialize(filename=nil)
     @filename = filename
     @type = "dev" if @filename == Dir.dev
     @type = "fat" if @filename == Dir.fat
     @backup_area = "#{@filename.split("/")[0..-2].join("/")}/_backup" if @type
-    @split = split
     @tiddler_hash = {}
     @tiddler_splits = {}
-    @store = ""
     @host = hostc
     return unless filename
     open(filename) do |file|
@@ -32,15 +30,9 @@ class Splitter
         @before << line
       end
       @before << line
-      if split
-        while (line = file.gets) =~ /<div title=.*/
-          tiddler = Tiddler.from_file(self, file, line)
-          self[tiddler.title] = tiddler
-        end
-      else
-        while (line = file.gets) =~ /<div title=.*/
-          @store << Tiddler.div_text(file, line)
-        end
+      while (line = file.gets) =~ /<div title=.*/
+        tiddler = Tiddler.from_file(self, file, line)
+        self[tiddler.title] = tiddler
       end
       @mid = line
       until (line = file.gets) =~ /^<script id="jsArea" type="text\/javascript">/
@@ -56,12 +48,12 @@ class Splitter
     end
   end
 
-  def Splitter.fat split=true
-    new Dir.fat, split
+  def Splitter.fat
+    new Dir.fat
   end
 
-  def Splitter.dev split=true
-    new Dir.dev, split
+  def Splitter.dev
+    new Dir.dev
   end
 
   def Splitter.name_(name, suffix="_")
@@ -82,21 +74,6 @@ class Splitter
       backup
       `mv #{new_one} #{@filename}`
     end
-  end
-
-  def Splitter.test_same(filename2, small=true)
-    splitter = Splitter.dev small
-    sizes = splitter.sizes
-    sizes2 = new(filename2).sizes
-    same = sizes == sizes2
-    puts same
-    unless same
-      puts
-      puts sizes
-      puts
-      puts sizes2
-    end
-    same
   end
 
   def count
@@ -138,7 +115,7 @@ class Splitter
   end
 
   def store_size
-    @split ? unsorted_tiddlers.map(&:size).reduce(0, &:+) : @store.size
+    unsorted_tiddlers.map(&:size).reduce(0, &:+)
   end
 
   def sizes
