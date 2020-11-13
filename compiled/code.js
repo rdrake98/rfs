@@ -1789,19 +1789,15 @@ TiddlyWiki.prototype.saveTiddler = function(title,newTitle,newBody,modifier,
 TiddlyWiki.prototype.loadFromDiv = function(src,idPrefix)
 {
   this.idPrefix = idPrefix
-  loadTiddlers(this, document.getElementById(src).childNodes)
-  this.setDirty(false)
-}
-
-loadTiddlers = function(store,nodes)
-{
+  var nodes = document.getElementById(src).childNodes
   for(var t = 0; t < nodes.length; t++) {
     var node = nodes[t]
     if(node.getAttribute) {
       var title = node.getAttribute("title")
-      if(title) internalizeTiddler(store.createTiddler(title),title,node)
+      if(title) internalizeTiddler(this.createTiddler(title),title,node)
     }
   }
+  this.setDirty(false)
 }
 
 internalizeTiddler = function(tiddler,title,node)
