@@ -1468,31 +1468,22 @@ Tiddler.prototype.incChangeCount = function()
 }
 
 // Change the text and other attributes of a tiddler
-Tiddler.prototype.set = function(title,text,modifier,modified,created,fields,creator)
+Tiddler.prototype.set = function(title,text,modified,modifier,created,creator,fields)
 {
-  this.assign(title,text,modifier,modified,created,fields,creator)
+  this.assign(title,text,modified,modifier,created,creator,fields)
   this.changed()
-  return this
 }
 
 // Change the text and other attributes of a tiddler without triggered a tiddler.changed() call
-Tiddler.prototype.assign = function(title,text,modifier,modified,created,fields,creator)
+Tiddler.prototype.assign = function(title,text,modified,modifier,created,creator,fields)
 {
-  if(title != undefined)
-    this.title = title
-  if(text != undefined)
-    this.text = text
-  if(modifier != undefined)
-    this.modifier = modifier
-  if(modified != undefined)
-    this.modified = modified
-  if(creator != undefined)
-    this.creator = creator
-  if(created != undefined)
-    this.created = created
-  if(fields != undefined)
-    this.fields = fields
-  return this
+  if(title != undefined) this.title = title
+  if(text != undefined) this.text = text
+  if(modified != undefined) this.modified = modified
+  if(modifier != undefined) this.modifier = modifier
+  if(created != undefined) this.created = created
+  if(creator != undefined) this.creator = creator
+  if(fields != undefined) this.fields = fields
 }
 
 // Static method to convert "\n" to newlines, "\s" to "\"
@@ -1774,7 +1765,7 @@ TiddlyWiki.prototype.saveTiddler = function(title,newTitle,newBody,modifier,
     created = created || modified
     tiddler = new Tiddler()
   }
-  tiddler.set(newTitle,newBody,modifier,modified,created,fields,creator)
+  tiddler.set(newTitle,newBody,modified,modifier,created,creator,fields)
   this.addTiddler(tiddler)
   tiddler.incChangeCount()
   if(!exclude) ajaxChangeTiddler(newTitle, "changed", unshared)
@@ -1817,7 +1808,7 @@ internalizeTiddler = function(tiddler,title,node)
     if(name == "splitname" || name == "changecount")
       fields[name] = attrs[i].value.unescapeLineBreaks()
   }
-  tiddler.assign(title,text,modifier,modified,created,fields,creator)
+  tiddler.assign(title,text,modified,modifier,created,creator,fields)
 }
 
 TiddlyWiki.prototype.updateTiddlers = function()
@@ -1993,15 +1984,15 @@ Story.prototype.refreshTiddler = function(title,n,force)
       if(!tiddler) {
         tiddler = new Tiddler()
         if(store.isShadowTiddler(title))
-          tiddler.set(title,store.getTiddlerText(title),
-            "(built-in shadow tiddler)",version.date,version.date)
+          tiddler.set(title,store.getTiddlerText(title),version.date,
+            "(built-in shadow tiddler)",version.date)
         else {
           var text = title == "NewTiddler" ?
             openTiddlersRaw() :
             (template == "EditTemplate" ? "Try googling for %0" :
               "Try googling for %0. Double-click to create the tiddler.").
                 format([googleWords(title)])
-          tiddler.set(title,text,"(missing)",version.date,version.date)
+          tiddler.set(title,text,version.date,"(missing)",version.date)
         }
       }
       elem.setAttribute("tiddler",title)
