@@ -108,15 +108,14 @@ end
 def snip(original_file)
   original_file = ENV["TM_FILEPATH"] || original_file || ENV["PWD"] + "/"
   original_file = ENV["PWD"] + "/" + original_file if original_file[0..0] != "/"
-  file = original_file.sub("#{Dir.home}/", "")
   code = original_file == Dir.compiled("code.js")
-  isMine = file != original_file
+  file = original_file.sub("#{Dir.home}/", "")
+  prefix = file != original_file ? "../" : ""
   require_relative "/Users/rd/scripts/textmate/base_tm"
   selection = TMSelection.new
   text = selection.text
   line = selection.line
   url_end = line < 10 ? "" : "&line=#{line}"
-  prefix = isMine ? "../" : ""
 
   bits = file.split('/')
   if file[-1] == "/" then
