@@ -45,8 +45,26 @@ class App < Roda
           reload(type, true, edition, changes)
       end
 
-      r.post "link" do
+      r.post "bulk_change" do
         # byebug if $dd
+        response = {}
+        p = r.params
+        type, title, edition = p['type'], p['title'], p['edition']
+        puts "bulk change on #{title} in #{type}"
+        normal = wiki(type, true)
+        wiki = wiki(type)
+        clash = wiki.check_file_edition(edition)
+        if clash
+          response["clash"] = clash.split(",")[0]
+        else
+          wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
+          wiki.add_tiddlers(p['changes'])
+          response["newText"] = wiki[title].bulk_change
+        end
+        response.to_json
+      end
+
+      r.post "link" do
         response = {}
         p = r.params
         type, title, name, target, edition =
@@ -67,25 +85,6 @@ class App < Roda
           new_text, replacer = wiki[title].link(name, target, unlink, overlink)
           response["newText"] = new_text
           response["replacer"] = replacer
-        end
-        response.to_json
-      end
-
-      r.post "bulk_change" do
-        # byebug if $dd
-        response = {}
-        p = r.params
-        type, title, edition = p['type'], p['title'], p['edition']
-        puts "bulk change on #{title} in #{type}"
-        normal = wiki(type, true)
-        wiki = wiki(type)
-        clash = wiki.check_file_edition(edition)
-        if clash
-          response["clash"] = clash.split(",")[0]
-        else
-          wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
-          wiki.add_tiddlers(p['changes'])
-          response["newText"] = wiki[title].bulk_change
         end
         response.to_json
       end
