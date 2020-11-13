@@ -1806,7 +1806,7 @@ internalizeTiddler = function(tiddler,title,node)
   for(var i = attrs.length-1; i >= 0; i--) {
     var name = attrs[i].name
     if(name == "splitname" || name == "changecount")
-      fields[name] = attrs[i].value.unescapeLineBreaks()
+      fields[name] = attrs[i].value
   }
   tiddler.assign(title,text,modified,modifier,created,creator,fields)
 }
