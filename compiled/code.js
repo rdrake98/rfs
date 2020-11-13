@@ -1795,13 +1795,10 @@ TiddlyWiki.prototype.loadFromDiv = function(src,idPrefix)
 
 loadTiddlers = function(store,nodes)
 {
-  var tiddlers = []
-  for(var t = 0; t < nodes.length; t++)
-    this.loadTiddler(store,nodes[t],tiddlers)
-  return tiddlers
+  for(var t = 0; t < nodes.length; t++) loadTiddler(store,nodes[t])
 }
 
-loadTiddler = function(store,node,tiddlers)
+loadTiddler = function(store,node)
 {
   var title = null
   if(node.getAttribute) title = node.getAttribute("title")
@@ -1812,12 +1809,11 @@ loadTiddler = function(store,node,tiddlers)
   }
   if(title) {
     var tiddler = store.createTiddler(title)
-    this.internalizeTiddler(store,tiddler,title,node)
-    tiddlers.push(tiddler)
+    internalizeTiddler(tiddler,title,node)
   }
 }
 
-internalizeTiddler = function(store,tiddler,title,node)
+internalizeTiddler = function(tiddler,title,node)
 {
   var e = node.firstChild
   while(e.nodeName!="PRE" && e.nodeName!="pre") e = e.nextSibling
@@ -1836,7 +1832,6 @@ internalizeTiddler = function(store,tiddler,title,node)
       fields[name] = attrs[i].value.unescapeLineBreaks()
   }
   tiddler.assign(title,text,modifier,modified,created,fields,creator)
-  return tiddler
 }
 
 TiddlyWiki.prototype.updateTiddlers = function()
