@@ -1795,16 +1795,12 @@ TiddlyWiki.prototype.loadFromDiv = function(src,idPrefix)
 
 loadTiddlers = function(store,nodes)
 {
-  for(var t = 0; t < nodes.length; t++) loadTiddler(store,nodes[t])
-}
-
-loadTiddler = function(store,node)
-{
-  var title = null
-  if(node.getAttribute) title = node.getAttribute("title")
-  if(title) {
-    var tiddler = store.createTiddler(title)
-    internalizeTiddler(tiddler,title,node)
+  for(var t = 0; t < nodes.length; t++) {
+    var node = nodes[t]
+    if(node.getAttribute) {
+      var title = node.getAttribute("title")
+      if(title) internalizeTiddler(store.createTiddler(title),title,node)
+    }
   }
 }
 
