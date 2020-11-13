@@ -3126,6 +3126,10 @@ Date.prototype.formatDay = function() {
   return this.formatString('DD mmm YY')
 }
 
+Date.prototype.equals = function(date2) {
+  return this.getTime() == date2.getTime()
+}
+
 // Substitute date components into a string
 Date.prototype.formatString = function(template)
 {
@@ -4045,15 +4049,22 @@ bulk_change = function(title) {
         changes.forEach(function(h) {
           title = h.title
           var t = store.getTiddler(title)
-          if(!t || h.text != t.text) {
-            action = t ? "changed" : "added"
-            var modified = new Date(h.modified)
-              store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
-                h.fields,new Date(h.created),h.creator,true)
-          } else action = "unchanged"
-          dumpM(title + " " + action)
+          dumpM(title)
+          var modified = new Date(h.modified)
+          if (modified.equals(t.modified)) {
+            t.text = h.text
+            t.fields = h.fields
+            t.changed()
+            macros.unsavedChanges.addChange(title, true)
+            ajaxChangeTiddler(title, "medited", false)
+            store.notify(title)
+            store.setDirty(true)
+            macros.unsavedChanges.refresh()
+          } else
+            store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
+              h.fields,new Date(h.created),h.creator)
         })
-        story.refreshAllTiddlers // to be on safe side
+        story.refreshAllTiddlers // ???
       }
     },
     function fail(data, status) {

@@ -63,12 +63,20 @@ class Tiddler
     datetime.strftime "%Y%m%d%H%M"
   end
 
-  def content= content
+  def update_content content, minor_edit=false
     return if @content == content
     @content = content
-    self.modifier = "RubyTuesday"
-    self.modified = strftime(Time.now.utc)
-    self.changecount = changecount.to_i + 1
+    if minor_edit
+      self.medited = strftime(Time.now.utc)
+    else
+      self.modifier = "RubyTuesday"
+      self.modified = strftime(Time.now.utc)
+      self.changecount = changecount.to_i + 1
+    end
+  end
+
+  def content= content
+    update_content content
   end
 
   def [] attribute
@@ -188,18 +196,20 @@ class Tiddler
   end
 
   def to_h
-    h = {
+    fields = {
+      "splitname" => splitname,
+      "changecount" => changecount,
+    }
+    fields["medited"] = time_from(medited) if medited
+    {
       "title" => title,
       "text" => content,
       "creator" => creator,
       "modifier" => modifier,
-      "splitname" => splitname,
-      "changecount" => changecount,
       "modified" => modified,
       "created" => time_from(created),
+      "fields" => fields,
     }
-    h["medited"] = time_from(medited) if medited
-    h
   end
 
   def bulk_change
@@ -207,7 +217,9 @@ class Tiddler
     targets = @wiki[scope].tiddlers_linked
     size = targets.size
     self.content = @content + "\n--\n#{size}"
-    [to_h].to_json
+    t = targets[0]
+    t.update_content("…" + t.content, true)
+    [to_h, t.to_h].to_json
   end
 
   def tiddlers_linked
