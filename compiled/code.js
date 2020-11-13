@@ -1802,11 +1802,6 @@ loadTiddler = function(store,node)
 {
   var title = null
   if(node.getAttribute) title = node.getAttribute("title")
-  if(!title && node.id) {
-    var lenPrefix = store.idPrefix.length
-    if(node.id.substr(0,lenPrefix) == store.idPrefix)
-      title = node.id.substr(lenPrefix)
-  }
   if(title) {
     var tiddler = store.createTiddler(title)
     internalizeTiddler(tiddler,title,node)
