@@ -212,8 +212,7 @@ function main()
   macros.unsavedChanges.reset()
   config.notifiers.forEach(n => n.notify(n.name))
   var hash = decodeURIComponent(location.hash.substr(1))
-  var plusChanges = hash == "plusChanges*" && "wiki" ||
-    hash == "plusChanges^" && "links"
+  var plusChanges = hash == "plusChanges*"
   if(hash && !plusChanges)
     story.displayTiddlers("bottom",hash.split(" "))
   else
@@ -240,12 +239,8 @@ function main()
             var modified = new Date(h.modified)
             if(t && modified < t.modified)
               dumpM("\n** newer " + title + " replaced by older **")
-            if(plusChanges == "wiki")
-              store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
-                h.fields,new Date(h.created),h.creator,true)
-            else
-              store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
-                {},undefined,undefined,true)
+            store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
+              h.fields,new Date(h.created),h.creator,true)
           } else action = "unchanged"
           dumpM(title + " " + action)
         })
