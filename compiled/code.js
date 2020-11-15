@@ -1804,9 +1804,9 @@ internalizeTiddler = function(tiddler,title,node)
   var creator = node.getAttribute("creator")
   var modifier = node.getAttribute("modifier")
   var c = node.getAttribute("created")
-  var m = node.getAttribute("modified")
-  var created = c ? Date.convertFromYYYYMMDDHHMMSS(c) : version.date
-  var modified = m ? Date.convertFromYYYYMMDDHHMMSS(m) : created
+  var m = node.getAttribute("modified") // eg 202011150246
+  var created = c ? Date.convertFromYYYYMMDDHHMM(c) : version.date
+  var modified = m ? Date.convertFromYYYYMMDDHHMM(m) : created
   var fields = {}
   var attrs = node.attributes
   for(var i = attrs.length-1; i >= 0; i--) {
@@ -3225,13 +3225,6 @@ Date.convertFromYYYYMMDDHHMM = function(d)
   return Date.convertFromYYYYMMDDHHMMSSMMM(d.substr(0,12))
 }
 
-// Static method to create a date from a UTC YYYYMMDDHHMMSS format string
-Date.convertFromYYYYMMDDHHMMSS = function(d)
-{
-  d = d?d.replace(/[^0-9]/g, ""):""
-  return Date.convertFromYYYYMMDDHHMMSSMMM(d.substr(0,14))
-}
-
 // Static method to create a date from a UTC YYYYMMDDHHMMSSMMM format string
 Date.convertFromYYYYMMDDHHMMSSMMM = function(d)
 {
@@ -3798,7 +3791,8 @@ Tiddler.prototype.basicSplit = function()
 Tiddler.prototype.medited = function()
 {
   var dateString = this.fields.medited
-  return dateString && Date.convertFromYYYYMMDDHHMMSS(dateString)
+  return dateString && Date.convertFromYYYYMMDDHHMM(dateString)
+  // new Date(dateString) would be nice
 }
 
 Tiddler.prototype.minor = function()
@@ -4052,8 +4046,7 @@ bulk_change = function(title) {
         _dump("clash between browser edition " + edition + " and " + clash)
         displayMessage("edition clash")
       } else  {
-        dumpM("bulk change")
-        dumpM("number of edits: " + changes.length)
+        dumpM("bulk change with " + changes.length + " edits")
         changes.forEach(function(h) {
           title = h.title
           var t = store.getTiddler(title)
