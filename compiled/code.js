@@ -2556,7 +2556,7 @@ function saveChanges(event)
       }
     },
     function fail(data, status) {
-      message = 'ruby save failed at ' + new Date().convertToYYMMDDHHMMSS()
+      message = 'ruby save failed at ' + new Date().convertToYYYYMMDDHHMM()
       dumpM(message)
       _dump(status)
       _dump(data)
@@ -3207,25 +3207,20 @@ Date.prototype.daySuffix = function()
   return messages.dates.daySuffixes[this.getDate()-1]
 }
 
-// Convert a date to UTC YYYYMMDDHHMM string format
+// convert a date to UTC string
 Date.prototype.convertToYYYYMMDDHHMM = function()
 {
   return this.getUTCFullYear() + String.zeroPad(this.getUTCMonth()+1,2) + String.zeroPad(this.getUTCDate(),2) + String.zeroPad(this.getUTCHours(),2) + String.zeroPad(this.getUTCMinutes(),2)
 }
 
-Date.prototype.convertToYYMMDDHHMMSS = function()
-{
-  return (this.getUTCFullYear() + String.zeroPad(this.getUTCMonth()+1,2) + String.zeroPad(this.getUTCDate(),2) + "." + String.zeroPad(this.getUTCHours(),2) + String.zeroPad(this.getUTCMinutes(),2) + String.zeroPad(this.getUTCSeconds(),2)).slice(2)
-}
-
-// Static method to create a date from a UTC YYYYMMDDHHMM format string
+// create a date from a UTC string
 Date.convertFromYYYYMMDDHHMM = function(d)
 {
   d = d?d.replace(/[^0-9]/g, ""):""
   return Date.convertFromYYYYMMDDHHMMSSMMM(d.substr(0,12))
 }
 
-// Static method to create a date from a UTC YYYYMMDDHHMMSSMMM format string
+// create a date from a UTC string
 Date.convertFromYYYYMMDDHHMMSSMMM = function(d)
 {
   d = d ? d.replace(/[^0-9]/g, "") : ""
