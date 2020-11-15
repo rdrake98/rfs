@@ -246,7 +246,7 @@ function main()
             if(t && latest < t.modified)
               dumpM("\n** newer " + title + " replaced by older **")
             store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
-              h.fields,new Date(h.created),h.creator,true)
+              h.fields,new Date(h.created),h.creator,true,medit)
           } else action = "unchanged"
           if(!medit) dumpM(title + " " + action)
         })
@@ -1755,13 +1755,13 @@ excludeTitle = function(title) {
 }
 
 TiddlyWiki.prototype.saveTiddler = function(title,newTitle,newBody,modifier,
-  modified,fields,created,creator,unshared)
+  modified,fields,created,creator,unshared,medit)
 {
   if (title != newTitle) {
     macros.unsavedChanges.addChange(title, true)
     var exclude = false
   } else exclude = excludeTitle(title)
-  macros.unsavedChanges.addChange(newTitle, exclude)
+  macros.unsavedChanges.addChange(newTitle, exclude || medit && "medited")
   var tiddler = this.fetchTiddler(title)
   if(tiddler) {
     created = created || tiddler.created // preserve created date
@@ -3891,7 +3891,7 @@ macros.tiddlerDates = {
     var text = modified == created || excludeTitle(tiddler.title) ?
       modified : modified + " (created " + created + ")"
     var medited = tiddler.medited()
-    if(medited) text = text + " and medited " + medited.formatDay()
+    if(medited) text = text + " (medited " + medited.formatDay() + ")"
     $(place).text(text)
   }
 }
@@ -4052,11 +4052,11 @@ bulk_change = function(title) {
         _dump("clash between browser edition " + edition + " and " + clash)
         displayMessage("edition clash")
       } else  {
-        dumpM("number of changes: " + changes.length)
+        dumpM("bulk change")
+        dumpM("number of edits: " + changes.length)
         changes.forEach(function(h) {
           title = h.title
           var t = store.getTiddler(title)
-          dumpM(title)
           var modified = new Date(h.modified)
           if (modified.equals(t.modified)) { // has to be medited
             t.text = h.text
