@@ -1797,10 +1797,8 @@ internalizeTiddler = function(tiddler,title,node)
   var attrs = node.attributes
   for(var i = attrs.length-1; i >= 0; i--) {
     var name = attrs[i].name
-    if(name == "splitname" || name == "changecount")
+    if(name == "splitname" || name == "changecount" || name == "medited")
       fields[name] = attrs[i].value
-    if(name == "medited")
-      fields["medited"] = Date.convertFromYYYYMMDDHHMMSS(attrs[i].value)
   }
   tiddler.assign(title,text,modified,modifier,created,creator,fields)
 }
@@ -3781,6 +3779,18 @@ Tiddler.prototype.getSplitName = function()
 Tiddler.prototype.basicSplit = function()
 {
   return this.getSplitName().toLowerCase()
+}
+
+Tiddler.prototype.medited = function()
+{
+  var dateString = this.fields.medited
+  return dateString && Date.convertFromYYYYMMDDHHMMSS(dateString)
+}
+
+Tiddler.prototype.minor = function()
+{
+  var medited = this.medited()
+  return medited && medited > this.modified
 }
 
 TiddlyWiki.prototype.splitName = function(title)
