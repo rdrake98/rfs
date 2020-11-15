@@ -222,7 +222,10 @@ class Tiddler
     re = /^\"\"\"(.*)\"\"\"$/
     from = from =~ re ? $1 : from
     to = to =~ re ? $1 : to
-    edits = @wiki[scope].tiddlers_linked.select do |t|
+    targets = scope == "all" ?
+      @wiki.tiddlers - [self] :
+      @wiki[scope].tiddlers_linked
+    edits = targets.select do |t|
       old_content = t.content
       new_content = old_content.sub(from, to)
       t.update_content(new_content, true)
