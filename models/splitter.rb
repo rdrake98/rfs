@@ -229,21 +229,9 @@ class Splitter
     @host == "p" ? "g" : "p"
   end
 
-  def other_changes(change_type)
-    if change_type == "wiki"
-      commit_changes_file("before plusChanges* on startup", false)
-      File.read(shared_changes_file(other_host))
-    else
-      Dir.glob("../link_data/steps/fml/*.txt").map do |name|
-        lines = File.read(name).lines
-        {
-          "title": lines[0].chomp,
-          "modified": lines[1].chomp,
-          "modifier": "RubyLinks",
-          "text": lines[3..-1].join.gsub(/( +$|\s+\z)/, ""),
-        }
-      end.to_json
-    end
+  def other_changes(from_self)
+    commit_changes_file("before plusChanges* on startup", false)
+    File.read(shared_changes_file(from_self ? @host : other_host))
   end
 
   def commit_changes_file(message, blank_shared=true)

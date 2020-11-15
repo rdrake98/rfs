@@ -57,6 +57,8 @@ end
 class Object
   def in?(collection); collection.include?(self); end
 
+  def true?; to_s.downcase == "true"; end
+
   def taps; tap{|s| puts s}; end
 end
 

@@ -212,7 +212,8 @@ function main()
   macros.unsavedChanges.reset()
   config.notifiers.forEach(n => n.notify(n.name))
   var hash = decodeURIComponent(location.hash.substr(1))
-  var plusChanges = hash == "plusChanges*"
+  var plusChanges = hash.slice(0,12) == "plusChanges*"
+  var fromSelf = plusChanges && hash.slice(12) == "*"
   if(hash && !plusChanges)
     story.displayTiddlers("bottom",hash.split(" "))
   else
@@ -223,7 +224,7 @@ function main()
   if(plusChanges && wikiType().length == 3) {
     ajaxPost('other_changes', {
         type: wikiType(),
-        change_type: plusChanges,
+        from_self: fromSelf,
       },
       function success(response) {
         var changes = JSON.parse(response).filter(h => !excludeTitle(h.title))
@@ -231,18 +232,23 @@ function main()
         changes.forEach(function(h) {
           title = h.title || h
           var t = store.getTiddler(title)
+          var medit = false
           if(!h.title) {
             action = t ? "deleted" : "not found"
             if(t) store.removeTiddler(title, true)
           } else if(!t || h.text != t.text) {
             action = t ? "changed" : "added"
             var modified = new Date(h.modified)
-            if(t && modified < t.modified)
+            var medited = h.fields.medited
+            medited = medited && new Date(medited)
+            medit = medited && medited > modified
+            var latest = medited && medited > modified ? medited : modified
+            if(t && latest < t.modified)
               dumpM("\n** newer " + title + " replaced by older **")
             store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
               h.fields,new Date(h.created),h.creator,true)
           } else action = "unchanged"
-          dumpM(title + " " + action)
+          if(!medit) dumpM(title + " " + action)
         })
         story.refreshAllTiddlers // to be on safe side
       },

@@ -90,15 +90,11 @@ class App < Roda
       r.post "other_changes" do
         p = r.params
         type = p['type']
-        change_type = p['change_type']
+        from_self = p['from_self']
         wiki = wiki(type, true)
         wiki = reload(type, false) if wrong_edition?(wiki)
-        if change_type == "wiki"
-          puts "serving changes from m#{wiki.other_host} for #{type} on startup"
-        else
-          puts "adding links"
-        end
-        wiki.other_changes(change_type)
+        puts "serving changes from m#{wiki.other_host} for #{type} on startup"
+        wiki.other_changes(from_self.true?)
       end
 
       r.post "seed" do
