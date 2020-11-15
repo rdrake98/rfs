@@ -1288,7 +1288,7 @@ tiddler_ = function(count) {
 
 jsonChanges = function(full) {
   var uc = macros.unsavedChanges
-  var names = Array.from(full ? uc.full : uc.changed)
+  var names = Array.from(full ? uc.full : uc.medited)
   var tiddlers = names.map(function(name) {
     t = store.getTiddler(name)
     if(!t) return name
@@ -1330,10 +1330,18 @@ macros.unsavedChanges = {
   addChange: function(title, excluded) {
     this.changed.delete(title)
     if (!excluded) this.changed.add(title)
+    if(!excluded || excluded == "medited") {
+      this.medited.delete(title)
+      this.medited.add(title)
+    }
     this.full.delete(title)
     this.full.add(title)
   },
-  reset: function() {this.changed = new Set; this.full = new Set},
+  reset: function() {
+    this.changed = new Set
+    this.medited = new Set
+    this.full = new Set
+  },
 }
 
 //--
@@ -4041,10 +4049,10 @@ bulk_change = function(title) {
           var t = store.getTiddler(title)
           dumpM(title)
           var modified = new Date(h.modified)
-          if (modified.equals(t.modified)) { // medited
+          if (modified.equals(t.modified)) { // has to be medited
             t.text = h.text
             t.fields = h.fields
-            macros.unsavedChanges.addChange(title, true)
+            macros.unsavedChanges.addChange(title, "medited")
             ajaxChangeTiddler(title, "medited", false)
             store.notify(title)
           } else
