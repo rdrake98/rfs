@@ -228,7 +228,7 @@ function main()
       },
       function success(response) {
         var changes = JSON.parse(response).filter(h => !excludeTitle(h.title))
-        dumpM("number of changes: " + changes.length)
+        dumpM("number of edits: " + changes.length)
         changes.forEach(function(h) {
           title = h.title || h
           var t = store.getTiddler(title)
@@ -1066,7 +1066,7 @@ macros.timeline = {
       return basicCompare(a[sortField], b[sortField])})
     var lastGroup = "", ul
     var lines = params[1] || config.options.txtLinesRecentChanges
-    var last = tiddlers.length-Math.min(tiddlers.length,parseInt(lines,10))
+    var last = tiddlers.length-Math.min(tiddlers.length,parseInt(lines))
     for(var t=tiddlers.length-1; t>=last; t--) {
       var tiddler = tiddlers[t]
       var group = tiddler[sortField].formatString('DD MMM YYYY')
@@ -1170,7 +1170,7 @@ macros.edit.handler = function(place,macroName,params,wikifier,paramString,tiddl
       var v = e.value = store.getValue(tiddler,field) || defVal
       rows = rows || 10
       var lines = v.match(/\n/mg)
-      var maxLines = Math.max(parseInt(config.options.txtMaxEditRows,10),5)
+      var maxLines = Math.max(parseInt(config.options.txtMaxEditRows),5)
       if(lines != null && lines.length > rows) rows = lines.length + 5
       rows = Math.min(rows,maxLines)
       e.setAttribute("rows",rows)
@@ -1496,7 +1496,7 @@ function Tiddler(title)
 Tiddler.prototype.incChangeCount = function()
 {
   var c = this.fields['changecount']
-  c = c ? parseInt(c,10) : 0
+  c = c ? parseInt(c) : 0
   this.fields['changecount'] = String(c+1)
 }
 
@@ -2960,7 +2960,7 @@ String.prototype.format = function(s)
     if(match && match[1]) {
       if(match.index > currPos)
         r.push(this.substring(currPos,match.index))
-      r.push(substrings[parseInt(match[1],10)])
+      r.push(substrings[parseInt(match[1])])
       currPos = subRegExp.lastIndex
     }
   } while(match)
@@ -3210,27 +3210,21 @@ Date.prototype.daySuffix = function()
 // convert a date to UTC string
 Date.prototype.convertToYYYYMMDDHHMM = function()
 {
-  return this.getUTCFullYear() + String.zeroPad(this.getUTCMonth()+1,2) + String.zeroPad(this.getUTCDate(),2) + String.zeroPad(this.getUTCHours(),2) + String.zeroPad(this.getUTCMinutes(),2)
+  return this.getUTCFullYear() + String.zeroPad(this.getUTCMonth()+1,2) +
+    String.zeroPad(this.getUTCDate(),2) + String.zeroPad(this.getUTCHours(),2) +
+    String.zeroPad(this.getUTCMinutes(),2)
 }
 
 // create a date from a UTC string
 Date.convertFromYYYYMMDDHHMM = function(d)
 {
-  d = d?d.replace(/[^0-9]/g, ""):""
-  return Date.convertFromYYYYMMDDHHMMSSMMM(d.substr(0,12))
-}
-
-// create a date from a UTC string
-Date.convertFromYYYYMMDDHHMMSSMMM = function(d)
-{
-  d = d ? d.replace(/[^0-9]/g, "") : ""
-  return new Date(Date.UTC(parseInt(d.substr(0,4),10),
-      parseInt(d.substr(4,2),10)-1,
-      parseInt(d.substr(6,2),10),
-      parseInt(d.substr(8,2)||"00",10),
-      parseInt(d.substr(10,2)||"00",10),
-      parseInt(d.substr(12,2)||"00",10),
-      parseInt(d.substr(14,3)||"000",10)))
+  return new Date(Date.UTC(
+    parseInt(d.substr(0,4)),
+    parseInt(d.substr(4,2))-1,
+    parseInt(d.substr(6,2)),
+    parseInt(d.substr(8,2)),
+    parseInt(d.substr(10,2))
+  ))
 }
 
 //--
