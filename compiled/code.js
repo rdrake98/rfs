@@ -3882,8 +3882,11 @@ macros.tiddlerDates = {
   handler: function(place,macroName,params,wikifier,paramString,tiddler) {
     var modified = tiddler.modified.formatDay()
     var created = tiddler.created.formatDay()
-    $(place).text(modified == created || excludeTitle(tiddler.title) ?
-      modified : modified + " (created " + created + ")")
+    var text = modified == created || excludeTitle(tiddler.title) ?
+      modified : modified + " (created " + created + ")"
+    var medited = tiddler.medited()
+    if(medited) text = text + " and medited " + medited.formatDay()
+    $(place).text(text)
   }
 }
 
