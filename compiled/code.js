@@ -3874,12 +3874,10 @@ macros.makeTable = {
 
 macros.tiddlerDates = {
   handler: function(place,macroName,params,wikifier,paramString,tiddler) {
-    if(tiddler instanceof Tiddler) {
-      var modified = tiddler.modified.formatDay()
-      var created = tiddler.created.formatDay()
-      $(place).text(modified == created || excludeTitle(tiddler.title) ?
-        modified : modified + " (created " + created + ")")
-    }
+    var modified = tiddler.modified.formatDay()
+    var created = tiddler.created.formatDay()
+    $(place).text(modified == created || excludeTitle(tiddler.title) ?
+      modified : modified + " (created " + created + ")")
   }
 }
 
