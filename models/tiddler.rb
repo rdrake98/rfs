@@ -125,6 +125,11 @@ class Tiddler
     time_from(string || created)
   end
 
+  def medited
+    string = self["medited"]
+    string && time_from(string)
+  end
+
   def time_from(s)
     Time.new(s[0..3],s[4..5],s[6..7],s[8..9],s[10..11])
   end
@@ -200,7 +205,7 @@ class Tiddler
       "splitname" => splitname,
       "changecount" => changecount,
     }
-    fields["medited"] = time_from(medited) if medited
+    fields["medited"] = medited if medited
     {
       "title" => title,
       "text" => content,
@@ -213,13 +218,24 @@ class Tiddler
   end
 
   def bulk_change
-    from, to, scope = @content.lines[0].split(", ")
-    targets = @wiki[scope].tiddlers_linked
-    size = targets.size
-    self.content = @content + "\n--\n#{size}"
-    t = targets[0]
-    t.update_content("…" + t.content, true)
-    [to_h, t.to_h].to_json
+    from, to, scope = @content.lines[0].chomp.split(", ")
+    re = /^\"\"\"(.*)\"\"\"$/
+    from = from =~ re ? $1 : from
+    to = to =~ re ? $1 : to
+    edits = @wiki[scope].tiddlers_linked.select do |t|
+      old_content = t.content
+      new_content = old_content.sub(from, to)
+      t.update_content(new_content, true)
+      old_content != new_content
+    end
+    if edits.size > 0
+      time = edits[0].medited.to_minute
+      titles = edits.map(&:title).join(" - ")
+      self.content = @content + "\n#{time} #{titles}"
+      ([to_h] + edits.map(&:to_h)).to_json
+    else
+      []
+    end
   end
 
   def tiddlers_linked
