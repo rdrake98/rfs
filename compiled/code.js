@@ -3195,22 +3195,10 @@ Date.prototype.daySuffix = function()
   return messages.dates.daySuffixes[this.getDate()-1]
 }
 
-// Convert a date to local YYYYMMDDHHMM string format
-Date.prototype.convertToLocalYYYYMMDDHHMM = function()
-{
-  return this.getFullYear() + String.zeroPad(this.getUTCMonth()+1,2) + String.zeroPad(this.getDate(),2) + String.zeroPad(this.getUTCHours(),2) + String.zeroPad(this.getMinutes(),2)
-}
-
 // Convert a date to UTC YYYYMMDDHHMM string format
 Date.prototype.convertToYYYYMMDDHHMM = function()
 {
   return this.getUTCFullYear() + String.zeroPad(this.getUTCMonth()+1,2) + String.zeroPad(this.getUTCDate(),2) + String.zeroPad(this.getUTCHours(),2) + String.zeroPad(this.getUTCMinutes(),2)
-}
-
-// Convert a date to UTC YYYYMMDD.HHMMSSMMM string format
-Date.prototype.convertToYYYYMMDDHHMMSSMMM = function()
-{
-  return this.getUTCFullYear() + String.zeroPad(this.getUTCMonth()+1,2) + String.zeroPad(this.getUTCDate(),2) + "." + String.zeroPad(this.getUTCHours(),2) + String.zeroPad(this.getUTCMinutes(),2) + String.zeroPad(this.getUTCSeconds(),2) + String.zeroPad(this.getUTCMilliseconds(),3) +"0"
 }
 
 Date.prototype.convertToYYMMDDHHMMSS = function()
