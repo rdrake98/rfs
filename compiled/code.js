@@ -1286,6 +1286,33 @@ tiddler_ = function(count) {
   return "%0 tiddler%1".format([count || 'No', count == 1 ? '' : 's'])
 }
 
+jsonChanges = function(full) {
+  var uc = macros.unsavedChanges
+  var names = Array.from(full ? uc.full : uc.changed)
+  var tiddlers = names.map(function(name) {
+    t = store.getTiddler(name)
+    if(!t) return name
+    t = Object.assign({}, t)
+    delete t.links
+    delete t.linksUpdated
+    return t
+  })
+  return JSON.stringify(tiddlers)
+}
+
+ajaxChangeTiddler = function(title, action, unshared) {
+  ajaxPost('change_tiddler', {
+      type: wikiType(),
+      title: title,
+      action: action,
+      shared: unshared ? "false" : "true",
+      changes: jsonChanges(),
+    },
+    function success(text) {_dump(text)},
+    function fail(data, status) {_dump('ruby change_tiddler failed for ' + title)}
+  )
+}
+
 // Eric Shulman, heavily bowdlerized by Richard Drake
 macros.unsavedChanges = {
   handler: function(place) {
@@ -1711,33 +1738,6 @@ TiddlyWiki.prototype.removeTiddler = function(title, unshared)
 
 excludeTitle = function(title) {
   return title == "Search" || title == "DefaultTiddlers"
-}
-
-jsonChanges = function(full) {
-  var uc = macros.unsavedChanges
-  var names = Array.from(full ? uc.full : uc.changed)
-  var tiddlers = names.map(function(name) {
-    t = store.getTiddler(name)
-    if(!t) return name
-    t = Object.assign({}, t)
-    delete t.links
-    delete t.linksUpdated
-    return t
-  })
-  return JSON.stringify(tiddlers)
-}
-
-ajaxChangeTiddler = function(title, action, unshared) {
-  ajaxPost('change_tiddler', {
-      type: wikiType(),
-      title: title,
-      action: action,
-      shared: unshared ? "false" : "true",
-      changes: jsonChanges(),
-    },
-    function success(text) {_dump(text)},
-    function fail(data, status) {_dump('ruby change_tiddler failed for ' + title)}
-  )
 }
 
 TiddlyWiki.prototype.saveTiddler = function(title,newTitle,newBody,modifier,
