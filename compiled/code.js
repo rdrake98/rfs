@@ -4046,6 +4046,7 @@ bulk_change = function(title) {
             t.fields = h.fields
             macros.unsavedChanges.addChange(title, "medited")
             ajaxChangeTiddler(title, "medited", false)
+            t.changed()
             store.notify(title)
           } else
             store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
