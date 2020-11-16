@@ -123,11 +123,12 @@ class WikiWithTabsSB < WikiWithTabs
     titles = titles.filter {|title| title =~ /^S2/}
     puts titles.size
     titles = titles.each {|title| fat.update_from(sb, title)}
-    name = Time.now.strftime "S%YM%m"
+    time = Time.now
+    name = time.strftime "S%YM%m"
     if fat[name]
       fat[name].content += "\n" + titles.join("\n")
     else
-      fat.create_new(name, titles.join("\n"))
+      fat.create_new(name, titles.join("\n"), time.strftime "S%Y M%m")
       fat["S2020M05Top"].content += "\n" + name
     end
     puts fat.tiddlers.size
