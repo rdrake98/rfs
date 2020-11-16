@@ -205,7 +205,7 @@ class Tiddler
       "splitname" => splitname,
       "changecount" => changecount,
     }
-    fields["medited"] = medited if medited
+    (d = self["medited"]) && fields["medited"] = d
     {
       "title" => title,
       "text" => content,
