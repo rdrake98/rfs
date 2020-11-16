@@ -3109,8 +3109,7 @@ String.encodeTiddlyLinkList = function(list)
 String.zeroPad = function(n,d)
 {
   var s = n.toString()
-  if(s.length < d)
-    s = "000000000000000000000000000".substr(0,d-s.length) + s
+  if(s.length < d) s = "000000000000000000000000000".substr(0,d-s.length) + s
   return s
 }
 
