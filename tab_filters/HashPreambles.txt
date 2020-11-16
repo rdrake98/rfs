@@ -1,5 +1,5 @@
 Hash Preambles
-2020-05-07 00:34:00 +0100
+2020-05-07 00:34:00 UTC
 
 http://climateaudit.org
 https://climateaudit.org
