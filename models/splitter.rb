@@ -194,6 +194,11 @@ class Splitter
     @prettySplits = nil if tiddler.title == "NamePatches"
   end
 
+  def change_tiddler(title, tiddler)
+    delete(title) # because splitname may have changed
+    self[title] = tiddler
+  end
+
   def delete(title, noisy=false)
     tiddler = self[title]
     if tiddler
@@ -202,6 +207,22 @@ class Splitter
       puts "- split found" if @tiddler_splits.delete(tiddler.splitdown) && noisy
     else
       puts "- tiddler not found" if noisy
+    end
+  end
+
+  def update_from(splitter, title, new_title=nil)
+    source = splitter[title]
+    if source
+      if new_title
+        target = self[new_title]
+        if target
+          target.content = source.content
+        else
+          create_new(new_title, source.content, splitName(new_title))
+        end
+      else
+        change_tiddler(title, source)
+      end
     end
   end
 
