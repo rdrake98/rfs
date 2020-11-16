@@ -223,7 +223,7 @@ class Tiddler
     from = from =~ re ? $1 : from
     to = to =~ re ? $1 : to
     targets = scope == "all" ?
-      @wiki.tiddlers - [self] :
+      @wiki.normal_tiddlers - [self] :
       @wiki[scope].tiddlers_linked
     edits = targets.select do |t|
       old_content = t.content
@@ -233,8 +233,8 @@ class Tiddler
     end
     if edits.size > 0
       time = edits[0].medited.to_minute
-      titles = edits.map(&:title).join(" - ")
-      self.content = @content + "\n#{time} #{titles}"
+      links = edits.map(&:to_link).join(" - ")
+      self.content = @content + "\n#{time} #{links}"
       ([to_h] + edits.map(&:to_h)).to_json
     else
       []

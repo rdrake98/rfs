@@ -114,6 +114,10 @@ class Splitter
       tiddlers_linked("MacrosNotTo") - tiddlers_linked("AcceptableDifferences")
   end
 
+  def normal_tiddlers
+    tiddlers - [self["Search"], self["NewTiddlers"]]
+  end
+
   def store_size
     unsorted_tiddlers.map(&:size).reduce(0, &:+)
   end
