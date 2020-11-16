@@ -316,7 +316,7 @@ class Splitter
   end
 
   def check_file_edition(browser_edition, json=nil)
-    return nil unless @type == "fat" # need to check needs of non fat wikis
+    return nil unless @type == "fat"
     file_edition = read_file_edition
     return nil if browser_edition == file_edition
     if json
