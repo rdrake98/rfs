@@ -4037,7 +4037,7 @@ bulk_change = function(title) {
       if(clash) {
         _dump("clash between browser edition " + edition + " and " + clash)
         displayMessage("edition clash")
-      } else  {
+      } else if(changes.length > 0) {
         dumpM("making " + changes.length + " edits...")
         changes.forEach(function(h) {
           title = h.title
@@ -4055,7 +4055,8 @@ bulk_change = function(title) {
               h.fields,new Date(h.created),h.creator)
         })
         dumpM("completed")
-      }
+      } else
+        dumpM("no edits found")
     },
     function fail(data, status) {
       _dump('Bulk change failed in ruby for ' + title)

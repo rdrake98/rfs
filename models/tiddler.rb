@@ -218,7 +218,9 @@ class Tiddler
   end
 
   def bulk_change
-    from, to, scope = @content.lines[0].chomp.split(", ")
+    specs = @content.lines[0].chomp.split(", ")
+    return "[]" if specs.size != 3
+    from, to, scope = specs
     re = /^\"\"\"(.*)\"\"\"$/
     from = from =~ re ? $1 : from
     to = to =~ re ? $1 : to
@@ -237,7 +239,7 @@ class Tiddler
       self.content = @content + "\n#{time} #{links}"
       ([to_h] + edits.map(&:to_h)).to_json
     else
-      []
+      "[]"
     end
   end
 
