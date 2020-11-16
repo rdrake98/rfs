@@ -1382,7 +1382,7 @@ macros.toolbar.onClickPopup = function(e)
   var command = commands[this.getAttribute("commandName")]
   var title = this.getAttribute("tiddler")
   popup.setAttribute("tiddler",title)
-  command.handlePopup(popup,title)
+  command.handlePopup(popup,title,e.altKey)
   Popup.show()
 }
 
@@ -1462,9 +1462,9 @@ commands.permalink.handler = function(event,src,title)
   location.hash = encodeURIComponent(String.encodeTiddlyLink(title))
 }
 
-commands.references.handlePopup = function(popup,title)
+commands.references.handlePopup = function(popup,title,altKey)
 {
-  var references = store.getReferringTiddlers(title)
+  var references = store.getReferringTiddlers(title,altKey)
   if (references.length)
     for(var r=0; r < references.length; r++) {
       var place = createTiddlyElement(popup,"li")
@@ -1839,7 +1839,7 @@ TiddlyWiki.prototype.search = function(regExp) {
 }
 
 // Return an array of the tiddlers that link to a given tiddler
-TiddlyWiki.prototype.getReferringTiddlers = function(name)
+TiddlyWiki.prototype.getReferringTiddlers = function(name, want_bch)
 {
   // implications are that some non-existing tiddlers may show a reference that
   // really links to an existing one. As it's hard to open such a non-existing
@@ -1849,7 +1849,9 @@ TiddlyWiki.prototype.getReferringTiddlers = function(name)
   var altName = name.basicSplit()
   if (name != altName && store.fetchTiddler(altName)) altName = null
   this.forEachTiddler(function(title,tiddler) {
-    if(title != name && !excludeTitle(title)) {
+    var bch = title.slice(-3) == "Bch"
+    var wanted = (want_bch && bch) || (!want_bch && !bch)
+    if(wanted && title != name && !excludeTitle(title)) {
       var links = tiddler.links
       for(var i=0; i < links.length; i++) {
         var link = links[i]
