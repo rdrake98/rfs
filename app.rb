@@ -136,5 +136,10 @@ class App < Roda
     r.get "commit_tabs_mods" do
       WikiWithTabsSB.commit_mods
     end
+
+    r.get "cp_other_dev" do
+      wiki("dev").cp_other_dev
+      "dev5 from the other machine copied. proceed with care"
+    end
   end
 end

@@ -347,7 +347,13 @@ class Splitter
     backup
     newFile = write("", @host)
     commit_changes_file("#{@type} #{json ? '' : 'force '}saved") if @type
+    `cp -p #{@filename} $db/_shared/dev/m#{@host}` if @type == "dev"
     newFile
+  end
+
+  def cp_other_dev
+    `cd #{parent_dir}; git add .; git commit -m "before cp_other_dev"`
+    `cp -p $db/_shared/dev/m#{other_host}/dev5.html #{parent_dir}`
   end
 
   def inject_tests(testing)
