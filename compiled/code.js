@@ -4022,6 +4022,7 @@ commands.roll.handler = function(event,src,title)
 
 bulk_change = function(title) {
   var t = store.getTiddler(title)
+  dumpM("doing bulk change...")
   ajaxPost('bulk_change', {
       type: wikiType(),
       edition: edition,
@@ -4035,7 +4036,7 @@ bulk_change = function(title) {
         _dump("clash between browser edition " + edition + " and " + clash)
         displayMessage("edition clash")
       } else  {
-        dumpM("bulk change with " + changes.length + " edits")
+        dumpM("making " + changes.length + " edits...")
         changes.forEach(function(h) {
           title = h.title
           var t = store.getTiddler(title)
@@ -4050,6 +4051,7 @@ bulk_change = function(title) {
             store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
               h.fields,new Date(h.created),h.creator)
         })
+        dumpM("completed")
       }
     },
     function fail(data, status) {
