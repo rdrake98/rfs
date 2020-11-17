@@ -1465,11 +1465,15 @@ commands.permalink.handler = function(event,src,title)
 commands.references.handlePopup = function(popup,title,altKey)
 {
   var references = store.getReferringTiddlers(title,altKey)
-  if (references.length)
+  var size = references.length
+  if (size) {
+    if (size > 10)
+      createTiddlyElement(popup,"li",null,"disabled", size + " references")
     for(var r=0; r < references.length; r++) {
       var place = createTiddlyElement(popup,"li")
       createTiddlyLink(place,references[r].title,true,null,true)
     }
+  }
   else
     createTiddlyElement(popup,"li",null,"disabled","No references")
 }
