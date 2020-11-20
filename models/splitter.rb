@@ -35,7 +35,7 @@ class Splitter
         self[tiddler.title] = tiddler
       end
       @mid = line
-      until (line = file.gets) =~ /^<script id="jsArea" type="text\/javascript">/
+      until (line = file.gets) =~ /^<script id="jsArea" type="text\/javascript"/
         @mid << line
       end
       @mid << line
