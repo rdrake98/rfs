@@ -128,7 +128,7 @@ class WikiWithTabsSB < WikiWithTabs
     if fat[name]
       fat[name].content += "\n" + titles.join("\n")
     else
-      fat.create_new(name, titles.join("\n"), time.strftime "S%Y M%m")
+      fat.create_new(name, titles.join("\n"), time.strftime("S%Y M%m"))
       fat["S2020M05Top"].content += "\n" + name
     end
     puts fat.tiddlers.size
