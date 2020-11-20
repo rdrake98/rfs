@@ -1,9 +1,3 @@
-//<![CDATA[
-
-// JSLint directives
-/*global jQuery:false, version:false */
-/*jslint bitwise:true, browser:true, confusion:true, eqeq:true, evil:true, forin:true, maxerr:100, plusplus:true, regexp:true, sloppy:true, sub:true, undef:true, unparam:true, vars:true, white:true */
-
 // Messages
 
 function displayMessage(text,file) {
@@ -4177,5 +4171,3 @@ function seed() {
     else dumpM("changes must be empty for seed to be run")
   else dumpM("must be fat or dev for seed to be run")
 }
-
-//]]>
