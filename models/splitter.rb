@@ -397,19 +397,6 @@ class Splitter
   def update_scripts
     puts @mid.lines[-1]
     puts @after.lines[0..4]
-    lines = @mid.lines
-    lines[-1].sub!(' type="text/javascript"', '')
-    @mid = lines.join
-    lines = @after.lines
-    lines[1].sub!(' type="text/javascript"', '')
-    lines[3].sub!(' type="text/javascript"', '')
-    @after = lines.join
-    puts
-    puts @mid.lines[-1]
-    puts @after.lines[0..4]
-    puts
-    backup
-    write("")
   end
 
   def self.check_tiddlers(fixed=true)
