@@ -394,21 +394,22 @@ class Splitter
     !same
   end
 
-  def update_jq
+  def update_scripts
+    puts @mid.lines[-1]
+    puts @after.lines[0..4]
+    lines = @mid.lines
+    lines[-1].sub!(' type="text/javascript"', '')
+    @mid = lines.join
     lines = @after.lines
-    puts lines.size
-    script_line = lines[1]
-    puts script_line
-    script_line.sub!(">", ' src="/Users/rd/Dropbox/_minified/jquery-3.5.1.min.js">')
-    puts script_line
-    new_after = (lines[0..1] + lines[8..-1]).join
-    return false if new_after == @after
-    backup
-    @after = new_after
-    write("")
+    lines[1].sub!(' type="text/javascript"', '')
+    lines[3].sub!(' type="text/javascript"', '')
+    @after = lines.join
     puts
-    puts @after.lines[0..5]
-    true
+    puts @mid.lines[-1]
+    puts @after.lines[0..4]
+    puts
+    backup
+    write("")
   end
 
   def self.check_tiddlers(fixed=true)
