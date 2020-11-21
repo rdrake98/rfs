@@ -396,6 +396,7 @@ class Splitter
 
   def update_scripts
     puts @mid.lines[-1]
+    puts
     puts @after.lines[0..4]
   end
 
