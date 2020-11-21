@@ -2581,19 +2581,6 @@ function convertUnicodeToHtmlEntities(s)
   return s.replace(re,function($0) {return "&#" + $0.charCodeAt(0).toString() + ";"})
 }
 
-function convertUriToUTF8(uri,charSet)
-{
-  if(window.netscape == undefined || charSet == undefined || charSet == "")
-    return uri
-  try {
-    netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect")
-    var converter = Components.classes["@mozilla.org/intl/utf8converterservice;1"].getService(Components.interfaces.nsIUTF8ConverterService)
-  } catch(ex) {
-    return uri
-  }
-  return converter.convertURISpecToUTF8(uri,charSet)
-}
-
 //--
 //-- TiddlyWiki-specific utility functions
 //--
