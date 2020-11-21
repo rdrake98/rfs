@@ -394,6 +394,23 @@ class Splitter
     !same
   end
 
+  def update_jq
+    lines = @after.lines
+    puts lines.size
+    script_line = lines[1]
+    puts script_line
+    script_line.sub!(">", ' src="/Users/rd/Dropbox/_minified/jquery-3.5.1.min.js">')
+    puts script_line
+    new_after = (lines[0..1] + lines[8..-1]).join
+    return false if new_after == @after
+    backup
+    @after = new_after
+    write("")
+    puts
+    puts @after.lines[0..5]
+    true
+  end
+
   def self.check_tiddlers(fixed=true)
     f = fixed ? fat : new("/Users/rd/rf/_milestones/f181211.212407g.html")
     puts f.tiddlers.select {|t| t.content =~ /\n\Z/}.size
