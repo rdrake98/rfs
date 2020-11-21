@@ -386,17 +386,10 @@ class Splitter
   end
 
   def update_code(testing=nil, suffix="")
-    # keep for injecting tests. for now
-    puts @code.size
-    new_code = ""
-    same = @code == new_code
-    @code = new_code
-    puts same ? "code unchanged" : @code.size
-    backup unless same
+    puts "keep injecting tests, for now"
     old_before = @before
     inject_tests(testing) unless testing == nil
-    same &&= @before == old_before
-    puts @mid.lines[-1]
+    same = @before == old_before
     write(suffix) unless same
     !same
   end
