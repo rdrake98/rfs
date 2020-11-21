@@ -2564,28 +2564,11 @@ function saveChanges(event)
   )
 }
 
-function getDirPath(localPath)
-{
-  return localPath.slice(0,localPath.lastIndexOf("/") + 1)
-}
-
 function wikiType() {
-  path = getLocalPath()
+  var path = location.pathname
   if (path == "/Users/rd/Dropbox/fatword.html") return "fat"
   if (path == "/Users/rd/ww/emptys/dev5.html") return "dev"
   return path
-}
-
-// Translate URL to local path
-getLocalPath = function()
-{
-  var originalPath = convertUriToUTF8(document.location.toString(),"UTF-8")
-  // Remove any location or query part of the URL
-  var argPos = originalPath.indexOf("?")
-  if(argPos != -1) originalPath = originalPath.substr(0,argPos)
-  var hashPos = originalPath.indexOf("#")
-  if(hashPos != -1) originalPath = originalPath.substr(0,hashPos)
-  return unescape(originalPath.substr(7)) // assume mac local file
 }
 
 //--
