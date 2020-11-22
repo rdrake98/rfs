@@ -386,7 +386,8 @@ class Splitter
   end
 
   def update_code(testing=nil, suffix="")
-    puts "keep injecting tests, for now"
+    puts File.read(Dir.compiled "code.js").size
+    puts "we can still inject tests into dev, for now"
     old_before = @before
     inject_tests(testing) unless testing == nil
     same = @before == old_before
