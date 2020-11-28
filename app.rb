@@ -8,7 +8,9 @@ class App < Roda
 
   def reload(type="fat", saving=true, edition=nil, changes=nil)
     puts "reloading #{type} into server from file"
-    wiki = type == "fat" ? Splitter.fat : Splitter.dev
+    wiki = type == "fat" ?
+      Splitter.fat :
+      type == "dev" ? Splitter.dev : Splitter.new(type)
     Wikis[type] = wiki
     saving ? edition ? wiki.save(edition, changes) : wiki.do_save : wiki
   end

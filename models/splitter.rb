@@ -355,9 +355,10 @@ class Splitter
     return clash if clash
     commit_changes_file("before #{@type} saved") if @type
     add_changes(json)
-    if !@type || browser_edition == edition # check non fat,dev wikis
+    # qq :browser_edition, :edition if $dd
+    if browser_edition == edition
       newFile = do_save(json)
-      newFile ? [edition, newFile].join(",") : edition # check non fat,dev wikis
+      newFile ? [edition, newFile].join(",") : edition
     else
       nil
     end
