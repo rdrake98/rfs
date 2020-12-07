@@ -90,10 +90,10 @@ class WikiWithTabsSB < WikiWithTabs
     Dir.cd(:tab_backups).glob("s*.js")
   end
 
-  def self.commit_mods
+  def self.commit_mods(force=false)
     last_backup = read_all_names[-1]
     spec = Splitter.new(Dir.tinys "spec.html")
-    if spec["LastBackup"].content != last_backup
+    if force || spec["LastBackup"].content != last_backup
       ymd = Time.new.ymd
       dir = "backups/b#{ymd}%02d" %
         (Dir.cd(:tinys, 'backups').glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1)
