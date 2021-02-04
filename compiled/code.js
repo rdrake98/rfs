@@ -1056,8 +1056,11 @@ macros.timeline = {
     var paramString = $(container).attr("params")
     var params = paramString.parseParams("anon")[0].anon || []
     var sortField = params[0] || "modified"
-    var tiddlers = store.includedTiddlers().sort(function(a,b) {
-      return basicCompare(a[sortField], b[sortField])})
+    var tiddlers = store.includedTiddlers().sort(
+      sortField == "created" ?
+        function(a,b) {return basicCompare(a[sortField], b[sortField])} :
+        function(a,b) {return basicCompare(a[sortField], b[sortField])}
+    )
     var lastGroup = "", ul
     var lines = params[1] || config.options.txtLinesRecentChanges
     var last = tiddlers.length-Math.min(tiddlers.length,parseInt(lines))
