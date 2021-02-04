@@ -31,6 +31,7 @@ config.options = {
   txtMaxEditRows: "30",
   txtWidth: "610",
   txtLinesRecentChanges: "75",
+  txtCreatedShift: "0",
   txtMainTab: "Recent",
   txtMoreTab: "Shadowed",
 }
@@ -3106,8 +3107,7 @@ String.encodeTiddlyLinkList = function(list)
 twoPad = function(n)
 {
   var s = n.toString()
-  if(s.length < 2) s = "00".substr(0,2-s.length) + s
-  return s
+  return s.length < 2 ? "00".substr(0,2-s.length) + s : s
 }
 
 String.prototype.startsWith = function(prefix)
