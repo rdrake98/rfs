@@ -1045,6 +1045,14 @@ macros.today.handler = function(place,macroName,params)
   $("<span/>").text(text).appendTo(place)
 }
 
+Date.prototype.compareS = function(anchorYear,anchorMMDD)
+{
+  // return this.getUTCFullYear() + String.zeroPad(this.getUTCMonth()+1,2) +
+  //   String.zeroPad(this.getUTCDate(),2) + String.zeroPad(this.getUTCHours(),2) +
+  //   String.zeroPad(this.getUTCMinutes(),2)
+  return this.convertToYYYYMMDDHHMM()
+}
+
 macros.timeline = {
   handler: function(place,macroName,params,wikifier,paramString) {
     var container = $("<div />").attr("params", paramString).
@@ -1071,9 +1079,7 @@ macros.timeline = {
       _dump(anchorMMDD)
       tiddlers = tiddlers.sort(
         function(a, b) {
-          ac = a.created.convertToYYYYMMDDHHMM()
-          bc = b.created.convertToYYYYMMDDHHMM()
-          return basicCompare(ac, bc)
+          return basicCompare(a.created.compareS(), b.created.compareS())
         }
       )
     }
