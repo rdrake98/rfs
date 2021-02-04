@@ -27,7 +27,7 @@ config.options = {
   chkRegExp: false,
   chkCaseSensitive: false,
   chkTitleOnly: false,
-  chkShowDetail: false,
+  chkShowCreatedHistory: true,
   txtMaxEditRows: "30",
   txtWidth: "610",
   txtLinesRecentChanges: "75",
@@ -990,13 +990,8 @@ Wikifier.prototype.outputText = function(place,startPos,endPos)
 
 function wikify(source,output,highlightRegExp,tiddler)
 {
-  if(source) {
-    var wikifier = new Wikifier(source,formatter,highlightRegExp,tiddler)
-    var t0 = new Date()
-    wikifier.subWikify(output)
-    if(tiddler && config.options.chkShowDetail && false)
-      dumpM("wikify:" +tiddler.title+ " in " + (new Date()-t0) + " ms")
-  }
+  if(source)
+    new Wikifier(source,formatter,highlightRegExp,tiddler).subWikify(output)
 }
 
 function highlightify(source,output,highlightRegExp,tiddler)
@@ -3665,8 +3660,6 @@ cacheTiddlerSplits = function() {
   store.forEachTiddler(function(title,tiddler) {
     tiddlerSplits[tiddler.getSplitName().toLowerCase()] = tiddler
   })
-  if(!startingUp && config.options.chkShowDetail)
-    dumpM("cacheTiddlerSplits in " + (new Date() - t0) + " ms")
 }
 
 var wikiChunk = textPrims.upperLetter + textPrims.lowerLetter + "+"
