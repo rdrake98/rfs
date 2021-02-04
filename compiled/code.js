@@ -1047,12 +1047,15 @@ macros.today.handler = function(place,macroName,params)
 
 Date.prototype.createdCompareString = function(anchorYear,anchorMMDD)
 {
-  return this.convertToYYYYMMDDHHMM()
+  if(this.formatMMDD() != anchorMMDD)
+    return "00" + this.convertToYYYYMMDDHHMM()
+  var yearDiff = anchorYear - this.getUTCFullYear()
+  return String.zeroPad(yearDiff,2) + this.convertToYYYYMMDDHHMM()
 }
 
 Date.prototype.formatMMDD = function()
 {
-  return this.format("0MM0DD")
+  return this.formatString("0MM0DD")
 }
 
 macros.timeline = {
