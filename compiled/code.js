@@ -1047,10 +1047,9 @@ macros.today.handler = function(place,macroName,params)
 
 Date.prototype.createdCompareString = function(anchorYear,anchorMMDD)
 {
-  if(this.formatMMDD() != anchorMMDD)
-    return "00" + this.convertToYYYYMMDDHHMM()
-  var yearDiff = anchorYear - this.getUTCFullYear()
-  return String.zeroPad(yearDiff,2) + this.convertToYYYYMMDDHHMM()
+  var long = this.convertToYYYYMMDDHHMM()
+  return this.formatMMDD() != anchorMMDD ?
+    "00" + long : String.zeroPad(anchorYear - this.getUTCFullYear(),2) + long
 }
 
 Date.prototype.formatMMDD = function()
