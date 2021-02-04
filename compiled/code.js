@@ -1063,10 +1063,17 @@ macros.timeline = {
       )
     } else {
       var dayShift = parseInt(params[2] || "0")
-      _dump(dayShift)
+      var anchorDate = new Date()
+      anchorDate.setDate(anchorDate.getDate() + dayShift)
+      var longDate = anchorDate.convertToYYYYMMDDHHMM()
+      var anchorYear = parseInt(longDate.slice(0,4))
+      var anchorMMDD = longDate.slice(4,8)
+      _dump(anchorMMDD)
       tiddlers = tiddlers.sort(
         function(a, b) {
-          return basicCompare(a.created, b.created)
+          ac = a.created.convertToYYYYMMDDHHMM()
+          bc = b.created.convertToYYYYMMDDHHMM()
+          return basicCompare(ac, bc)
         }
       )
     }
