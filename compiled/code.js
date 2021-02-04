@@ -1045,7 +1045,7 @@ macros.today.handler = function(place,macroName,params)
   $("<span/>").text(text).appendTo(place)
 }
 
-Date.prototype.compareS = function(anchorYear,anchorMMDD)
+Date.prototype.createdCompareString = function(anchorYear,anchorMMDD)
 {
   // return this.getUTCFullYear() + String.zeroPad(this.getUTCMonth()+1,2) +
   //   String.zeroPad(this.getUTCDate(),2) + String.zeroPad(this.getUTCHours(),2) +
@@ -1079,7 +1079,10 @@ macros.timeline = {
       _dump(anchorMMDD)
       tiddlers = tiddlers.sort(
         function(a, b) {
-          return basicCompare(a.created.compareS(), b.created.compareS())
+          return basicCompare(
+            a.created.createdCompareString(anchorYear,anchorMMDD),
+            b.created.createdCompareString(anchorYear,anchorMMDD)
+          )
         }
       )
     }
