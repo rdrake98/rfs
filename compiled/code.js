@@ -1071,7 +1071,7 @@ macros.timeline = {
         function(a,b) {return basicCompare(a.modified, b.modified)}
       )
     } else {
-      var dayShift = parseInt(params[2] || "0")
+      var dayShift = parseInt(params[2] || config.options.txtCreatedShift)
       var anchorDate = new Date()
       anchorDate.setDate(anchorDate.getDate() + dayShift)
       var anchorYear = anchorDate.getUTCFullYear()
