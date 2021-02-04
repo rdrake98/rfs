@@ -1047,10 +1047,12 @@ macros.today.handler = function(place,macroName,params)
 
 Date.prototype.createdCompareString = function(anchorYear,anchorMMDD)
 {
-  // return this.getUTCFullYear() + String.zeroPad(this.getUTCMonth()+1,2) +
-  //   String.zeroPad(this.getUTCDate(),2) + String.zeroPad(this.getUTCHours(),2) +
-  //   String.zeroPad(this.getUTCMinutes(),2)
   return this.convertToYYYYMMDDHHMM()
+}
+
+Date.prototype.formatMMDD = function()
+{
+  return this.format("0MM0DD")
 }
 
 macros.timeline = {
@@ -1073,9 +1075,8 @@ macros.timeline = {
       var dayShift = parseInt(params[2] || "0")
       var anchorDate = new Date()
       anchorDate.setDate(anchorDate.getDate() + dayShift)
-      var longDate = anchorDate.convertToYYYYMMDDHHMM()
-      var anchorYear = parseInt(longDate.slice(0,4))
-      var anchorMMDD = longDate.slice(4,8)
+      var anchorYear = anchorDate.getUTCFullYear()
+      var anchorMMDD = anchorDate.formatMMDD()
       _dump(anchorMMDD)
       tiddlers = tiddlers.sort(
         function(a, b) {
