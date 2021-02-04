@@ -1047,9 +1047,9 @@ macros.today.handler = function(place,macroName,params)
 
 Date.prototype.createdCompareString = function(anchorYear,anchorMMDD)
 {
-  var long = this.convertToYYYYMMDDHHMM()
-  return this.formatMMDD() != anchorMMDD ?
-    "00" + long : String.zeroPad(anchorYear - this.getUTCFullYear(),2) + long
+  return (this.formatMMDD() != anchorMMDD ? "00" :
+    twoPad(anchorYear - this.getUTCFullYear(),2)) +
+      this.convertToYYYYMMDDHHMM()
 }
 
 Date.prototype.formatMMDD = function()
@@ -1079,7 +1079,6 @@ macros.timeline = {
       anchorDate.setDate(anchorDate.getDate() + dayShift)
       var anchorYear = anchorDate.getUTCFullYear()
       var anchorMMDD = anchorDate.formatMMDD()
-      _dump(anchorMMDD)
       tiddlers = tiddlers.sort(
         function(a, b) {
           return basicCompare(
@@ -3104,11 +3103,10 @@ String.encodeTiddlyLinkList = function(list)
   return results.join(" ")
 }
 
-// Static method to left-pad a string with 0s to a certain width
-String.zeroPad = function(n,d)
+twoPad = function(n)
 {
   var s = n.toString()
-  if(s.length < d) s = "000000000000000000000000000".substr(0,d-s.length) + s
+  if(s.length < 2) s = "00".substr(0,2-s.length) + s
   return s
 }
 
@@ -3140,34 +3138,34 @@ Date.prototype.equals = function(date2) {
 // Substitute date components into a string
 Date.prototype.formatString = function(template)
 {
-  var t = template.replace(/0hh12/g,String.zeroPad(this.getHours12(),2))
+  var t = template.replace(/0hh12/g,twoPad(this.getHours12(),2))
   t = t.replace(/hh12/g,this.getHours12())
-  t = t.replace(/0hh/g,String.zeroPad(this.getUTCHours(),2))
+  t = t.replace(/0hh/g,twoPad(this.getUTCHours(),2))
   t = t.replace(/hh/g,this.getUTCHours())
   t = t.replace(/mmm/g,messages.dates.shortMonths[this.getUTCMonth()])
-  t = t.replace(/0mm/g,String.zeroPad(this.getMinutes(),2))
+  t = t.replace(/0mm/g,twoPad(this.getMinutes(),2))
   t = t.replace(/mm/g,this.getMinutes())
-  t = t.replace(/0ss/g,String.zeroPad(this.getSeconds(),2))
+  t = t.replace(/0ss/g,twoPad(this.getSeconds(),2))
   t = t.replace(/ss/g,this.getSeconds())
   t = t.replace(/[ap]m/g,this.getAmPm().toLowerCase())
   t = t.replace(/[AP]M/g,this.getAmPm().toUpperCase())
   t = t.replace(/wYYYY/g,this.getYearForWeekNo())
-  t = t.replace(/wYY/g,String.zeroPad(this.getYearForWeekNo()-2000,2))
+  t = t.replace(/wYY/g,twoPad(this.getYearForWeekNo()-2000,2))
   t = t.replace(/YYYY/g,this.getFullYear())
-  t = t.replace(/YY/g,String.zeroPad(this.getFullYear()-2000,2))
+  t = t.replace(/YY/g,twoPad(this.getFullYear()-2000,2))
   t = t.replace(/MMM/g,messages.dates.months[this.getUTCMonth()])
-  t = t.replace(/0MM/g,String.zeroPad(this.getUTCMonth()+1,2))
+  t = t.replace(/0MM/g,twoPad(this.getUTCMonth()+1,2))
   t = t.replace(/MM/g,this.getUTCMonth()+1)
-  t = t.replace(/0WW/g,String.zeroPad(this.getWeek(),2))
+  t = t.replace(/0WW/g,twoPad(this.getWeek(),2))
   t = t.replace(/WW/g,this.getWeek())
   t = t.replace(/DDD/g,messages.dates.days[this.getDay()])
   t = t.replace(/ddd/g,messages.dates.shortDays[this.getDay()])
-  t = t.replace(/0DD/g,String.zeroPad(this.getUTCDate(),2))
+  t = t.replace(/0DD/g,twoPad(this.getUTCDate(),2))
   t = t.replace(/DDth/g,this.getUTCDate()+this.daySuffix())
   t = t.replace(/DD/g,this.getUTCDate())
   var tz = this.getTimezoneOffset()
   var atz = Math.abs(tz)
-  t = t.replace(/TZD/g,(tz < 0 ? '+' : '-') + String.zeroPad(Math.floor(atz / 60),2) + ':' + String.zeroPad(atz % 60,2))
+  t = t.replace(/TZD/g,(tz < 0 ? '+' : '-') + twoPad(Math.floor(atz / 60),2) + ':' + twoPad(atz % 60,2))
   t = t.replace(/\\/g,"")
   return t
 }
@@ -3210,9 +3208,9 @@ Date.prototype.daySuffix = function()
 // convert a date to UTC string
 Date.prototype.convertToYYYYMMDDHHMM = function()
 {
-  return this.getUTCFullYear() + String.zeroPad(this.getUTCMonth()+1,2) +
-    String.zeroPad(this.getUTCDate(),2) + String.zeroPad(this.getUTCHours(),2) +
-    String.zeroPad(this.getUTCMinutes(),2)
+  return this.getUTCFullYear() + twoPad(this.getUTCMonth()+1,2) +
+    twoPad(this.getUTCDate(),2) + twoPad(this.getUTCHours(),2) +
+    twoPad(this.getUTCMinutes(),2)
 }
 
 // create a date from a UTC string
