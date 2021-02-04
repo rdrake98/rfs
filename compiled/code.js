@@ -1045,10 +1045,6 @@ macros.today.handler = function(place,macroName,params)
   $("<span/>").text(text).appendTo(place)
 }
 
-createdCompare = function(a, b) {
-  return basicCompare(a.created, b.created)
-}
-
 macros.timeline = {
   handler: function(place,macroName,params,wikifier,paramString) {
     var container = $("<div />").attr("params", paramString).
@@ -1060,10 +1056,14 @@ macros.timeline = {
     var paramString = $(container).attr("params")
     var params = paramString.parseParams("anon")[0].anon || []
     var sortField = params[0] || "modified"
+    var dayShift = parseInt(params[2] || "0")
+    _dump(dayShift)
     var tiddlers = store.includedTiddlers().sort(
-      sortField == "created" ?
-        createdCompare :
-        function(a,b) {return basicCompare(a.modified, b.modified)}
+      sortField == "modified" ?
+        function(a,b) {return basicCompare(a.modified, b.modified)} :
+        function(a, b) {
+          return basicCompare(a.created, b.created)
+        }
     )
     var lastGroup = "", ul
     var lines = params[1] || config.options.txtLinesRecentChanges
