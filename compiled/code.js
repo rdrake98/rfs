@@ -1066,19 +1066,25 @@ macros.timeline = {
         function(a,b) {return basicCompare(a.modified, b.modified)}
       )
     } else {
-      var dayShift = parseInt(params[2] || config.options.txtCreatedShift)
-      var anchorDate = new Date()
-      anchorDate.setDate(anchorDate.getDate() + dayShift)
-      var anchorYear = anchorDate.getUTCFullYear()
-      var anchorMMDD = anchorDate.formatMMDD()
-      tiddlers = tiddlers.sort(
-        function(a, b) {
-          return basicCompare(
-            a.created.createdCompareString(anchorYear,anchorMMDD),
-            b.created.createdCompareString(anchorYear,anchorMMDD)
-          )
-        }
-      )
+      if(config.options.chkShowCreatedHistory) {
+        var dayShift = parseInt(params[2] || config.options.txtCreatedShift)
+        var anchorDate = new Date()
+        anchorDate.setDate(anchorDate.getDate() + dayShift)
+        var anchorYear = anchorDate.getUTCFullYear()
+        var anchorMMDD = anchorDate.formatMMDD()
+        tiddlers = tiddlers.sort(
+          function(a, b) {
+            return basicCompare(
+              a.created.createdCompareString(anchorYear,anchorMMDD),
+              b.created.createdCompareString(anchorYear,anchorMMDD)
+            )
+          }
+        )
+      } else {
+        tiddlers = tiddlers.sort(
+          function(a,b) {return basicCompare(a.created, b.created)}
+        )
+      }
     }
     var lastGroup = "", ul
     var lines = params[1] || config.options.txtLinesRecentChanges
