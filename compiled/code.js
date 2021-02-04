@@ -27,7 +27,7 @@ config.options = {
   chkRegExp: false,
   chkCaseSensitive: false,
   chkTitleOnly: false,
-  chkShowCreatedHistory: true,
+  chkShowCreatedHistory: false,
   txtMaxEditRows: "30",
   txtWidth: "610",
   txtLinesRecentChanges: "75",
@@ -1066,23 +1066,27 @@ macros.timeline = {
         function(a,b) {return basicCompare(a.modified, b.modified)}
       )
     } else {
+      tiddlers = tiddlers.sort(
+        function(a,b) {return basicCompare(a.created, b.created)}
+      )
       if(config.options.chkShowCreatedHistory) {
         var dayShift = parseInt(params[2] || config.options.txtCreatedShift)
         var anchorDate = new Date()
         anchorDate.setDate(anchorDate.getDate() + dayShift)
         var anchorYear = anchorDate.getUTCFullYear()
         var anchorMMDD = anchorDate.formatMMDD()
-        tiddlers = tiddlers.sort(
-          function(a, b) {
-            return basicCompare(
-              a.created.createdCompareString(anchorYear,anchorMMDD),
-              b.created.createdCompareString(anchorYear,anchorMMDD)
-            )
-          }
-        )
-      } else {
-        tiddlers = tiddlers.sort(
-          function(a,b) {return basicCompare(a.created, b.created)}
+        tiddlers = tiddlers.concat(
+          tiddlers.filter(t =>
+            t.created.formatMMDD() == anchorMMDD &&
+            t.created.getUTCFullYear() != anchorYear
+          ).sort(
+            function(a, b) {
+              return basicCompare(
+                a.created.createdCompareString(anchorYear,anchorMMDD),
+                b.created.createdCompareString(anchorYear,anchorMMDD)
+              )
+            }
+          )
         )
       }
     }
