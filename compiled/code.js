@@ -1056,15 +1056,20 @@ macros.timeline = {
     var paramString = $(container).attr("params")
     var params = paramString.parseParams("anon")[0].anon || []
     var sortField = params[0] || "modified"
-    var dayShift = parseInt(params[2] || "0")
-    _dump(dayShift)
-    var tiddlers = store.includedTiddlers().sort(
-      sortField == "modified" ?
-        function(a,b) {return basicCompare(a.modified, b.modified)} :
+    var tiddlers = store.includedTiddlers()
+    if(sortField == "modified") {
+      tiddlers = tiddlers.sort(
+        function(a,b) {return basicCompare(a.modified, b.modified)}
+      )
+    } else {
+      var dayShift = parseInt(params[2] || "0")
+      _dump(dayShift)
+      tiddlers = tiddlers.sort(
         function(a, b) {
           return basicCompare(a.created, b.created)
         }
-    )
+      )
+    }
     var lastGroup = "", ul
     var lines = params[1] || config.options.txtLinesRecentChanges
     var last = tiddlers.length-Math.min(tiddlers.length,parseInt(lines))
