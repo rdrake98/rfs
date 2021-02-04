@@ -1048,15 +1048,11 @@ macros.today.handler = function(place,macroName,params)
 
 Date.prototype.createdCompareString = function(anchorYear,anchorMMDD)
 {
-  return (this.formatMMDD() != anchorMMDD ? "00" :
-    twoPad(anchorYear - this.getUTCFullYear())) +
-      this.convertToYYYYMMDDHHMM()
+  return (this.formatMMDD() != anchorMMDD ? "00" : twoPad(
+    anchorYear - this.getUTCFullYear())) + this.convertToYYYYMMDDHHMM()
 }
 
-Date.prototype.formatMMDD = function()
-{
-  return this.formatString("0MM0DD")
-}
+Date.prototype.formatMMDD = function() {return this.formatString("0MM0DD")}
 
 macros.timeline = {
   handler: function(place,macroName,params,wikifier,paramString) {
@@ -3104,11 +3100,7 @@ String.encodeTiddlyLinkList = function(list)
   return results.join(" ")
 }
 
-twoPad = function(n)
-{
-  var s = n.toString()
-  return s.length < 2 ? "00".substr(0,2-s.length) + s : s
-}
+twoPad = function(n) { return ("00" + n).slice(-2) }
 
 String.prototype.startsWith = function(prefix)
 {
