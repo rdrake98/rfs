@@ -474,13 +474,6 @@ class Splitter
     write_tiny(configs, titles, file, expand)
   end
 
-  def write_for_jem(file)
-    open_now = titles_linked("DefaultTiddlers")
-    recent = tiddlers.sort_by(&:modified).map(&:title)[-40..-2]
-    censored = titles_linked("CensorshipForJem") << "CensorshipForJem"
-    write_tiny({}, open_now, file, true, censored, recent)
-  end
-
   def write_sample(n, expand=false)
     write_selected(titles.sample(n), "sample", expand, "x")
   end
