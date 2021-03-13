@@ -434,14 +434,13 @@ class Splitter
     (titles + (titles << "MainMenu").map{|t| titles_linked(t)}.flatten).uniq
   end
 
-  def write_tiny(hash, selected=[], file="empty", expand=false, censored=[], recent=[])
+  def write_tiny(hash, selected=[], file="empty", expand=false)
     tinys = {}
     hash.each do |key, content|
       title = key.to_s
       tinys[title] = Tiddler.new(self, title, content, self[title].splitname)
     end
     titles = config_titles + (expand ? expanded(selected) : selected)
-    titles = (titles + recent - censored).uniq
     divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
     tiny_wiki = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
     filename = Dir.tinys "#{file}.html"
