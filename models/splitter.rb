@@ -465,11 +465,10 @@ class Splitter
   end
 
   def write_sb
-    write_selected([:ExternalURLs], "sb")
+    write_selected(%w[ExternalURLs], "sb")
   end
 
   def write_selected(titles, file, expand=false, title=file)
-    titles = titles.map(&:to_s)
     title_links = titles.map {|t| self[t].to_link}
     configs = {DefaultTiddlers: title_links.join("\n"), SiteTitle: title}
     write_tiny(configs, titles, file, expand)
