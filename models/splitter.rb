@@ -470,7 +470,8 @@ class Splitter
 
   def write_selected(titles, file, expand=false, title=file)
     titles = titles.map(&:to_s)
-    configs = {DefaultTiddlers: titles.join("\n"), SiteTitle: title}
+    title_links = titles.map {|t| self[t].to_link}
+    configs = {DefaultTiddlers: title_links.join("\n"), SiteTitle: title}
     write_tiny(configs, titles, file, expand)
   end
 
