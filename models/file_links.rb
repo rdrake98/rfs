@@ -10,10 +10,7 @@ class FileLinks
     @lines = window["tabs"].map {|tab| ExternalLinkSB.new(tab)}
   end
 
-  def write
-  end
-
   def purge
-    @lines = @lines.select(&:wanted)
+    @lines.select!(&:wanted)
   end
 end
