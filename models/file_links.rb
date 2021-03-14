@@ -13,4 +13,8 @@ class FileLinks
   def purge
     @lines.select!(&:wanted)
   end
+
+  def content
+    @lines.collect(&:content).join
+  end
 end

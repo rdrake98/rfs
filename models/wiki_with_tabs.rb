@@ -7,7 +7,7 @@ class WikiWithTabs
   attr_reader :wiki
   def initialize(file)
     @wiki = file ? Splitter.new(Dir.data "#{file}.html") : Splitter.fat
-    @spec = Splitter.new("#{file ? Dir.data("spec") : Dir.tinys(spec)}.html")
+    @spec = Splitter.new("#{file ? Dir.data : Dir.tinys}/spec.html")
     @stop_list = spec_for("StopListInitial")
     @preambles = spec_for("PreamblesInitial")
     @hash_preambles = spec_for("HashPreambles")
