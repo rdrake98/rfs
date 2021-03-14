@@ -34,16 +34,6 @@ class ExternalLink
   end
 end
 
-class ExternalLinkLine < ExternalLink
-  attr_reader :content
-
-  def initialize(content)
-    @content = content
-    url, text = content =~ /^\[\[(.*)\|(.*)\]\]/ && [$2, $1]
-    super(url, text)
-  end
-end
-
 class ExternalLinkSB < ExternalLink
   def initialize(tab)
     super(tab["url"], tab["title"])
