@@ -20,24 +20,6 @@ class WikiWithTabs
     @spec[title].content.lines.map(&:chomp)
   end
 
-  def write_tiddlers
-    pages = file_links
-    pages = pages.select {|page| page.lines.size > 0}
-    groups = pages.map(&:group).uniq
-    groups.each do |group|
-      pages.select {|page| page.group == group}.each_with_index do |page, i|
-        page.number = sprintf('%02i',i+1)
-      end
-    end
-    pages.sort_by!(&:tiddler_name).each do |page|
-      name = page.tiddler_name
-      @wiki["FOvByDay"].content += "\n#{name}"
-      @wiki.create_new(name, page.content, "#{name[0..8]} #{name[9..11]}")
-    end
-    @wiki.write
-    pages.size
-  end
-
   def all_lines(tabs_pages)
     tabs_pages.map(&:lines).flatten
   end
