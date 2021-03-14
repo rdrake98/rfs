@@ -6,12 +6,12 @@ require 'file_links'
 
 class WikiWithTabs
   attr_reader :wiki
-  def initialize(branch, wiki_file, two_level=false, spec=nil)
+  def initialize(branch, wiki_file, two_level=false)
     @branch = branch
     @wiki = wiki_file ?
       Splitter.new(Dir.data "#{wiki_file}.html") : Splitter.fat
     @two_level = two_level
-    spec_file = spec ? Dir.tinys(spec) : Dir.data("spec")
+    spec_file = wiki_file ? Dir.data("spec") : Dir.tinys(spec)
     @spec = Splitter.new("#{spec_file}.html")
     @stop_list = spec_for("StopListInitial")
     @preambles = spec_for("PreamblesInitial")
