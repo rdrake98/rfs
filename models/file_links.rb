@@ -3,9 +3,8 @@
 require 'external_link'
 
 class FileLinks
-  attr_accessor :id, :name, :lines
+  attr_accessor :name, :lines
   def initialize(window, name)
-    @id = window["id"]
     @name = name
     @lines = window["tabs"].map {|tab| ExternalLink.new(tab)}
   end
