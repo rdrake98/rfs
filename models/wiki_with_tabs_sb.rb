@@ -183,32 +183,4 @@ class WikiWithTabsSB < WikiWithTabs
     [file_links.size, wins.size, tiddlers.size,
       tabs_wiki.tiddlers.size, tabs_wiki.contents.size]
   end
-
-  def show_tabs_being_reduced
-    file = @wiki.write_sb[0]
-    tabs_wiki = Splitter.new(file)
-    file_links.each do |win|
-      tabs_wiki.create_new("W0D#{win.id}", win.content)
-    end
-    initial_reduce
-    file_links.each do |win|
-      tabs_wiki.create_new("W1D#{win.id}", win.content)
-    end
-    second_reduce
-    file_links.each do |win|
-      tabs_wiki.create_new("W2D#{win.id}", win.content)
-    end
-    qs_reduce
-    file_links.each do |win|
-      tabs_wiki.create_new("W3D#{win.id}", win.content)
-    end
-    hashes_reduce
-    file_links.each do |win|
-      tabs_wiki.create_new("W4D#{win.id}", win.content)
-    end
-
-    tabs_wiki.write("")
-    `open #{file}`
-    [tabs_wiki.tiddlers.size, tabs_wiki.contents.size]
-  end
 end
