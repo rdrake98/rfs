@@ -1,7 +1,6 @@
 # wiki_with_tabs.rb
 
 require 'splitter'
-require 'link_analysis'
 require 'file_links'
 
 class WikiWithTabs
@@ -20,8 +19,6 @@ class WikiWithTabs
   def spec_for(title)
     @spec[title].content.lines.map(&:chomp)
   end
-
-  include LinkAnalysis
 
   def write_tiddlers
     pages = file_links
