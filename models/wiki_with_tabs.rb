@@ -5,11 +5,9 @@ require 'file_links'
 
 class WikiWithTabs
   attr_reader :wiki
-  def initialize(wiki_file)
-    @wiki = wiki_file ?
-      Splitter.new(Dir.data "#{wiki_file}.html") : Splitter.fat
-    spec_file = wiki_file ? Dir.data("spec") : Dir.tinys(spec)
-    @spec = Splitter.new("#{spec_file}.html")
+  def initialize(file)
+    @wiki = file ? Splitter.new(Dir.data "#{file}.html") : Splitter.fat
+    @spec = Splitter.new("#{file ? Dir.data("spec") : Dir.tinys(spec)}.html")
     @stop_list = spec_for("StopListInitial")
     @preambles = spec_for("PreamblesInitial")
     @hash_preambles = spec_for("HashPreambles")
