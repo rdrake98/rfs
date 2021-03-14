@@ -61,10 +61,7 @@ class WikiWithTabs
   end
 
   def qs_reduce
-    tabs_pages = file_links
-    stats = find_qs_from_pages(tabs_pages)
-    tabs_pages.each &:write
-    stats[0..2]
+    find_qs_from_pages(file_links)[0..2]
   end
 
   def second_reduce
