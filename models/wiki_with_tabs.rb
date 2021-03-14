@@ -6,8 +6,7 @@ require 'file_links'
 
 class WikiWithTabs
   attr_reader :wiki
-  def initialize(branch, wiki_file)
-    @branch = branch
+  def initialize(wiki_file)
     @wiki = wiki_file ?
       Splitter.new(Dir.data "#{wiki_file}.html") : Splitter.fat
     spec_file = wiki_file ? Dir.data("spec") : Dir.tinys(spec)
@@ -22,36 +21,7 @@ class WikiWithTabs
     @spec[title].content.lines.map(&:chomp)
   end
 
-  def WikiWithTabs.jan(wiki_file=nil)
-    new("o160129", wiki_file)
-  end
-
   include LinkAnalysis
-
-  def do_reductions
-    checkout("master")
-    p initial_reduce
-    p second_reduce
-    p qs_reduce
-    p hashes_reduce
-  end
-
-  def checkout(branch)
-    `cd /Users/rd/ww/tabs; git reset --hard HEAD; git checkout #{branch}`
-  end
-
-  def day
-    @branch[1..-1]
-  end
-
-  def tabs_dir
-    "t#{day}"
-  end
-
-  def file_links
-    pattern = "/Users/rd/ww/tabs/#{tabs_dir}/*"
-    Dir[pattern].map{|name| FileLinks.new(name)}
-  end
 
   def write_tiddlers
     pages = file_links

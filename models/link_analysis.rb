@@ -34,11 +34,4 @@ module LinkAnalysis
     p qs_reduce
     p hashes_reduce
   end
-
-  def from_original
-    checkout(@branch)
-    yield
-  ensure
-    checkout("master")
-  end
 end
