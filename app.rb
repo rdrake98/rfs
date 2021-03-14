@@ -122,10 +122,6 @@ class App < Roda
       WikiWithTabsSB.new.show_final_tabs.to_s
     end
 
-    r.get "tabs_combined" do
-      WikiWithTabsSB.new(0).show_final_tabs.to_s
-    end
-
     r.get "unpeel" do
       WikiWithTabsSB.unpeel
     end

@@ -8,11 +8,9 @@ class WikiWithTabsSB < WikiWithTabs
     last_backup = @spec["LastBackup"]&.content&.chomp # nil in old tests
     self.class.copy_backups
     all_names = self.class.read_all_names
-    names = name == 0 ?
-      [all_names[-1]] :
-      name ?
-        [name] :
-        all_names[all_names.index(last_backup) + 1..-1]
+    names = name ?
+      [name] :
+      all_names[all_names.index(last_backup) + 1..-1]
     @file_links = []
     names.each do |name|
       tiddler = "S#{name[1..6]}N#{name[8..11]}"
