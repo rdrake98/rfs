@@ -6,11 +6,10 @@ require 'file_links'
 
 class WikiWithTabs
   attr_reader :wiki
-  def initialize(branch, wiki_file, two_level=false)
+  def initialize(branch, wiki_file)
     @branch = branch
     @wiki = wiki_file ?
       Splitter.new(Dir.data "#{wiki_file}.html") : Splitter.fat
-    @two_level = two_level
     spec_file = wiki_file ? Dir.data("spec") : Dir.tinys(spec)
     @spec = Splitter.new("#{spec_file}.html")
     @stop_list = spec_for("StopListInitial")
@@ -21,14 +20,6 @@ class WikiWithTabs
 
   def spec_for(title)
     @spec[title].content.lines.map(&:chomp)
-  end
-
-  def two_level
-    @two_level && @two_level != :new_format
-  end
-
-  def new_format
-    @two_level == :new_format
   end
 
   def WikiWithTabs.jan(wiki_file=nil)
@@ -58,8 +49,8 @@ class WikiWithTabs
   end
 
   def file_links
-    pattern = "/Users/rd/ww/tabs/#{tabs_dir}/*#{two_level ? "/*" : ""}"
-    Dir[pattern].map{|name| FileLinks.new(name, @two_level)}
+    pattern = "/Users/rd/ww/tabs/#{tabs_dir}/*"
+    Dir[pattern].map{|name| FileLinks.new(name)}
   end
 
   def write_tiddlers

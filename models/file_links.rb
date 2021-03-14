@@ -24,13 +24,9 @@ end
 class FileLinks < ContentLinks
   attr_reader :filename
   attr_accessor :type, :number
-  def initialize(filename, variant)
+  def initialize(filename)
     @filename = filename
-    @new_format = variant == :new_format
-    @two_level = !@new_format && variant
-    @type = @two_level ?
-      @filename.split('/')[-2][0].upcase :
-      (@filename.split('/')[-1][2] == "v" ? "V" : "N")
+    @type = @filename.split('/')[-1][2] == "v" ? "V" : "N"
     @number = "00"
     super(File.read(filename))
   end
@@ -40,7 +36,7 @@ class FileLinks < ContentLinks
   end
 
   def month_or_day
-    @filename.split('/')[@two_level ? -3 : -2][1..(@new_format ? 6 : 4)]
+    @filename.split('/')[-2][1..4]
   end
 
   def machine
