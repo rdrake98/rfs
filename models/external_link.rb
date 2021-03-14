@@ -4,8 +4,8 @@ class ExternalLink
   attr_reader :url, :text
   attr_accessor :wanted
 
-  def initialize(url, text)
-    @url, @text = url, text
+  def initialize(tab)
+    @url, @text = tab["url"], tab["title"]
     @wanted = !@url.nil?
   end
 
@@ -32,13 +32,7 @@ class ExternalLink
   def pre_hash_matches?(url2)
     pre_hash && url2.start_with?(@pre_hash) || before_hash(url2) == @url
   end
-end
-
-class ExternalLinkSB < ExternalLink
-  def initialize(tab)
-    super(tab["url"], tab["title"])
-  end
-
+  
   def content
     @text.link(@url) + "\n"
   end

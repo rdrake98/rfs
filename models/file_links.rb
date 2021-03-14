@@ -7,7 +7,7 @@ class FileLinks
   def initialize(window, name)
     @id = window["id"]
     @name = name
-    @lines = window["tabs"].map {|tab| ExternalLinkSB.new(tab)}
+    @lines = window["tabs"].map {|tab| ExternalLink.new(tab)}
   end
 
   def purge
