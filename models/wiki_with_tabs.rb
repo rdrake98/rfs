@@ -39,10 +39,7 @@ class WikiWithTabs
   end
 
   def hashes_reduce
-    tabs_pages = file_links
-    stats = find_hashes_from_pages(tabs_pages)
-    tabs_pages.each &:write
-    stats[0..2]
+    stats = find_hashes_from_pages(file_links)[0..2]
   end
 
   def find_qs_from_pages(tabs_pages)
@@ -74,7 +71,6 @@ class WikiWithTabs
         tiddler.external_links.any?{|link|link[1] == url}
       end
     end
-    tabs_pages.each &:write
     [lines.size, lines.select(&:wanted).size, lines.reject(&:wanted).size]
   end
 
@@ -92,7 +88,6 @@ class WikiWithTabs
       url = line.url
       wanted_lines[i+1..-1].each {|line2| line2.wanted &&= line2.url != url}
     end
-    tabs_pages.each &:write
     stats << lines.select(&:wanted).size << lines.reject(&:wanted).size
   end
 end
