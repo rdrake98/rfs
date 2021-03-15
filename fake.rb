@@ -1,4 +1,4 @@
-# rake.rb
+# fake.rb
 
 if ARGV[0] == 'e'
   require './test/test_externals.rb'
