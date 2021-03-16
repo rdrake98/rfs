@@ -434,12 +434,11 @@ class Splitter
     (titles + (titles << "MainMenu").map{|t| titles_linked(t)}.flatten).uniq
   end
 
-  def write_tiny(hash, selected=[], file="empty", expand=false)
-    tinys = {}
-    hash.each do |key, content|
-      title = key.to_s
-      tinys[title] = Tiddler.new(self, title, content)
-    end
+  def write_tiny(defaults, title, selected=[], file="empty", expand=false)
+    tinys = {
+      "DefaultTiddlers" => Tiddler.new(self, "DefaultTiddlers", defaults),
+      "SiteTitle" => Tiddler.new(self, "SiteTitle", title),
+    }
     titles = config_titles + (expand ? expanded(selected) : selected)
     divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
     tiny_wiki = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
@@ -449,7 +448,7 @@ class Splitter
   end
 
   def write_empty
-    write_tiny(DefaultTiddlers: "GettingStarted", SiteTitle: "m")
+    write_tiny("GettingStarted", "m")
   end
 
   def write_spec
@@ -461,10 +460,9 @@ class Splitter
     write_selected(%w[ExternalURLs], "sb")
   end
 
-  def write_selected(titles, file, expand=false, title=file)
-    title_links = titles.map {|t| self[t].to_link}
-    configs = {DefaultTiddlers: title_links.join("\n"), SiteTitle: title}
-    write_tiny(configs, titles, file, expand)
+  def write_selected(selected, file, expand=false, title=file)
+    defaults = selected.map {|t| self[t].to_link}.join("\n")
+    write_tiny(defaults, title, selected, file, expand)
   end
 
   def write_sample(n, expand=false)
