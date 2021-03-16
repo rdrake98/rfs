@@ -218,7 +218,7 @@ class Splitter
         if target
           target.content = source.content
         else
-          create_new(new_title, source.content, splitName(new_title))
+          create_new(new_title, source.content)
         end
       else
         change_tiddler(title, source)

@@ -18,7 +18,7 @@ class Tiddler
         self.content = content
         self.creator = modifier
         self.created = self["modified"]
-        self.splitname = header_or_split || title
+        self.splitname = header_or_split || wiki.splitName(title)
       else
         @content = content["text"]
         self.creator = content["creator"]
