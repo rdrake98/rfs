@@ -438,7 +438,7 @@ class Splitter
     tinys = {}
     hash.each do |key, content|
       title = key.to_s
-      tinys[title] = Tiddler.new(self, title, content, self[title].splitname)
+      tinys[title] = Tiddler.new(self, title, content)
     end
     titles = config_titles + (expand ? expanded(selected) : selected)
     divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
