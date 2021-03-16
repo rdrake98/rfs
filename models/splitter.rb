@@ -434,7 +434,7 @@ class Splitter
     (titles + (titles << "MainMenu").map{|t| titles_linked(t)}.flatten).uniq
   end
 
-  def write_tiny(defaults, title, selected=[], file="empty", expand=false)
+  def write_tiny(defaults, title, file, selected=[], expand=false)
     tinys = {
       "DefaultTiddlers" => Tiddler.new(self, "DefaultTiddlers", defaults),
       "SiteTitle" => Tiddler.new(self, "SiteTitle", title),
@@ -448,7 +448,7 @@ class Splitter
   end
 
   def write_empty
-    write_tiny("GettingStarted", "m")
+    write_tiny("GettingStarted", "m", "empty")
   end
 
   def write_spec
@@ -462,11 +462,11 @@ class Splitter
 
   def write_selected(selected, file, expand=false, title=file)
     defaults = selected.map {|t| self[t].to_link}.join("\n")
-    write_tiny(defaults, title, selected, file, expand)
+    write_tiny(defaults, title, file, selected, expand)
   end
 
   def write_sample(n, expand=false)
-    write_selected(titles.sample(n), "sample", expand, "x")
+    write_selected(titles.sample(n), "sample", expand, "s")
   end
 
   def self.test_null(title)
