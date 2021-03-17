@@ -2510,7 +2510,7 @@ macros.option.genericOnChange = function(e)
 }
 
 macros.option.types = {
-  'txt': {
+  txt: {
     elementType: 'input',
     valueField: 'value',
     eventName: 'onchange',
@@ -2518,7 +2518,7 @@ macros.option.types = {
     create: macros.option.genericCreate,
     onChange: macros.option.genericOnChange
   },
-  'chk': {
+  chk: {
     elementType: 'input',
     valueField: 'checked',
     eventName: 'onclick',
