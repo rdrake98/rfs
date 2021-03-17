@@ -1,5 +1,5 @@
 require 'roda'
-require 'wiki_with_tabs_sb'
+require 'wiki_with_tabs'
 
 class App < Roda
   puts "restarting rfs"
@@ -115,24 +115,24 @@ class App < Roda
     end
 
     r.get "copy_backups" do
-      WikiWithTabsSB.copy_backups
+      WikiWithTabs.copy_backups
     end
 
     r.get "tabs" do
-      WikiWithTabsSB.new.show_final_tabs.to_s
+      WikiWithTabs.new.show_final_tabs.to_s
     end
 
     r.get "unpeel" do
-      WikiWithTabsSB.unpeel
+      WikiWithTabs.unpeel
     end
 
     r.get "copy_tabs_to_fat" do
-      WikiWithTabsSB.copy_to_fat
+      WikiWithTabs.copy_to_fat
       "copy_to_fat complete"
     end
 
     r.get "commit_tabs_mods" do
-      WikiWithTabsSB.commit_mods
+      WikiWithTabs.commit_mods
     end
 
     r.get "cp_other_dev" do
