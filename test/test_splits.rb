@@ -4,14 +4,14 @@ require 'minitest/autorun'
 require 'splitter'
 
 $wiki = Splitter.new
-$wiki.create_new("NamePatches", <<~SH
-  TextMate
-  BBC 2
-  iPhone
-  Mc*
+patches = <<~SH
+TextMate
+BBC 2
+iPhone
+Mc*
 
 SH
-)
+$wiki.create_new("NamePatches", patches, "Name Patches")
 
 module Minitest::Assertions
   def assert_split(output, name)
