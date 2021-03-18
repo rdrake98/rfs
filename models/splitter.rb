@@ -451,22 +451,17 @@ class Splitter
     write_tiny("empty", "GettingStarted", "m")
   end
 
-  def write_spec
-    write_selected("spec",
-      %w[StopListInitial PreamblesInitial HashPreambles QPreambles])
-  end
-
   def write_sb
     write_selected("sb", %w[ExternalURLs])
+  end
+
+  def write_sample(n, expand=false)
+    write_selected("sample", titles.sample(n), "s", expand)
   end
 
   def write_selected(file, selected, title=file, expand=false)
     open_tiddlers = selected.map {|t| self[t].to_link}.join("\n")
     write_tiny(file, open_tiddlers, title, selected, expand)
-  end
-
-  def write_sample(n, expand=false)
-    write_selected("sample", titles.sample(n), "s", expand)
   end
 
   def self.test_null(title)
