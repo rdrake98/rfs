@@ -1,7 +1,6 @@
 Stop List Initial
-2020-05-19 01:33:00 UTC
+2021-03-18 16:47:00 UTC
 
-file:///Users/rd/Dropbox/fatword.html
 https://app.getpocket.com/
 https://twitter.com/
 https://twitter.com/rdrake98

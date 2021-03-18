@@ -1,10 +1,11 @@
 Preambles Initial
-2020-05-13 04:01:00 UTC
+2021-03-18 16:47:00 UTC
 
 about:
 chrome:
 chrome-extension:
 view-source:
+file:///Users/rd/Dropbox/fatword
 http://localhost
 http://wp.localhost
 https://mail.google.com
@@ -27,7 +28,7 @@ https://twitter.com/nonklatink/with_replies
 https://twitter.com/FondOfBeetles/with_replies
 https://twitter.com/NaomiOreskes/with_replies
 https://twitter.com/ClimateAudit/with_replies
-https://getpocket.com/login
+https://getpocket.com
 https://xhamster.com
 https://twitter.com/messages
 https://wordpress.com/comment
@@ -36,3 +37,4 @@ https://www.amazon.co.uk/kindle-dbs/thankYouPage
 file:///Users/rd/Dropbox/tinys
 https://www.bbc.co.uk/bbc
 https://www.bbc.co.uk/iplayer/guide
+https://www.youtube.com/watch?v=ZozXHQB6TuU
