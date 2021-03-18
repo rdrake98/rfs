@@ -102,7 +102,7 @@ class WikiWithTabs
       ymd = Time.new.ymd
       dir = "backups/b#{ymd}%02d" %
         (Dir.cd(:tinys, 'backups').glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1)
-      puts `cd $tinys; rsync -t --out-format=%n%L s* #{dir}`
+      puts `cd $tinys; rsync -t --out-format=%n%L sb.html spec.html #{dir}`
       spec["LastBackup"].content = last_backup
       spec.write("")
       message = "LastBackup in #{spec.filename} is now #{last_backup}"
@@ -120,9 +120,7 @@ class WikiWithTabs
   def self.copy_to_fat
     fat = Splitter.fat
     puts fat.tiddlers.size
-    sb_file = Dir.cd(:tinys).glob("sb*.html")[-1]
-    puts "Using #{sb_file}"
-    sb = Splitter.new(sb_file)
+    sb = Splitter.new(Dir.tinys "sb.html")
     titles = sb.titles
     puts titles.size
     titles = titles.filter {|title| title =~ /^S2/}
@@ -134,7 +132,7 @@ class WikiWithTabs
       fat[name].content += "\n" + titles.join("\n")
     else
       fat.create_new(name, titles.join("\n"), time.strftime("S%Y M%m"))
-      fat["S2020M05Top"].content += "\n" + name
+      fat["S2020Elinks"].content += "\n" + name
     end
     puts fat.tiddlers.size
     fat.write
