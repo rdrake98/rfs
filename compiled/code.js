@@ -3877,6 +3877,12 @@ macros.openTiddlers = {
   },
 }
 
+function allTitles() {
+  var titles = []
+  store.forEachTiddler(function(title,tiddler) {titles.push(title)})
+  return titles
+}
+
 function openTitles() {
   var titles = []
   story.forEachTiddler(function(title,elem) {if(elem.id) titles.push(title)})
