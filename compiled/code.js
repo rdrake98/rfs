@@ -73,7 +73,6 @@ commands = {
   saveTiddler: {},
   cancelTiddler: {},
   deleteTiddler: {},
-  permalink: {},
   top: {},
   drop: {},
   roll: {},
@@ -158,10 +157,6 @@ merge(commands.deleteTiddler,{
   text: "delete",
   tooltip: "Remove tiddler from wiki",
   warning: "Are you sure you want to delete '%0'?"})
-
-merge(commands.permalink,{
-  text: "permalink",
-  tooltip: "Permalink for this tiddler"})
 
 merge(commands.references,{
   text: "references",
@@ -1481,11 +1476,6 @@ commands.deleteTiddler.handler = function(event,src,title)
     cacheTiddlerSplits()
     story.closeTiddler(title,true)
   }
-}
-
-commands.permalink.handler = function(event,src,title)
-{
-  location.hash = encodeURIComponent(String.encodeTiddlyLink(title))
 }
 
 commands.references.handlePopup = function(popup,title,altKey)
