@@ -444,9 +444,9 @@ class Splitter
     filename = Dir.tinys "#{file}.html"
     File.write(filename, tiny_bytes)
     tiny = Splitter.new(filename)
-    tiny["DefaultTiddlers"].content = open_tiddlers
-    tiny["SiteTitle"].content = title
-    tiny["SiteSubtitle"].content = ""
+    tiny["DefaultTiddlers"].update_content(open_tiddlers, true)
+    tiny["SiteTitle"].update_content(title, true)
+    tiny["SiteSubtitle"].update_content("", true)
     tiny.write("")
     [filename, titles.size, tiny_bytes.size]
   end
