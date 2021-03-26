@@ -3731,14 +3731,6 @@ String.prototype.asTiddlyLink = function()
     "[[" + (store.splitName(this) || this) + "]]"
 }
 
-Array.prototype.asTiddlyLinkList = function()
-{
-  var results = []
-  for(var t=0; t < this.length; t++)
-    results.push(this[t].asTiddlyLink())
-  return results.join(", ")
-}
-
 basicCompare = function(a,b) {return a < b ? -1 : (a == b ? 0 : 1)}
 
 basicSplitCompare = function(a,b) {
