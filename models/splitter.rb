@@ -368,7 +368,7 @@ class Splitter
   end
 
   def do_save(json=nil)
-    add_tiddlers(nil, true)
+    add_tiddlers(json, true)
     backup
     newFile = write("", @host)
     commit_changes_file("#{@type} #{json ? '' : 'force '}saved") if @type
