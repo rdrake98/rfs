@@ -2287,9 +2287,7 @@ Story.prototype.saveTiddler = function(title)
 Story.prototype.permaView = function()
 {
   var links = []
-  this.forEachTiddler(function(title,element) {
-    links.push(String.encodeTiddlyLink(title))
-  })
+  this.forEachTiddler(function(title,element) {links.push(title)})
   location.hash = encodeURIComponent(links.join(" ")) || "#"
 }
 
@@ -3068,12 +3066,6 @@ String.prototype.readMacroParams = function(notAllowEval)
   var n = []
   for(var t=1; t < p.length; t++) n.push(p[t].value)
   return n
-}
-
-// Static method to bracket a string with double square brackets if it contains a space
-String.encodeTiddlyLink = function(title)
-{
-  return title.indexOf(" ") == -1 ? title : "[[" + title + "]]"
 }
 
 twoPad = function(n) { return ("00" + n).slice(-2) }
