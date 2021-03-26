@@ -3902,11 +3902,8 @@ function openTitles() {
 }
 
 function openTiddlersRaw() {
-  var markup = ''
-  story.forEachTiddler(function(title,elem) {
-    if(elem.id) markup += title.asTiddlyLink() + "\n"
-  })
-  return markup
+  return openTitles().map(title => title.asTiddlyLink()).join("\n") + "\n"
+
 }
 
 macros.openTiddlersRaw = {
