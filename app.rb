@@ -142,7 +142,8 @@ class App < Roda
 
     r.get "write_extract" do
       fat = wiki("fat")
-      stats = fat.write_extract
+      changed = fat.add_tiddlers
+      stats = fat.write_extract(changed)
       `open #{stats[0]}`
       "#{stats}<p>Thank you for your extraction"
     end

@@ -264,7 +264,8 @@ class Splitter
     File.write(shared_changes_file, "[]") if blank_shared
   end
 
-  def add_tiddlers(json, loud=false)
+  def add_tiddlers(json=File.read(changes_file), loud=false)
+    titles = []
     JSON.parse(json).each do |hash|
       # byebug if $dd
       title = hash["title"]
@@ -272,11 +273,13 @@ class Splitter
         delete(title) # because splitname may have changed
         self[title] = Tiddler.new(self, title, hash)
         puts title if loud
+        titles << title
       else
         puts "#{hash} wants deleting" if loud
         delete(hash, true)
       end
     end
+    titles
   end
 
   def create_new(title, content, split=nil)
@@ -365,7 +368,7 @@ class Splitter
   end
 
   def do_save(json=nil)
-    add_tiddlers(json || File.read(changes_file), true)
+    add_tiddlers(nil, true)
     backup
     newFile = write("", @host)
     commit_changes_file("#{@type} #{json ? '' : 'force '}saved") if @type
@@ -457,9 +460,10 @@ class Splitter
     write_selected("sb", %w[ExternalURLs])
   end
 
-  def write_extract
+  def write_extract(changed=[])
     ot = self["DefaultTiddlers"]
-    write_tiny("extract", ot.content, "x", ot.titles_linked, true)
+    selected = (ot.titles_linked + changed).uniq
+    write_tiny("extract", ot.content, "x", selected, true)
   end
 
   # for use from Pry
