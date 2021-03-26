@@ -438,6 +438,7 @@ class Splitter
     tinys = {
       "DefaultTiddlers" => Tiddler.new(self, "DefaultTiddlers", open_tiddlers),
       "SiteTitle" => Tiddler.new(self, "SiteTitle", title),
+      "SiteSubtitle" => Tiddler.new(self, "SiteSubtitle", ""),
     }
     titles = config_titles + (expand ? expanded(selected) : selected)
     divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
@@ -454,6 +455,11 @@ class Splitter
 
   def write_sb
     write_selected("sb", %w[ExternalURLs])
+  end
+
+  def write_extract
+    ot = self["DefaultTiddlers"]
+    write_tiny("extract", ot.content, "x", ot.titles_linked, true)
   end
 
   # for use from Pry
