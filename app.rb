@@ -139,5 +139,12 @@ class App < Roda
       wiki("dev").cp_other_dev
       "dev5 from the other machine copied. proceed with care"
     end
+
+    r.get "write_extract" do
+      fat = wiki("fat")
+      stats = fat.write_extract
+      `open #{stats[0]}`
+      "#{stats}<p>Thank you for your extraction"
+    end
   end
 end
