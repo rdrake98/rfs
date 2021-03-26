@@ -2180,13 +2180,13 @@ Story.prototype.search = function(text, title) {
     var punctuation = names.name.match(
       new RegExp("[^ " + textPrims.anyLetter.slice(1), "g"))
     msg += names.name.length > 50 || punctuation && punctuation.length > 2 ?
-      " -- possible link: " + names.name.asTiddlyLink() :
+      " -- possible link: " + asTiddlyLink(names.name) :
       names.justOne ?
-        " -- possible link: " + names.minimalName.asTiddlyLink() :
-        " -- possible links: " + names.minimalName.asTiddlyLink() +
-                          ", " + names.name.asTiddlyLink()
+        " -- possible link: " + asTiddlyLink(names.minimalName) :
+        " -- possible links: " + asTiddlyLink(names.minimalName) +
+                          ", " + asTiddlyLink(names.name)
   }
-  for(var i = 0; i < count; i++) msg += "\n" + tiddlers[i].title.asTiddlyLink()
+  for(var i = 0; i < count; i++) msg += "\n" + asTiddlyLink(tiddlers[i].title)
   store.saveTiddler("Search","Search",msg,"SearchGuy",new Date(),{})
   if(title) this.moveToTop(title)
   this.displayTiddler(null,"Search")
@@ -3558,7 +3558,7 @@ makeCopyable = function(elem) {
     if(titleArea.changed_half(this.getBoundingClientRect(),event.clientY)) {
       var title = elem.parent().attr('tiddler')
       var split = splitWordsIfRequired(title)
-      var link = title.asTiddlyLink()
+      var link = asTiddlyLink(title)
       var search = queryNames().name || "here"
       var lower = split.toLowerCase()
       var renamed = search != lower && "[[" + search + "|" + title + "]]"
@@ -3691,11 +3691,9 @@ function splitWordsIfRequired(name) {
   return store.splitName(name) || splitWordsFromPatches(name)
 }
 
-String.prototype.asTiddlyLink = function()
+function asTiddlyLink(name)
 {
-  return isWikiLink(this) ?
-    this.toString() :
-    "[[" + (store.splitName(this) || this) + "]]"
+  return isWikiLink(name) ? name : "[[" + (store.splitName(name) || name) + "]]"
 }
 
 String.prototype.basicSplit = function() {
@@ -3861,8 +3859,7 @@ function openTitles() {
 }
 
 function openTiddlersRaw() {
-  return openTitles().map(title => title.asTiddlyLink()).join("\n") + "\n"
-
+  return openTitles().map(asTiddlyLink).join("\n") + "\n"
 }
 
 macros.openTiddlersRaw = {
