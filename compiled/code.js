@@ -3675,8 +3675,7 @@ function splitWords(name) {
       }
     i = basicMorpheme.lastIndex
   }
-  if(i < name.length)
-    split.push(name.slice(i))
+  if(i < name.length) split.push(name.slice(i))
   return prettified || name.length > 5 ? split.join(" ") : name
 }
 
@@ -3692,16 +3691,15 @@ function splitWordsIfRequired(name) {
   return store.splitName(name) || splitWordsFromPatches(name)
 }
 
-String.prototype.basicSplit = function() {
-  return splitWordsIfRequired(this).toLowerCase()
-}
-
-// replace encodeTiddlyLink with this throughout core?
 String.prototype.asTiddlyLink = function()
 {
   return isWikiLink(this) ?
     this.toString() :
     "[[" + (store.splitName(this) || this) + "]]"
+}
+
+String.prototype.basicSplit = function() {
+  return splitWordsIfRequired(this).toLowerCase()
 }
 
 basicCompare = function(a,b) {return a < b ? -1 : (a == b ? 0 : 1)}
