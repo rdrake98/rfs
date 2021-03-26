@@ -3916,10 +3916,8 @@ macros.openTiddlersRaw = {
 }
 
 function statf() {
-  s = "''Total Tiddlers: " + store.getTiddlers().length
-  var i = -1
-  story.forEachTiddler(function(title,elem) {i++})
-  return s + "\nOpenTiddlers: " + i + "''\n----\n" + edition
+  return "''Total Tiddlers: " + store.getTiddlers().length +
+    "\nOpenTiddlers: " + openTitles().length + "''\n----\n" + edition
 }
 
 macros.statf = {
