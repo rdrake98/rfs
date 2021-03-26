@@ -3080,15 +3080,6 @@ String.prototype.readMacroParams = function(notAllowEval)
   return n
 }
 
-// Process a string list of unique tiddler names into an array. Tiddler names that have spaces in them must be [[bracketed]]
-String.prototype.readBracketedList = function(unique)
-{
-  var p = this.parseParams("list",null,false,true)
-  var n = []
-  for(var t=1; t < p.length; t++) if(p[t].value) n.pushUnique(p[t].value,unique)
-  return n
-}
-
 // Static method to bracket a string with double square brackets if it contains a space
 String.encodeTiddlyLink = function(title)
 {
