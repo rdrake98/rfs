@@ -438,17 +438,17 @@ class Splitter
   end
 
   def write_tiny(file, open_tiddlers, title, selected=[], expand=false)
-    tinys = {
-      "DefaultTiddlers" => Tiddler.new(self, "DefaultTiddlers", open_tiddlers),
-      "SiteTitle" => Tiddler.new(self, "SiteTitle", title),
-      "SiteSubtitle" => Tiddler.new(self, "SiteSubtitle", ""),
-    }
     titles = config_titles + (expand ? expanded(selected) : selected)
-    divs = titles.map {|t| (tinys[t] || self[t])&.div_text}.join
-    tiny_wiki = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
+    divs = titles.map {|t| self[t]&.div_text}.join
+    tiny_bytes = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
     filename = Dir.tinys "#{file}.html"
-    File.write(filename, tiny_wiki)
-    [filename, titles.size, tiny_wiki.size]
+    File.write(filename, tiny_bytes)
+    tiny = Splitter.new(filename)
+    tiny["DefaultTiddlers"].content = open_tiddlers
+    tiny["SiteTitle"].content = title
+    tiny["SiteSubtitle"].content = ""
+    tiny.write("")
+    [filename, titles.size, tiny_bytes.size]
   end
 
   def write_selected(file, selected, title=file, expand=false)
