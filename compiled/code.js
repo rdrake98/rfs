@@ -3095,16 +3095,6 @@ String.encodeTiddlyLink = function(title)
   return title.indexOf(" ") == -1 ? title : "[[" + title + "]]"
 }
 
-// Static method to encodeTiddlyLink for every item in an array and join them with spaces
-String.encodeTiddlyLinkList = function(list)
-{
-  var results = []
-  if(list)
-    for(var t=0; t < list.length; t++)
-      results.push(String.encodeTiddlyLink(list[t]))
-  return results.join(" ")
-}
-
 twoPad = function(n) { return ("00" + n).slice(-2) }
 
 String.prototype.startsWith = function(prefix)
