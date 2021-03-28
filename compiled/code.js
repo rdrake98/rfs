@@ -1898,15 +1898,6 @@ TiddlyWiki.prototype.getReferringTiddlers = function(name, want_bch)
   return results.sort(basicSplitCompare)
 }
 
-TiddlyWiki.prototype.getTiddlers = function()
-{
-  var results = []
-  this.forEachTiddler(function(title,tiddler) {
-    results.push(tiddler)
-  })
-  return results
-}
-
 TiddlyWiki.prototype.getValue = function(tiddler,name)
 {
   var t = (typeof tiddler == "string") ? this.getTiddler(tiddler) : tiddler
@@ -3842,7 +3833,7 @@ macros.openTiddlers = {
 
 function allTitles() {
   var titles = []
-  store.forEachTiddler(function(title,tiddler) {titles.push(title)})
+  store.forEachTiddler(function(title) {titles.push(title)})
   return titles
 }
 
@@ -3863,7 +3854,7 @@ macros.openTiddlersRaw = {
 }
 
 function statf() {
-  return "''Total Tiddlers: " + store.getTiddlers().length +
+  return "''Total Tiddlers: " + allTitles().length +
     "\nOpenTiddlers: " + openTitles().length + "''\n----\n" + edition
 }
 
