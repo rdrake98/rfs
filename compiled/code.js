@@ -246,7 +246,12 @@ function main()
 }
 
 function displayInitialTiddlers(titles) {
-  story.displayDefaultTiddlers(titles)
+  if(!titles) {
+    story.displayTiddler(null,"DefaultTiddlers")
+    titles = story.getLinks("DefaultTiddlers")
+    story.closeTiddler("DefaultTiddlers")
+  }
+  story.displayTiddlers(null, titles)
   scrollTo(0,0)
   refreshDisplay()
   document.title = getPageTitle()
@@ -1967,12 +1972,6 @@ Story.prototype.forEachTiddler = function(fn)
 
 Story.prototype.displayDefaultTiddlers = function(titles)
 {
-  if(!titles) {
-    this.displayTiddler(null,"DefaultTiddlers")
-    titles = this.getLinks("DefaultTiddlers")
-    this.closeTiddler("DefaultTiddlers")
-  }
-  this.displayTiddlers(null, titles)
 }
 
 Story.prototype.displayTiddlers = function(src,titles)
