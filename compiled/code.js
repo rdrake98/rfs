@@ -233,18 +233,20 @@ function main()
           } else action = "unchanged"
           if(!medit) dumpM(title + " " + action)
         })
-        story.refreshAllTiddlers // to be on safe side
+        displayInitialTiddlers(JSON.parse(response).tiddlers_open)
       },
       function fail() {
         _dump('other_changes')
         dumpM('failed in ruby')
+        displayInitialTiddlers()
       }
     )
-  }
-  if(hash && !plusChanges)
-    story.displayTiddlers("bottom",hash.split(" "))
-  else
-    story.displayDefaultTiddlers()
+  } else
+    displayInitialTiddlers(hash && !plusChanges ? hash.split(" ") : null)
+}
+
+function displayInitialTiddlers(titles) {
+  story.displayDefaultTiddlers(titles)
   scrollTo(0,0)
   refreshDisplay()
   document.title = getPageTitle()
@@ -1963,12 +1965,14 @@ Story.prototype.forEachTiddler = function(fn)
   }
 }
 
-Story.prototype.displayDefaultTiddlers = function()
+Story.prototype.displayDefaultTiddlers = function(titles)
 {
-  this.displayTiddler(null,"DefaultTiddlers")
-  var links = this.getLinks("DefaultTiddlers")
-  this.closeTiddler("DefaultTiddlers")
-  this.displayTiddlers(null, links)
+  if(!titles) {
+    this.displayTiddler(null,"DefaultTiddlers")
+    titles = this.getLinks("DefaultTiddlers")
+    this.closeTiddler("DefaultTiddlers")
+  }
+  this.displayTiddlers(null, titles)
 }
 
 Story.prototype.displayTiddlers = function(src,titles)
