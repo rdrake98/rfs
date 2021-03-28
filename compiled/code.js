@@ -1624,8 +1624,7 @@ function TiddlyWiki()
   this.tiddlersUpdated = false
   this.slices = {} // map tiddlerName->(map sliceName->sliceValue). Lazy.
   this.fetchTiddler = function(title) {
-    var t = tiddlers[title]
-    return t instanceof Tiddler ? t : null // hasOwnProperty problem
+    return tiddlers[title]
   }
   this.deleteTiddler = function(title) {
     delete this.slices[title]
@@ -1812,13 +1811,9 @@ TiddlyWiki.prototype.loadFromDiv = function(src)
     var node = nodes[t]
     if(node.getAttribute) {
       var title = node.getAttribute("title")
-      var tiddler = this.fetchTiddler(title)
-      if(!tiddler) {
-        tiddler = new Tiddler(title)
-        this.addTiddler(tiddler)
-        this.setDirty(true)
-      }    
-      if(title) internalizeTiddler(tiddler,title,node)
+      var tiddler = new Tiddler(title)
+      this.addTiddler(tiddler)
+      internalizeTiddler(tiddler,title,node)
     }
   }
   this.setDirty(false)
