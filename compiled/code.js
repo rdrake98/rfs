@@ -1817,7 +1817,6 @@ TiddlyWiki.prototype.saveTiddler = function(title,newTitle,newBody,modifier,
   return tiddler
 }
 
-// Load contents of a TiddlyWiki from an HTML DIV
 TiddlyWiki.prototype.loadFromDiv = function(src)
 {
   var nodes = document.getElementById(src).childNodes
@@ -1873,7 +1872,6 @@ TiddlyWiki.prototype.search = function(regExp) {
   return titles.concat(texts)
 }
 
-// Return an array of the tiddlers that link to a given tiddler
 TiddlyWiki.prototype.getReferringTiddlers = function(name, want_bch)
 {
   // implications are that some non-existing tiddlers may show a reference that
