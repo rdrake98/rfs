@@ -1635,8 +1635,10 @@ function TiddlyWiki()
   this.forEachTiddler = function(callback) {
     for(var t in tiddlers) {
       var tiddler = tiddlers[t]
-      if(tiddler instanceof Tiddler) // till Firefox 58?
+      if(tiddler instanceof Tiddler)
         callback.call(this,t,tiddler)
+      else
+        _dump(tiddler)
     }
   }
 }
