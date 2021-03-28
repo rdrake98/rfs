@@ -1624,7 +1624,8 @@ function TiddlyWiki()
   this.tiddlersUpdated = false
   this.slices = {} // map tiddlerName->(map sliceName->sliceValue). Lazy.
   this.fetchTiddler = function(title) {
-    return tiddlers[title]
+    var t = tiddlers[title]
+    return t instanceof Tiddler ? t : null // hasOwnProperty problem
   }
   this.deleteTiddler = function(title) {
     delete this.slices[title]
@@ -1845,6 +1846,14 @@ internalizeTiddler = function(tiddler,title,node)
     var name = attrs[i].name
     if(name == "splitname" || name == "changecount" || name == "medited")
       fields[name] = attrs[i].value
+  }
+  if(title=="diff") {
+    _dump(typeof(tiddler))
+    _dump(typeof(tiddler.assign))
+  }
+  if(title=="hasOwnProperty") {
+    _dump(typeof(tiddler))
+    _dump(typeof(tiddler.assign))
   }
   tiddler.assign(title,text,modified,modifier,created,creator,fields)
 }
