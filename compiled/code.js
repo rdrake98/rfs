@@ -1632,10 +1632,7 @@ function TiddlyWiki()
     tiddlers[tiddler.title] = tiddler
   }
   this.forEachTiddler = function(callback) {
-    for(var t in tiddlers) {
-      var tiddler = tiddlers[t]
-      callback.call(this,t,tiddler)
-    }
+    for(var t in tiddlers) {callback.call(this,t,tiddlers[t])}
   }
 }
 
@@ -2290,7 +2287,7 @@ Story.prototype.saveTiddler = function(title)
 Story.prototype.permaView = function()
 {
   var links = []
-  this.forEachTiddler(function(title,element) {links.push(title)})
+  this.forEachTiddler(function(title) {links.push(title)})
   location.hash = encodeURIComponent(links.join(" ")) || "#"
 }
 
