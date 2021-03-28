@@ -214,7 +214,7 @@ function main()
         dumpM("number of edits: " + changes.length)
         changes.forEach(function(h) {
           title = h.title || h
-          var t = store.getTiddler(title)
+          var t = store.fetchTiddler(title)
           var medit = false
           if(!h.title) {
             action = t ? "deleted" : "not found"
@@ -1019,7 +1019,7 @@ function invokeMacro(place,macro,params,wikifier,tiddler)
     var m = macros[macro]
     if(m && m.handler) {
       var elem = story.findContainingTiddler(place)
-      window.tiddler = elem && store.getTiddler(elem.getAttribute("tiddler"))
+      window.tiddler = elem && store.fetchTiddler(elem.getAttribute("tiddler"))
       window.place = place
       var mParams = m.noPreParse || params.readMacroParams(false)
       m.handler(place,macro,mParams,wikifier,params,tiddler)
@@ -1320,7 +1320,7 @@ macros.tabs.switchTab = function(tabset,tab)
     tabset.parentNode.insertBefore(tabContent,tabset.nextSibling)
     var contentTitle = theTab.getAttribute("content")
     wikify(store.getTiddlerText(contentTitle),tabContent,null,
-      store.getTiddler(contentTitle))
+      store.fetchTiddler(contentTitle))
   }
 }
 
@@ -1332,7 +1332,7 @@ jsonChanges = function(full) {
   var uc = macros.unsavedChanges
   var names = Array.from(full ? uc.full : uc.medited)
   var tiddlers = names.map(function(name) {
-    t = store.getTiddler(name)
+    t = store.fetchTiddler(name)
     if(!t) return name
     t = Object.assign({}, t)
     delete t.links
@@ -1486,7 +1486,7 @@ commands.saveTiddler.handler = function(event,src,title)
 
 commands.deleteTiddler.handler = function(event,src,title)
 {
-  tiddler = store.getTiddler(title)
+  tiddler = store.fetchTiddler(title)
   if(!tiddler || excludeTitle(title))
     story.closeTiddler(title,true)
   else if(confirm(this.warning.format([title]))) {
@@ -1666,15 +1666,6 @@ TiddlyWiki.prototype.isShadowTiddler = function(title)
 
 TiddlyWiki.prototype.isAvailable = function(title) {
   return this.tiddlerExists(title) || this.isShadowTiddler(title)
-}
-
-TiddlyWiki.prototype.getTiddler = function(title)
-{
-  var t = this.fetchTiddler(title)
-  if(t != undefined)
-    return t
-  else
-    return null
 }
 
 TiddlyWiki.prototype.getTiddlerText = function(title)
@@ -1899,7 +1890,7 @@ TiddlyWiki.prototype.getReferringTiddlers = function(name, want_bch)
 
 TiddlyWiki.prototype.getValue = function(tiddler,name)
 {
-  var t = (typeof tiddler == "string") ? this.getTiddler(tiddler) : tiddler
+  var t = (typeof tiddler == "string") ? this.fetchTiddler(tiddler) : tiddler
   if(!t) return undefined
   var value = t[name]
   return name == "modified" || name == "created" ?
@@ -1992,7 +1983,7 @@ Story.prototype.refreshTiddler = function(title,n,force)
     var template = n ?
       ["ViewTemplate", "EditTemplate"][n-1] : currTemplate || "ViewTemplate"
     if((template != currTemplate) || force) {
-      var tiddler = store.getTiddler(title)
+      var tiddler = store.fetchTiddler(title)
       if(!tiddler) {
         tiddler = new Tiddler()
         if(store.isShadowTiddler(title))
@@ -2305,7 +2296,7 @@ config.refreshers = {
     var title = e.getAttribute("tiddler")
     $(e).empty()
     var text = store.getTiddlerText(title)
-    if(text) wikify(text,e,null,store.getTiddler(title))
+    if(text) wikify(text,e,null,store.fetchTiddler(title))
     return true
   },
 
@@ -3955,7 +3946,7 @@ commands.roll.handler = function(event,src,title)
 }
 
 bulk_change = function(title) {
-  var t = store.getTiddler(title)
+  var t = store.fetchTiddler(title)
   dumpM("doing bulk change...")
   ajaxPost('bulk_change', {
       type: wikiType(),
@@ -3973,7 +3964,7 @@ bulk_change = function(title) {
         dumpM("making " + changes.length + " edits...")
         changes.forEach(function(h) {
           title = h.title
-          var t = store.getTiddler(title)
+          var t = store.fetchTiddler(title)
           var modified = new Date(h.modified)
           if (modified.equals(t.modified)) { // has to be medited
             t.text = h.text
@@ -4039,7 +4030,7 @@ commands.link.handler = function(event,src,title)
     var unlink = event.metaKey
     var overlink = event.shiftKey
     var action = unlink ? "Unlink" : overlink ? "Overlink" : "Link"
-    var t = store.getTiddler(title)
+    var t = store.fetchTiddler(title)
     ajaxPost('link', {
         type: wikiType(),
         edition: edition,
