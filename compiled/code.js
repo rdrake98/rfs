@@ -1621,8 +1621,7 @@ function TiddlyWiki()
   this.tiddlersUpdated = false
   this.slices = {} // map tiddlerName->(map sliceName->sliceValue). Lazy.
   this.fetchTiddler = function(title) {
-    var t = tiddlers[title]
-    return t instanceof Tiddler ? t : null // till Firefox 58?
+    return tiddlers[title]
   }
   this.deleteTiddler = function(title) {
     delete this.slices[title]
@@ -1635,10 +1634,7 @@ function TiddlyWiki()
   this.forEachTiddler = function(callback) {
     for(var t in tiddlers) {
       var tiddler = tiddlers[t]
-      if(tiddler instanceof Tiddler)
-        callback.call(this,t,tiddler)
-      else
-        _dump(tiddler)
+      callback.call(this,t,tiddler)
     }
   }
 }
