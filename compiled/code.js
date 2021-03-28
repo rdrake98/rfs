@@ -1067,7 +1067,10 @@ macros.timeline = {
     var paramString = $(container).attr("params")
     var params = paramString.parseParams("anon")[0].anon || []
     var sortField = params[0] || "modified"
-    var tiddlers = store.includedTiddlers()
+    var tiddlers = []
+    store.forEachTiddler(function(title,tiddler) {
+      if (!excludeTitle(title)) tiddlers.push(tiddler)
+    })
     if(sortField == "modified") {
       tiddlers = tiddlers.sort(
         function(a,b) {return basicCompare(a.modified, b.modified)}
@@ -1893,15 +1896,6 @@ TiddlyWiki.prototype.getReferringTiddlers = function(name, want_bch)
     }
   })
   return results.sort(basicSplitCompare)
-}
-
-TiddlyWiki.prototype.includedTiddlers = function()
-{
-  var results = []
-  this.forEachTiddler(function(title,tiddler) {
-    if (!excludeTitle(title)) results.push(tiddler)
-  })
-  return results
 }
 
 TiddlyWiki.prototype.getTiddlers = function()
