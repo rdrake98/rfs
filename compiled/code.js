@@ -1970,10 +1970,6 @@ Story.prototype.forEachTiddler = function(fn)
   }
 }
 
-Story.prototype.displayDefaultTiddlers = function(titles)
-{
-}
-
 Story.prototype.displayTiddlers = function(src,titles)
 {
   for(var t = titles.length-1; t >= 0; t--) this.displayTiddler(src,titles[t])
