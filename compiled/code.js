@@ -217,7 +217,7 @@ function main()
         from_self: fromSelf,
       },
       function success(response) {
-        var changes = JSON.parse(response).filter(h => !excludeTitle(h.title))
+        var changes = getChanges(response).filter(h => !excludeTitle(h.title))
         dumpM("number of edits: " + changes.length)
         changes.forEach(function(h) {
           title = h.title || h
@@ -249,6 +249,11 @@ function main()
     )
   }
   startingUp = false
+}
+
+function getChanges(json) {
+  var changes = JSON.parse(json)
+  return changes.tiddlers_changed || changes
 }
 
 ajaxPost = function(route, data, success, failure) {
@@ -1324,7 +1329,10 @@ jsonChanges = function(full) {
     delete t.linksUpdated
     return t
   })
-  return JSON.stringify(tiddlers)
+  return JSON.stringify({
+    tiddlers_open: openTitles(), 
+    tiddlers_changed: tiddlers
+  })
 }
 
 ajaxChangeTiddler = function(title, action, unshared) {
@@ -3980,7 +3988,7 @@ bulk_change = function(title) {
       changes: jsonChanges(),
     },
     function success(response) {
-      var changes = JSON.parse(response)
+      var changes = getChanges(response)
       var clash = changes.clash
       if(clash) {
         _dump("clash between browser edition " + edition + " and " + clash)

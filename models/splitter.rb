@@ -265,21 +265,26 @@ class Splitter
   end
 
   def add_tiddlers(json=File.read(changes_file), loud=false)
-    titles = []
-    JSON.parse(json).each do |hash|
+    titles_changed = []
+    parsed = JSON.parse(json)
+    # safety first for now
+    titles_open, changes = Hash === parsed ?
+      [parsed["tiddlers_open"], parsed["tiddlers_changed"]] :
+      [nil, parsed]
+    changes.each do |hash|
       # byebug if $dd
       title = hash["title"]
       if title
         delete(title) # because splitname may have changed
         self[title] = Tiddler.new(self, title, hash)
         puts title if loud
-        titles << title
+        titles_changed << title
       else
         puts "#{hash} wants deleting" if loud
         delete(hash, true)
       end
     end
-    titles
+    [titles_open, titles_changed]
   end
 
   def create_new(title, content, split=nil)
@@ -451,19 +456,28 @@ class Splitter
     [filename, titles.size, tiny_bytes.size]
   end
 
+  def default_tiddlers_string(titles)
+    titles.map {|title| self[title].to_link}.join("\n")
+  end
+
   def write_selected(file, selected, title=file, expand=false)
-    open_tiddlers = selected.map {|t| self[t].to_link}.join("\n")
-    write_tiny(file, open_tiddlers, title, selected, expand)
+    write_tiny(file, default_tiddlers_string(selected), title, selected, expand)
   end
 
   def write_sb
     write_selected("sb", %w[ExternalURLs])
   end
 
-  def write_extract(changed=[])
-    ot = self["DefaultTiddlers"]
-    selected = (ot.titles_linked + changed).uniq
-    write_tiny("extract", ot.content, "x", selected, true)
+  def write_extract(titles_changed=[], titles_open=nil)
+    if titles_open
+      titles_open_content = default_tiddlers_string(titles_open)
+    else
+      ot = self["DefaultTiddlers"]
+      titles_open = ot.titles_linked
+      titles_open_content = ot.content
+    end
+    selected = (titles_open + titles_changed).uniq
+    write_tiny("extract", titles_open_content, "extract", selected, true)
   end
 
   # for use from Pry
