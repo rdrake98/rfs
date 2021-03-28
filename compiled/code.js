@@ -1632,7 +1632,7 @@ function TiddlyWiki()
     tiddlers[tiddler.title] = tiddler
   }
   this.forEachTiddler = function(callback) {
-    for(var t in tiddlers) {callback.call(this,t,tiddlers[t])}
+    for(var t in tiddlers) callback.call(this,t,tiddlers[t])
   }
 }
 
