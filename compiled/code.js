@@ -204,13 +204,6 @@ function main()
   var hash = decodeURIComponent(location.hash.substr(1))
   var plusChanges = hash.slice(0,12) == "plusChanges*"
   var fromSelf = plusChanges && hash.slice(12) == "*"
-  if(hash && !plusChanges)
-    story.displayTiddlers("bottom",hash.split(" "))
-  else
-    story.displayDefaultTiddlers()
-  scrollTo(0,0)
-  refreshDisplay()
-  document.title = getPageTitle()
   if(plusChanges && wikiType().length == 3) {
     ajaxPost('other_changes', {
         type: wikiType(),
@@ -248,6 +241,13 @@ function main()
       }
     )
   }
+  if(hash && !plusChanges)
+    story.displayTiddlers("bottom",hash.split(" "))
+  else
+    story.displayDefaultTiddlers()
+  scrollTo(0,0)
+  refreshDisplay()
+  document.title = getPageTitle()
   startingUp = false
 }
 
