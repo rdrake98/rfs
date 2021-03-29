@@ -1,5 +1,5 @@
 Stop List Initial
-2021-03-18 16:47:00 UTC
+2021-03-29 11:59:00 UTC
 
 https://app.getpocket.com/
 https://twitter.com/
@@ -33,3 +33,4 @@ file:///Users/rd/Dropbox/%7Chttps://cliscep.com/2020/03/15/dont-just-run-the-cou
 https://www.youtube.com/
 file:///Users/rd/rf/site/index.html
 https://circleci.com/vcs-authorize/
+https://www.skysports.com/watch/tv-guide
