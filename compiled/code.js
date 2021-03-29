@@ -1797,16 +1797,14 @@ TiddlyWiki.prototype.saveTiddler = function(title,newTitle,newBody,modifier,
 
 TiddlyWiki.prototype.loadFromDiv = function(src)
 {
-  var nodes = document.getElementById(src).childNodes
-  for(var t = 0; t < nodes.length; t++) {
-    var node = nodes[t]
-    if(node.getAttribute) {
+  document.getElementById(src).childNodes.forEach(node => {
+    if(node.getAttribute) { // this test is needed
       var title = node.getAttribute("title")
       var tiddler = new Tiddler(title)
       this.addTiddler(tiddler)
       internalizeTiddler(tiddler,title,node)
     }
-  }
+  })
   this.setDirty(false)
 }
 
@@ -1827,14 +1825,6 @@ internalizeTiddler = function(tiddler,title,node)
     var name = attrs[i].name
     if(name == "splitname" || name == "changecount" || name == "medited")
       fields[name] = attrs[i].value
-  }
-  if(title=="diff") {
-    _dump(typeof(tiddler))
-    _dump(typeof(tiddler.assign))
-  }
-  if(title=="hasOwnProperty") {
-    _dump(typeof(tiddler))
-    _dump(typeof(tiddler.assign))
   }
   tiddler.assign(title,text,modified,modifier,created,creator,fields)
 }
