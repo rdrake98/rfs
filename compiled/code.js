@@ -1340,7 +1340,7 @@ jsonChanges = function(full) {
     return t
   })
   return JSON.stringify({
-    tiddlers_open: openTitles(), 
+    tiddlers_open: openTitles(),
     tiddlers_changed: tiddlers
   })
 }
@@ -1732,17 +1732,6 @@ TiddlyWiki.prototype.getTiddlerSlice = function(title,sliceName)
     this.slices[title] = slices
   }
   return slices[sliceName]
-}
-
-// Build an hashmap of the specified named slices of a tiddler
-TiddlyWiki.prototype.getTiddlerSlices = function(title,sliceNames)
-{
-  var r = {}
-  for(var t=0; t < sliceNames.length; t++) {
-    var slice = this.getTiddlerSlice(title,sliceNames[t])
-    if(slice) r[sliceNames[t]] = slice
-  }
-  return r
 }
 
 TiddlyWiki.prototype.notify = function(title)
