@@ -2559,11 +2559,9 @@ function convertUnicodeToHtmlEntities(s)
 //-- TiddlyWiki-specific utility functions
 //--
 
-function merge(dst,src,preserveExisting)
+function merge(dst,src)
 {
-  for(var i in src)
-    if(!preserveExisting || dst[i] === undefined)
-      dst[i] = src[i]
+  for(var i in src) if(dst[i] === undefined) dst[i] = src[i]
   return dst
 }
 
