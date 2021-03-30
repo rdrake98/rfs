@@ -21,7 +21,7 @@ class WikiWithTabs
     @file_links = []
     names.each do |name|
       tiddler = "S#{name[1..6]}N#{name[8..11]}"
-      windows = JSON.parse(File.read(name)[2..-1])["sessions"][0]["windows"]
+      windows = JSON[(File.read(name)[2..-1])]["sessions"][0]["windows"]
       @file_links += windows.map {|window| FileLinks.new(window, tiddler)}
     end
   end

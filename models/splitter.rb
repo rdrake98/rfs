@@ -242,11 +242,21 @@ class Splitter
     "/Users/rd/Dropbox/_changes/m#{host}_#{@type}.json"
   end
 
+  def shared_open_file(host=@host)
+    "/Users/rd/Dropbox/_changes/m#{host}_#{@type}_open.json"
+  end
+
   def add_changes(json, shared=true)
     if @type
       text = json + "\n"
       File.write(changes_file, text)
       File.write(shared_changes_file, text) if shared
+    end
+  end
+
+  def order_change(json)
+    if @type
+      File.write(shared_open_file, json + "\n")
     end
   end
 
@@ -256,7 +266,10 @@ class Splitter
 
   def other_changes(from_self)
     commit_changes_file("before plusChanges* on startup", false)
-    File.read(shared_changes_file(from_self ? @host : other_host))
+    host = from_self ? @host : other_host
+    tiddlers_changed = JSON[File.read(shared_changes_file(host))]
+    tiddlers_open = JSON[File.read(shared_open_file(host))]
+    JSON[{tiddlers_open: tiddlers_open, tiddlers_changed: tiddlers_changed}]
   end
 
   def commit_changes_file(message, blank_shared=true)
@@ -266,7 +279,7 @@ class Splitter
 
   def add_tiddlers(json=File.read(changes_file), loud=false)
     titles_changed = []
-    parsed = JSON.parse(json)
+    parsed = JSON[json]
     # safety first for now
     titles_open, changes = Hash === parsed ?
       [parsed["tiddlers_open"], parsed["tiddlers_changed"]] :

@@ -1339,10 +1339,7 @@ jsonChanges = function(full) {
     delete t.linksUpdated
     return t
   })
-  return JSON.stringify({
-    tiddlers_open: openTitles(),
-    tiddlers_changed: tiddlers
-  })
+  return JSON.stringify(tiddlers)
 }
 
 ajaxChangeTiddler = function(title, action, unshared) {
@@ -3795,6 +3792,11 @@ macros.openTiddlers = {
     if(tabsets.children('.tabSelected').attr('content') == "OpenTiddlers")
       macros.tabs.switchTab(tabsets[0],"Open")
     if(!justRolled) commands.roll.anchor = null
+    if(wikiType().length == 3) {
+      ajaxPost('order_change', 
+        {type: wikiType(), open: JSON.stringify(openTitles())},
+        function success() {}, function fail() {})
+    }  
   },
 }
 

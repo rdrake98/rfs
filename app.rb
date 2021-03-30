@@ -40,6 +40,12 @@ class App < Roda
         message
       end
 
+      r.post "order_change" do
+        p = r.params
+        wiki(p['type'], true)&.order_change(p['open'])
+        ""
+      end
+
       r.post "save" do
         p = r.params
         type, edition, changes = p['type'], p['edition'], p['changes']
