@@ -265,7 +265,7 @@ class Splitter
   end
 
   def other_changes(from_self)
-    commit_changes_file("before plusChanges* on startup", false)
+    commit_changes_file("before plusChanges* or ** on startup", false)
     host = from_self ? @host : other_host
     tiddlers_changed = JSON[File.read(shared_changes_file(host))]
     tiddlers_open = JSON[File.read(shared_open_file(host))]
