@@ -210,7 +210,8 @@ function main()
         from_self: fromSelf,
       },
       function success(response) {
-        var changes = getChanges(response).filter(h => !excludeTitle(h.title))
+        var hash = JSON.parse(response)
+        var changes = hash.tiddlers_changed.filter(h => !excludeTitle(h.title))
         dumpM("number of edits: " + changes.length)
         changes.forEach(function(h) {
           title = h.title || h
@@ -233,7 +234,7 @@ function main()
           } else action = "unchanged"
           if(!medit) dumpM(title + " " + action)
         })
-        displayInitialTiddlers(JSON.parse(response).tiddlers_open)
+        displayInitialTiddlers(hash.tiddlers_open)
       },
       function fail() {
         _dump('other_changes')
@@ -256,11 +257,6 @@ function displayInitialTiddlers(titles) {
   refreshDisplay()
   document.title = getPageTitle()
   startingUp = false
-}
-
-function getChanges(json) {
-  var changes = JSON.parse(json)
-  return changes.tiddlers_changed || changes
 }
 
 ajaxPost = function(route, data, success, failure) {
@@ -3934,7 +3930,7 @@ bulk_change = function(title) {
       changes: jsonChanges(),
     },
     function success(response) {
-      var changes = getChanges(response)
+      var changes = JSON.parse(response)
       var clash = changes.clash
       if(clash) {
         _dump("clash between browser edition " + edition + " and " + clash)
