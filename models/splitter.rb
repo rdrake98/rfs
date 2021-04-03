@@ -279,12 +279,7 @@ class Splitter
 
   def add_tiddlers(json=File.read(changes_file), loud=false)
     titles_changed = []
-    parsed = JSON[json]
-    # safety first for now
-    titles_open, changes = Hash === parsed ?
-      [parsed["tiddlers_open"], parsed["tiddlers_changed"]] :
-      [nil, parsed]
-    changes.each do |hash|
+    JSON[json].each do |hash|
       # byebug if $dd
       title = hash["title"]
       if title
@@ -297,7 +292,7 @@ class Splitter
         delete(hash, true)
       end
     end
-    [titles_open, titles_changed]
+    titles_changed
   end
 
   def create_new(title, content, split=nil)
@@ -481,14 +476,9 @@ class Splitter
     write_selected("sb", %w[ExternalURLs])
   end
 
-  def write_extract(titles_changed=[], titles_open=nil)
-    if titles_open
-      titles_open_content = default_tiddlers_string(titles_open)
-    else
-      ot = self["DefaultTiddlers"]
-      titles_open = ot.titles_linked
-      titles_open_content = ot.content
-    end
+  def write_extract(titles_changed=[])
+    titles_open = JSON[File.read(shared_open_file(@host))]
+    titles_open_content = default_tiddlers_string(titles_open)
     selected = (titles_open + titles_changed).uniq
     write_tiny("extract", titles_open_content, "extract", selected, true)
   end
