@@ -2634,7 +2634,7 @@ function createExternalLink(place,url,label)
     "txmt://open?url=file://~/" + url.slice(23)
   if(!isUrl(href)) {
     // kludge follows
-    href = "file://" + (href[0] == "/" ? "" : "/Users/rd/Dropbox/") + href
+    href = "file:///Users/rd/Dropbox/" + href
     if (!/\.(html|pdf)(#\S*)?$/.test(href)) {
       href = "txmt://open?url=" + href
       txmt = true
