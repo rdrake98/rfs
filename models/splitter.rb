@@ -493,6 +493,10 @@ class Splitter
     write_selected("sample", titles.sample(n), "s", expand)
   end
 
+  def write_view
+    write_selected("view", self["ViewTiddlers"].titles_linked, "s", true)
+  end
+
   # testing WikifierNull by inspection
 
   def self.test_null(title)
