@@ -716,7 +716,9 @@ config.formatters = [
       if(lookaheadMatch[1]) img.align = "left"
       else if(lookaheadMatch[2]) img.align = "right"
       var src = lookaheadMatch[3].split(' ')
-      img.src = src[0]
+      var where = src[0]
+      // kludge for images to be visible under tinys etc
+      img.src = isUrl(where) ? where : "/Users/rd/Dropbox/" + where
       if(src[1] == '' && !img.align)
         img.width = config.options.txtWidth
       else if(src[1])
