@@ -450,7 +450,7 @@ class Splitter
     (titles + (titles << "MainMenu").map{|t| titles_linked(t)}.flatten).uniq
   end
 
-  def write_tiny(file, open_tiddlers, title, selected=[], expand=false)
+  def write_tiny(file, open_tiddlers, title, expand=true, selected=[])
     titles = config_titles + (expand ? expanded(selected) : selected)
     divs = titles.map {|t| self[t]&.div_text}.join
     tiny_bytes = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
@@ -468,33 +468,33 @@ class Splitter
     titles.map {|title| self[title].to_link}.join("\n")
   end
 
-  def write_selected(file, selected, title=file, expand=false)
-    write_tiny(file, default_tiddlers_string(selected), title, selected, expand)
+  def write_selected(file, selected, expand=true, title=file)
+    write_tiny(file, default_tiddlers_string(selected), title, expand, selected)
   end
 
   def write_sb
-    write_selected("sb", %w[ExternalURLs])
+    write_selected("sb", %w[ExternalURLs], false)
   end
 
   def write_extract(titles_changed=[])
     titles_open = JSON[File.read(shared_open_file(@host))]
     titles_open_content = default_tiddlers_string(titles_open)
     selected = (titles_open + titles_changed).uniq
-    write_tiny("extract", titles_open_content, "extract", selected, true)
+    write_tiny("extract", titles_open_content, "extract", true, selected)
   end
 
   # for use from Pry
 
   def write_empty
-    write_tiny("empty", "GettingStarted", "m")
+    write_tiny("empty", "GettingStarted", "m", false)
   end
 
-  def write_sample(n, expand=false)
-    write_selected("sample", titles.sample(n), "s", expand)
+  def write_sample(n, expand=true)
+    write_selected("sample", titles.sample(n), expand, "s")
   end
 
   def write_view
-    write_selected("view", self["ViewTiddlers"].titles_linked, "s", true)
+    write_selected("view", self["ViewTiddlers"].titles_linked)
   end
 
   # testing WikifierNull by inspection
