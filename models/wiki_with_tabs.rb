@@ -132,7 +132,7 @@ class WikiWithTabs
       fat[name].content += "\n" + titles.join("\n")
     else
       fat.create_new(name, titles.join("\n"), time.strftime("S%Y M%m"))
-      fat["S2020Elinks"].content += "\n" + name
+      fat["ElinksFromFeb19"].content += "\n" + name
     end
     puts fat.tiddlers.size
     fat.write
