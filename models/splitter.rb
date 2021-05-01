@@ -493,8 +493,8 @@ class Splitter
     write_selected("sample", titles.sample(n), expand, "s")
   end
 
-  def write_view
-    write_selected("view", self["ViewTiddlers"].titles_linked)
+  def write_from_tiddler(file="view", title="ViewTiddlers")
+    write_selected(file, self[title].titles_linked)
   end
 
   # testing WikifierNull by inspection
