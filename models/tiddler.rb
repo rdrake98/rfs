@@ -224,6 +224,10 @@ class Tiddler
     re = /^\"\"\"(.*)\"\"\"$/
     from = from =~ re ? $1 : from
     to = to =~ re ? $1 : to
+    if from[0] == ","
+      from = /(\W)#{from[1..-1]}/
+      to = "\\1#{to}"
+    end
     targets = scope == "all" ?
       @wiki.normal_tiddlers - [self] :
       @wiki[scope].tiddlers_linked
@@ -241,28 +245,6 @@ class Tiddler
     else
       "[]"
     end
-  end
-
-  def bulk_change_test(content)
-    specs = content.split(", ")
-    return "[]" if specs.size != 3
-    from, to, scope = specs
-    re = /^\"\"\"(.*)\"\"\"$/
-    from = from =~ re ? $1 : from
-    to = to =~ re ? $1 : to
-    if from[0] == ","
-      from = /(\W)#{from[1..-1]}/
-      to = "\\1#{to}"
-    end
-    targets = scope == "all" ?
-      @wiki.normal_tiddlers - [self] :
-      @wiki[scope].tiddlers_linked
-    edits = targets.select do |t|
-      old_content = t.content
-      new_content = old_content.sub(from, to)
-      old_content != new_content
-    end
-    [edits.size, from, to]
   end
 
   def tiddlers_linked
