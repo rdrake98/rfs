@@ -252,7 +252,7 @@ class Tiddler
     to = to =~ re ? $1 : to
     if from[0] == ","
       from = /(\W)#{from[1..-1]}/
-      to = '\1' + to
+      to = "\\1#{to}"
     end
     targets = scope == "all" ?
       @wiki.normal_tiddlers - [self] :
