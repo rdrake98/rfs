@@ -1249,7 +1249,8 @@ macros.search.handler = function(place)
 macros.search.onClick = function(e)
 {
   var text = this.nextSibling.value
-  doSearch(config.options.chkRegExp ? text : text.toLowerCase())
+  doSearch(
+    config.options.chkRegExp ? text : text.toLowerCase(), null, e.altKey)
 }
 
 macros.search.onKeyPress = function(e)
@@ -1818,16 +1819,19 @@ TiddlyWiki.prototype.updateTiddlers = function()
   this.forEachTiddler(function(title,tiddler) {tiddler.changed()})
 }
 
-TiddlyWiki.prototype.search = function(regExp) {
+TiddlyWiki.prototype.search = function(regExp, smart) {
   var titles = [], texts = []
-  this.forEachTiddler(function(title,tiddler) {
-    if (!excludeTitle(title))
-      if(regExp.test(title) || regExp.test(tiddler.getSplitName()))
-        titles.push(tiddler)
-      else if(!config.options.chkTitleOnly &&
-        regExp.test(tiddler.text))
-        texts.push(tiddler)
-  })
+  if(smart)
+    texts.push(store.fetchTiddler("MainMenu"))
+  else
+    this.forEachTiddler(function(title,tiddler) {
+      if (!excludeTitle(title))
+        if(regExp.test(title) || regExp.test(tiddler.getSplitName()))
+          titles.push(tiddler)
+        else if(!config.options.chkTitleOnly &&
+          regExp.test(tiddler.text))
+          texts.push(tiddler)
+    })
   titles.sort(basicSplitCompare)
   texts.sort(basicSplitCompare)
   return titles.concat(texts)
@@ -2106,7 +2110,7 @@ String.prototype.searchRegExp = function() {
   return c.replace(new RegExp("\\,$"),"(" + unWord + "|$)")
 }
 
-Story.prototype.search = function(text, title) {
+Story.prototype.search = function(text, title, smart) {
   if(!text) return
   var useRegExp = config.options.chkRegExp
   var caseSensitive = config.options.chkCaseSensitive ||
@@ -2116,7 +2120,7 @@ Story.prototype.search = function(text, title) {
     useRegExp ? text : text.searchRegExp(),
     caseSensitive ? "mg" : "img")
   linkTarget = null
-  var tiddlers = store.search(searchRegex)
+  var tiddlers = store.search(searchRegex, smart)
   story.refreshAllTiddlers() // update highlighting within story tiddlers
   var count = tiddlers.length
   var p = '"""', q = useRegExp ? "/" : "", r = "''"
@@ -3831,8 +3835,8 @@ macros.statf = {
   }
 }
 
-doSearch = function(text,title) {
-  story.search(text,title)
+doSearch = function(text,title,smart) {
+  story.search(text,title,smart)
   $('.searchField').val(text).focus()
 }
 
