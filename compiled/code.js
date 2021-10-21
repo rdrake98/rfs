@@ -1821,9 +1821,29 @@ TiddlyWiki.prototype.updateTiddlers = function()
 
 TiddlyWiki.prototype.search = function(regExp, smart) {
   var titles = [], texts = []
-  if(smart)
+  if(smart) {
+    ajaxPost('smart', {
+      type: wikiType(),
+      edition: edition,
+      name: queryNames().name,
+      target: linkTarget,
+      changes: jsonChanges(),
+    },
+    function success(response) {
+      var json = JSON.parse(response)
+      var clash = json.clash
+      if(clash) {
+        _dump("clash between browser edition " + edition + " and " + clash)
+        displayMessage("edition clash")
+      } else {
+        dumpM("done")
+      }
+    },
+    function fail(data, status) {
+      dumpM('smart failed in ruby')
+    })
     texts.push(store.fetchTiddler("MainMenu"))
-  else
+  } else
     this.forEachTiddler(function(title,tiddler) {
       if (!excludeTitle(title))
         if(regExp.test(title) || regExp.test(tiddler.getSplitName()))
