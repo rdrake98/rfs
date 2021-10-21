@@ -1263,7 +1263,6 @@ macros.search.onKeyPress = function(e)
     case 27: // Escape
       this.value = ""
       clearMessage()
-      break
   }
 }
 
