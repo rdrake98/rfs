@@ -1257,7 +1257,7 @@ macros.search.onKeyPress = function(e)
   switch(e.keyCode) {
     case 9: // Tab
       return
-    case 13: // Ctrl-Enter
+    case 13: // Return
       doSearch(this.value)
       break
     case 27: // Escape
