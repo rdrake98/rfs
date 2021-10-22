@@ -1,7 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    chartkick (4.0.5)
     rack (2.2.3)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
@@ -9,17 +8,14 @@ GEM
       rack
     shotgun (0.9.2)
       rack (>= 1.0)
-    tilt (2.0.10)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  chartkick
   rack-cors
   roda
   shotgun
-  tilt
 
 BUNDLED WITH
    2.2.22

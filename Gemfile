@@ -4,9 +4,5 @@ source 'https://rubygems.org'
 gem 'roda'
 gem 'rack-cors'
 
-# Rendering
-gem 'tilt'
-gem 'chartkick'
-
 # Testing
 gem 'shotgun'
