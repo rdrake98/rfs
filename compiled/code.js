@@ -1826,6 +1826,7 @@ TiddlyWiki.prototype.search = function(regExp, smart) {
       type: wikiType(),
       edition: edition,
       name: queryNames().name,
+      regExp: regExp,
       changes: jsonChanges(),
     },
     function success(response) {

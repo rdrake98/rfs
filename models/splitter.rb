@@ -295,7 +295,7 @@ class Splitter
     titles_changed
   end
 
-  def search(search_text)
+  def search(regExp, search_text)
     titles = ["RichardDrake"]
     titles
   end
