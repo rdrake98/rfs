@@ -295,6 +295,11 @@ class Splitter
     titles_changed
   end
 
+  def search(search_text)
+    titles = ["RichardDrake"]
+    titles
+  end
+
   def create_new(title, content, split=nil)
     self[title] = Tiddler.new(self, title, content, split) unless self[title]
   end

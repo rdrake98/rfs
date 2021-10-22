@@ -95,6 +95,24 @@ class App < Roda
         response.to_json
       end
 
+      r.post "search" do
+        response = {}
+        p = r.params
+        type, name, edition = p['type'], p['name'], p['edition']
+        puts "searching for '#{name}' in #{type}"
+        normal = wiki(type, true)
+        wiki = wiki(type)
+        clash = wiki.check_file_edition(edition)
+        if clash
+          response["clash"] = clash.split(",")[0]
+        else
+          wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
+          wiki.add_tiddlers(p['changes'])
+          response["titles"] = wiki.search(name)
+        end
+        response.to_json
+      end
+
       r.post "other_changes" do
         p = r.params
         type = p['type']

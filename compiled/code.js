@@ -1822,11 +1822,10 @@ TiddlyWiki.prototype.updateTiddlers = function()
 TiddlyWiki.prototype.search = function(regExp, smart) {
   var titles = [], texts = []
   if(smart) {
-    ajaxPost('smart', {
+    ajaxPost('search', {
       type: wikiType(),
       edition: edition,
       name: queryNames().name,
-      target: linkTarget,
       changes: jsonChanges(),
     },
     function success(response) {
@@ -1840,7 +1839,7 @@ TiddlyWiki.prototype.search = function(regExp, smart) {
       }
     },
     function fail(data, status) {
-      dumpM('smart failed in ruby')
+      dumpM('search failed in ruby')
     })
     texts.push(store.fetchTiddler("MainMenu"))
   } else
