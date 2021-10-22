@@ -6,3 +6,4 @@ gem 'rack-cors'
 
 # Testing
 gem 'shotgun'
+gem 'pry'
