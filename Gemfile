@@ -9,4 +9,4 @@ gem 'tilt'
 gem 'chartkick'
 
 # Testing
-gem 'rerun', git: 'https://github.com/alexch/rerun.git'
+gem 'shotgun'
