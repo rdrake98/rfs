@@ -2131,7 +2131,7 @@ function showSearch(text, tiddlers, title, useRegExp, caseSensitive, smart) {
   }
   for(var i = 0; i < count; i++) msg += "\n" + asTiddlyLink(tiddlers[i].title)
   store.saveTiddler("Search","Search",msg,"SearchGuy",new Date(),{})
-  if(title) this.moveToTop(title)
+  if(title) story.moveToTop(title)
   story.displayTiddler(null,"Search")
   story.moveToTop("Search")
 }
