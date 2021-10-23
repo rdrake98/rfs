@@ -296,8 +296,10 @@ class Splitter
   end
 
   def search(regExp, search_text)
-    titles = ["RichardDrake"]
-    titles
+    re = Regexp.new(regExp.match(/\/(.*)\//)[1])
+    ts = tiddlers.reject(&:exclude?).select{|t| t.content =~ re}
+    puts ts.size
+    ts.map(&:title)
   end
 
   def create_new(title, content, split=nil)

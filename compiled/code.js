@@ -1819,9 +1819,8 @@ TiddlyWiki.prototype.updateTiddlers = function()
   this.forEachTiddler(function(title,tiddler) {tiddler.changed()})
 }
 
-TiddlyWiki.prototype.search = function(regExp, smart) {
-  var titles = [], texts = []
-  if(smart) {
+function smartSearch(regExp) {
+  return new Promise(function(resolve, reject) {
     ajaxPost('search', {
       type: wikiType(),
       edition: edition,
@@ -1835,15 +1834,28 @@ TiddlyWiki.prototype.search = function(regExp, smart) {
       if(clash) {
         _dump("clash between browser edition " + edition + " and " + clash)
         displayMessage("edition clash")
+        reject(json)
       } else {
-        dumpM("done")
+        dumpM("ruby found " + json.titles.length)
+        resolve(json)
       }
     },
     function fail(data, status) {
       dumpM('search failed in ruby')
+      reject(data)
     })
-    texts.push(store.fetchTiddler("MainMenu"))
-  } else
+  })
+}
+
+TiddlyWiki.prototype.search = function(regExp, smart) {
+  var titles = [], texts = []
+  if(smart)
+    smartSearch(regExp).then(function(json) {
+      texts = json.titles.map(t => store.fetchTiddler(t))
+    }).catch(function() {
+      dumpM("rejected")
+    })
+  else
     this.forEachTiddler(function(title,tiddler) {
       if (!excludeTitle(title))
         if(regExp.test(title) || regExp.test(tiddler.getSplitName()))
@@ -1853,6 +1865,7 @@ TiddlyWiki.prototype.search = function(regExp, smart) {
           texts.push(tiddler)
     })
   titles.sort(basicSplitCompare)
+  dumpM(texts.length)
   texts.sort(basicSplitCompare)
   return titles.concat(texts)
 }

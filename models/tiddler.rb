@@ -247,6 +247,10 @@ class Tiddler
     end
   end
 
+  def exclude?
+    @title == "Search" || @title == "DefaultTiddlers"
+  end
+
   def tiddlers_linked
     tiddler_links.map{|s|@wiki.referent(s)}.compact.uniq
   end

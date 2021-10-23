@@ -109,7 +109,7 @@ class App < Roda
         else
           wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
           wiki.add_tiddlers(p['changes'])
-          response["titles"] = wiki.search(name, regExp)
+          response["titles"] = wiki.search(regExp, name)
         end
         response.to_json
       end
