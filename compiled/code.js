@@ -1821,28 +1821,31 @@ TiddlyWiki.prototype.updateTiddlers = function()
 
 function smartSearch(regExp) {
   return new Promise(function(resolve, reject) {
-    ajaxPost('search', {
-      type: wikiType(),
-      edition: edition,
-      name: queryNames().name,
-      regExp: regExp,
-      changes: jsonChanges(),
-    },
-    function success(response) {
-      var json = JSON.parse(response)
-      var clash = json.clash
-      if(clash) {
-        _dump("clash between browser edition " + edition + " and " + clash)
-        displayMessage("edition clash")
-        reject(json)
-      } else {
-        dumpM("ruby found " + json.titles.length)
-        resolve(json)
+    $.post({
+      url: 'http://localhost:9898/public/search',
+      async: false,
+      data: {
+        type: wikiType(),
+        edition: edition,
+        name: queryNames().name,
+        regExp: regExp,
+        changes: jsonChanges(),
+      },
+      success: function(response) {
+        var json = JSON.parse(response)
+        var clash = json.clash
+        if(clash) {
+          _dump("clash between browser edition " + edition + " and " + clash)
+          displayMessage("edition clash")
+          reject(json)
+        } else {
+          dumpM("ruby found " + json.titles.length)
+          resolve(json)
+        }
+      },
+      error: function(err) {
+        reject(err)
       }
-    },
-    function fail(data, status) {
-      dumpM('search failed in ruby')
-      reject(data)
     })
   })
 }
@@ -1851,7 +1854,10 @@ TiddlyWiki.prototype.search = function(regExp, smart) {
   var titles = [], texts = []
   if(smart)
     smartSearch(regExp).then(function(json) {
-      texts = json.titles.map(t => store.fetchTiddler(t))
+      var tiddlers = json.titles.map(t => store.fetchTiddler(t))
+      tiddlers.sort(basicSplitCompare)
+      dumpM(tiddlers.length)
+      return tiddlers
     }).catch(function() {
       dumpM("rejected")
     })
@@ -1865,7 +1871,6 @@ TiddlyWiki.prototype.search = function(regExp, smart) {
           texts.push(tiddler)
     })
   titles.sort(basicSplitCompare)
-  dumpM(texts.length)
   texts.sort(basicSplitCompare)
   return titles.concat(texts)
 }
