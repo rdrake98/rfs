@@ -3709,12 +3709,6 @@ Tiddler.prototype.medited = function()
   // new Date(dateString) would be nice
 }
 
-Tiddler.prototype.minor = function()
-{
-  var medited = this.medited()
-  return medited && medited > this.modified
-}
-
 TiddlyWiki.prototype.splitName = function(title)
 {
   var tiddler = this.fetchTiddler(title)
@@ -3798,7 +3792,7 @@ macros.tiddlerDates = {
     var created = tiddler.created.formatDay()
     var medited = tiddler.medited()
     var text = modified
-    if(medited) text += " medited " + medited.formatDay()
+    if(medited) text += " med " + medited.formatDay()
     if(modified != created && !excludeTitle(tiddler.title)) 
       text += " (created " + created + ")"
     $(place).text(text)
@@ -3839,6 +3833,12 @@ function allTitles() {
   return titles
 }
 
+function meditedTitles() {
+  var titles = []
+  store.forEachTiddler(function(title,t) {if(t.medited()) titles.push(title)})
+  return titles
+}
+
 function openTitles() {
   var titles = []
   story.forEachTiddler(function(title,elem) {if(elem.id) titles.push(title)})
@@ -3857,6 +3857,7 @@ macros.openTiddlersRaw = {
 
 function statf() {
   return "''Total Tiddlers: " + allTitles().length +
+    "\nMeditedTiddlers: " + meditedTitles().length +
     "\nOpenTiddlers: " + openTitles().length + "''\n----\n" + edition
 }
 
