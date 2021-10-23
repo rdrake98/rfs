@@ -1819,57 +1819,16 @@ TiddlyWiki.prototype.updateTiddlers = function()
   this.forEachTiddler(function(title,tiddler) {tiddler.changed()})
 }
 
-function smartSearch(regExp) {
-  return new Promise(function(resolve, reject) {
-    $.post({
-      url: 'http://localhost:9898/public/search',
-      async: false,
-      data: {
-        type: wikiType(),
-        edition: edition,
-        name: queryNames().name,
-        regExp: regExp,
-        changes: jsonChanges(),
-      },
-      success: function(response) {
-        var json = JSON.parse(response)
-        var clash = json.clash
-        if(clash) {
-          _dump("clash between browser edition " + edition + " and " + clash)
-          displayMessage("edition clash")
-          reject(json)
-        } else {
-          dumpM("ruby found " + json.titles.length)
-          resolve(json)
-        }
-      },
-      error: function(err) {
-        reject(err)
-      }
-    })
-  })
-}
-
-TiddlyWiki.prototype.search = function(regExp, smart) {
+TiddlyWiki.prototype.search = function(regExp) {
   var titles = [], texts = []
-  if(smart)
-    smartSearch(regExp).then(function(json) {
-      var tiddlers = json.titles.map(t => store.fetchTiddler(t))
-      tiddlers.sort(basicSplitCompare)
-      dumpM(tiddlers.length)
-      return tiddlers
-    }).catch(function() {
-      dumpM("rejected")
-    })
-  else
-    this.forEachTiddler(function(title,tiddler) {
-      if (!excludeTitle(title))
-        if(regExp.test(title) || regExp.test(tiddler.getSplitName()))
-          titles.push(tiddler)
-        else if(!config.options.chkTitleOnly &&
-          regExp.test(tiddler.text))
-          texts.push(tiddler)
-    })
+  this.forEachTiddler(function(title,tiddler) {
+    if (!excludeTitle(title))
+      if(regExp.test(title) || regExp.test(tiddler.getSplitName()))
+        titles.push(tiddler)
+      else if(!config.options.chkTitleOnly &&
+        regExp.test(tiddler.text))
+        texts.push(tiddler)
+  })
   titles.sort(basicSplitCompare)
   texts.sort(basicSplitCompare)
   return titles.concat(texts)
@@ -2158,29 +2117,52 @@ Story.prototype.search = function(text, title, smart) {
     useRegExp ? text : text.searchRegExp(),
     caseSensitive ? "mg" : "img")
   linkTarget = null
-  var tiddlers = store.search(searchRegex, smart)
-  story.refreshAllTiddlers() // update highlighting within story tiddlers
-  var count = tiddlers.length
-  var p = '"""', q = useRegExp ? "/" : "", r = "''"
-  var msg = r + tiddler_(count) + " matching " + p + q + text + q + p +
-    (config.options.chkTitleOnly ? " in title" : "") +
-    (caseSensitive ? " (CASE SENSITIVE)" : "") + r
-  if (!useRegExp) {
-    var names = queryNames()
-    var punctuation = names.name.match(
-      new RegExp("[^ " + textPrims.anyLetter.slice(1), "g"))
-    msg += names.name.length > 50 || punctuation && punctuation.length > 2 ?
-      " -- possible link: " + asTiddlyLink(names.name) :
-      names.justOne ?
-        " -- possible link: " + asTiddlyLink(names.minimalName) :
-        " -- possible links: " + asTiddlyLink(names.minimalName) +
-                          ", " + asTiddlyLink(names.name)
+  if(smart)
+    ajaxPost('search', {
+      type: wikiType(),
+      edition: edition,
+      name: queryNames().name,
+      regExp: searchRegex,
+      changes: jsonChanges(),
+    },
+    function success(response) {
+      var json = JSON.parse(response)
+      var clash = json.clash
+      if(clash) {
+        _dump("clash between browser edition " + edition + " and " + clash)
+        displayMessage("edition clash")
+      } else {
+        dumpM("done")
+      }
+    },
+    function fail(data, status) {
+      dumpM('search failed in ruby')
+    })
+  else {
+    var tiddlers = store.search(searchRegex)
+    story.refreshAllTiddlers() // update highlighting within story tiddlers
+    var count = tiddlers.length
+    var p = '"""', q = useRegExp ? "/" : "", r = "''"
+    var msg = r + tiddler_(count) + " matching " + p + q + text + q + p +
+      (config.options.chkTitleOnly ? " in title" : "") +
+      (caseSensitive ? " (CASE SENSITIVE)" : "") + r
+    if (!useRegExp) {
+      var names = queryNames()
+      var punctuation = names.name.match(
+        new RegExp("[^ " + textPrims.anyLetter.slice(1), "g"))
+      msg += names.name.length > 50 || punctuation && punctuation.length > 2 ?
+        " -- possible link: " + asTiddlyLink(names.name) :
+        names.justOne ?
+          " -- possible link: " + asTiddlyLink(names.minimalName) :
+          " -- possible links: " + asTiddlyLink(names.minimalName) +
+                            ", " + asTiddlyLink(names.name)
+    }
+    for(var i = 0; i < count; i++) msg += "\n" + asTiddlyLink(tiddlers[i].title)
+    store.saveTiddler("Search","Search",msg,"SearchGuy",new Date(),{})
+    if(title) this.moveToTop(title)
+    this.displayTiddler(null,"Search")
+    this.moveToTop("Search")
   }
-  for(var i = 0; i < count; i++) msg += "\n" + asTiddlyLink(tiddlers[i].title)
-  store.saveTiddler("Search","Search",msg,"SearchGuy",new Date(),{})
-  if(title) this.moveToTop(title)
-  this.displayTiddler(null,"Search")
-  this.moveToTop("Search")
 }
 
 Story.prototype.findContainingTiddler = function(e)
