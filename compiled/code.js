@@ -2157,7 +2157,9 @@ Story.prototype.search = function(text, title, smart) {
         _dump("clash between browser edition " + edition + " and " + clash)
         displayMessage("edition clash")
       } else {
-        dumpM("search done")
+        var tiddlers = json.titles.map(t => store.fetchTiddler(t))
+        tiddlers.sort(basicSplitCompare) // needed?
+        showSearch(text, tiddlers, null, useRegExp, caseSensitive)
       }
     },
     function fail(data, status) {
