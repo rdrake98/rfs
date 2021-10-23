@@ -2107,6 +2107,31 @@ String.prototype.searchRegExp = function() {
   return c.replace(new RegExp("\\,$"),"(" + unWord + "|$)")
 }
 
+function showSearch(text, tiddlers, title, useRegExp, caseSensitive) {
+  story.refreshAllTiddlers() // update highlighting within story tiddlers
+  var count = tiddlers.length
+  var p = '"""', q = useRegExp ? "/" : "", r = "''"
+  var msg = r + tiddler_(count) + " matching " + p + q + text + q + p +
+    (config.options.chkTitleOnly ? " in title" : "") +
+    (caseSensitive ? " (CASE SENSITIVE)" : "") + r
+  if (!useRegExp) {
+    var names = queryNames()
+    var punctuation = names.name.match(
+      new RegExp("[^ " + textPrims.anyLetter.slice(1), "g"))
+    msg += names.name.length > 50 || punctuation && punctuation.length > 2 ?
+      " -- possible link: " + asTiddlyLink(names.name) :
+      names.justOne ?
+        " -- possible link: " + asTiddlyLink(names.minimalName) :
+        " -- possible links: " + asTiddlyLink(names.minimalName) +
+                          ", " + asTiddlyLink(names.name)
+  }
+  for(var i = 0; i < count; i++) msg += "\n" + asTiddlyLink(tiddlers[i].title)
+  store.saveTiddler("Search","Search",msg,"SearchGuy",new Date(),{})
+  if(title) this.moveToTop(title)
+  story.displayTiddler(null,"Search")
+  story.moveToTop("Search")
+}
+
 Story.prototype.search = function(text, title, smart) {
   if(!text) return
   var useRegExp = config.options.chkRegExp
@@ -2140,28 +2165,7 @@ Story.prototype.search = function(text, title, smart) {
     })
   else {
     var tiddlers = store.search(searchRegex)
-    story.refreshAllTiddlers() // update highlighting within story tiddlers
-    var count = tiddlers.length
-    var p = '"""', q = useRegExp ? "/" : "", r = "''"
-    var msg = r + tiddler_(count) + " matching " + p + q + text + q + p +
-      (config.options.chkTitleOnly ? " in title" : "") +
-      (caseSensitive ? " (CASE SENSITIVE)" : "") + r
-    if (!useRegExp) {
-      var names = queryNames()
-      var punctuation = names.name.match(
-        new RegExp("[^ " + textPrims.anyLetter.slice(1), "g"))
-      msg += names.name.length > 50 || punctuation && punctuation.length > 2 ?
-        " -- possible link: " + asTiddlyLink(names.name) :
-        names.justOne ?
-          " -- possible link: " + asTiddlyLink(names.minimalName) :
-          " -- possible links: " + asTiddlyLink(names.minimalName) +
-                            ", " + asTiddlyLink(names.name)
-    }
-    for(var i = 0; i < count; i++) msg += "\n" + asTiddlyLink(tiddlers[i].title)
-    store.saveTiddler("Search","Search",msg,"SearchGuy",new Date(),{})
-    if(title) this.moveToTop(title)
-    this.displayTiddler(null,"Search")
-    this.moveToTop("Search")
+    showSearch(text, tiddlers, title, useRegExp, caseSensitive)
   }
 }
 
