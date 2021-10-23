@@ -200,6 +200,10 @@ class Tiddler
     WikiText.new(@content).link(@wiki, search_text, target, unlink, overlink)
   end
 
+  def link_changes?(search_text)
+    link(search_text, nil, false, false)[0] != @content
+  end
+
   def to_h
     fields = {
       "splitname" => splitname,

@@ -299,6 +299,9 @@ class Splitter
     re = Regexp.new(regex.match(/\/(.*)\//)[1])
     ts = tiddlers.select{|t| t.content =~ re && !t.exclude?}
     puts "#{ts.size} tiddlers matching"
+    ts.select!{|t| !t.tiddler_links.include?(search_text) &&
+                   t.link_changes?(search_text)}
+    puts "#{ts.size} may be worth linking"
     ts.map(&:title)
   end
 
