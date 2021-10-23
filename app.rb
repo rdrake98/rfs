@@ -98,8 +98,8 @@ class App < Roda
       r.post "search" do
         response = {}
         p = r.params
-        type, name, regex, edition = 
-          p['type'], p['name'], p['regex'], p['edition']
+        type, name, regex, caseSensitive, edition = 
+          p['type'], p['name'], p['regex'], p['case'], p['edition']
         puts "searching for '#{name}' using '#{regex}' in #{type}"
         normal = wiki(type, true)
         wiki = wiki(type)
@@ -109,7 +109,7 @@ class App < Roda
         else
           wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
           wiki.add_tiddlers(p['changes'])
-          response["titles"] = wiki.search(regex, name)
+          response["titles"] = wiki.search(regex, name, caseSensitive)
         end
         response.to_json
       end

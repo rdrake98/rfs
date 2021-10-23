@@ -295,8 +295,11 @@ class Splitter
     titles_changed
   end
 
-  def search(regex, search_text)
-    re = Regexp.new(regex.match(/\/(.*)\//)[1])
+  def search(regex, search_text, caseSensitive)
+    options = caseSensitive ?
+      Regexp::MULTILINE : 
+      Regexp::MULTILINE | Regexp::IGNORECASE
+    re = Regexp.new(regex.match(/\/(.*)\//)[1], options)
     ts = tiddlers.select{|t| t.content =~ re && !t.exclude?}
     puts "#{ts.size} tiddlers matching"
     ts.select! do |tiddler| 

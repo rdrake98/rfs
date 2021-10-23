@@ -2152,6 +2152,7 @@ Story.prototype.search = function(text, title, smart) {
       edition: edition,
       name: queryNames().name,
       regex: searchRegex,
+      case: caseSensitive,
       changes: jsonChanges(),
     },
     function success(response) {
