@@ -2107,11 +2107,12 @@ String.prototype.searchRegExp = function() {
   return c.replace(new RegExp("\\,$"),"(" + unWord + "|$)")
 }
 
-function showSearch(text, tiddlers, title, useRegExp, caseSensitive) {
+function showSearch(text, tiddlers, title, useRegExp, caseSensitive, smart) {
   story.refreshAllTiddlers() // update highlighting within story tiddlers
   var count = tiddlers.length
   var p = '"""', q = useRegExp ? "/" : "", r = "''"
-  var msg = r + tiddler_(count) + " matching " + p + q + text + q + p +
+  var s = smart ? "linkable " : ""
+  var msg = r + tiddler_(count) + " matching " + s + p + q + text + q + p +
     (config.options.chkTitleOnly ? " in title" : "") +
     (caseSensitive ? " (CASE SENSITIVE)" : "") + r
   if (!useRegExp) {
@@ -2159,7 +2160,7 @@ Story.prototype.search = function(text, title, smart) {
       } else {
         var tiddlers = json.titles.map(t => store.fetchTiddler(t))
         tiddlers.sort(basicSplitCompare) // needed?
-        showSearch(text, tiddlers, null, useRegExp, caseSensitive)
+        showSearch(text, tiddlers, null, useRegExp, caseSensitive, true)
       }
     },
     function fail(data, status) {
