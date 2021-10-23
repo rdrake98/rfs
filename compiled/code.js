@@ -1250,7 +1250,10 @@ macros.search.onClick = function(e)
 {
   var text = this.nextSibling.value
   doSearch(
-    config.options.chkRegExp ? text : text.toLowerCase(), null, e.altKey)
+    config.options.chkRegExp || e.altKey ? text : text.toLowerCase(), 
+    null, 
+    e.altKey
+  )
 }
 
 macros.search.onKeyPress = function(e)
@@ -2141,7 +2144,7 @@ Story.prototype.search = function(text, title, smart) {
   searchText = text
   searchRegex = new RegExp(
     useRegExp ? text : text.searchRegExp(),
-    caseSensitive ? "mg" : "img")
+    caseSensitive ? "mg" : "mig")
   linkTarget = null
   if(smart)
     ajaxPost('search', {
