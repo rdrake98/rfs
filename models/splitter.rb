@@ -297,8 +297,8 @@ class Splitter
 
   def search(regex, search_text)
     re = Regexp.new(regex.match(/\/(.*)\//)[1])
-    ts = tiddlers.reject(&:exclude?).select{|t| t.content =~ re}
-    puts ts.size
+    ts = tiddlers.select{|t| t.content =~ re && !t.exclude?}
+    puts "#{ts.size} tiddlers matching"
     ts.map(&:title)
   end
 
