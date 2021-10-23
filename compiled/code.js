@@ -2122,7 +2122,7 @@ Story.prototype.search = function(text, title, smart) {
       type: wikiType(),
       edition: edition,
       name: queryNames().name,
-      regExp: searchRegex,
+      regex: searchRegex,
       changes: jsonChanges(),
     },
     function success(response) {
@@ -2132,7 +2132,7 @@ Story.prototype.search = function(text, title, smart) {
         _dump("clash between browser edition " + edition + " and " + clash)
         displayMessage("edition clash")
       } else {
-        dumpM("done")
+        dumpM("search done")
       }
     },
     function fail(data, status) {

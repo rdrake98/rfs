@@ -295,8 +295,8 @@ class Splitter
     titles_changed
   end
 
-  def search(regExp, search_text)
-    re = Regexp.new(regExp.match(/\/(.*)\//)[1])
+  def search(regex, search_text)
+    re = Regexp.new(regex.match(/\/(.*)\//)[1])
     ts = tiddlers.reject(&:exclude?).select{|t| t.content =~ re}
     puts ts.size
     ts.map(&:title)
