@@ -301,7 +301,7 @@ class Splitter
     puts "#{ts.size} tiddlers matching"
     ref = referent(search_text)
     (ts -= [ref]).select! do |tiddler| 
-      !tiddler.tiddlers_linked.include?(ref) &&
+      !(ref && tiddler.tiddlers_linked.include?(ref)) &&
       tiddler.link_changes?(search_text)
     end
     puts "#{ts.size} may be worth linking"
