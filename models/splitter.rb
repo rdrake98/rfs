@@ -300,12 +300,12 @@ class Splitter
       Regexp::MULTILINE : 
       Regexp::MULTILINE | Regexp::IGNORECASE
     re = Regexp.new(regex.match(/\/(.*)\//)[1], options)
-    ts = tiddlers.select{|t| t.content =~ re && !t.exclude?}
+    ts = normal_tiddlers.select{|t| t.content =~ re}
     puts "#{ts.size} tiddlers matching"
+    ref = referent(search_text)
     ts.select! do |tiddler| 
-      tiddler.title != search_text &&
-      tiddler.splitname != search_text &&
-      !tiddler.tiddler_links.include?(search_text) &&
+      tiddler != ref &&
+      !tiddler.tiddlers_linked.include?(ref) &&
       tiddler.link_changes?(search_text)
     end
     puts "#{ts.size} may be worth linking"
