@@ -223,8 +223,8 @@ class Tiddler
 
   def bulk_change
     specs = @content.lines[0].chomp.split(", ")
-    return "[]" if specs.size != 3
-    from, to, scope = specs
+    return "[]" if specs.size != 2 # && specs[1] != "link"
+    from, to = specs
     re = /^\"\"\"(.*)\"\"\"$/
     from = from =~ re ? $1 : from
     to = to =~ re ? $1 : to
@@ -232,10 +232,7 @@ class Tiddler
       from = /(\W)#{from[1..-1]}/
       to = "\\1#{to}"
     end
-    targets = scope == "all" ?
-      @wiki.normal_tiddlers - [self] :
-      @wiki[scope].tiddlers_linked
-    edits = targets.select do |t|
+    edits = (@wiki.normal_tiddlers - [self]).select do |t|
       old_content = t.content
       new_content = old_content.sub(from, to)
       t.update_content(new_content, true)
