@@ -296,10 +296,7 @@ class Splitter
   end
 
   def search(regex, search_text, caseSensitive)
-    options = caseSensitive ?
-      Regexp::MULTILINE : 
-      Regexp::MULTILINE | Regexp::IGNORECASE
-    re = Regexp.new(regex.match(/\/(.*)\//)[1], options)
+    re = Regexp.new(regex.match(/\/(.*)\//)[1], Regexp::MULTILINE)
     ts = normal_tiddlers.select{|t| t.content =~ re}
     puts "#{ts.size} tiddlers matching"
     ref = referent(search_text)
