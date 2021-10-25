@@ -297,11 +297,10 @@ class Splitter
 
   def search(regex, search_text, caseSensitive)
     re = Regexp.new(regex.match(/\/(.*)\//)[1], Regexp::MULTILINE)
-    ts = normal_tiddlers.select{|t| t.content =~ re}
+    ts = normal_tiddlers.select{|tiddler| tiddler.content =~ re}
     puts "#{ts.size} tiddlers matching"
     ref = referent(search_text)
-    ts.select! do |tiddler| 
-      tiddler != ref &&
+    (ts -= [ref]).select! do |tiddler| 
       !tiddler.tiddlers_linked.include?(ref) &&
       tiddler.link_changes?(search_text)
     end
