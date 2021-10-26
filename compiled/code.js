@@ -2146,7 +2146,8 @@ Story.prototype.search = function(text, title, smart) {
     useRegExp ? text : text.searchRegExp(),
     caseSensitive ? "mg" : "mig")
   linkTarget = null
-  if(smart)
+  if(smart) {
+    dumpM("doing smart search...")
     ajaxPost('search', {
       type: wikiType(),
       edition: edition,
@@ -2170,8 +2171,8 @@ Story.prototype.search = function(text, title, smart) {
     function fail(data, status) {
       dumpM('search failed in ruby')
     })
-  else {
-    var tiddlers = store.search(searchRegex)
+  } else {
+    tiddlers = store.search(searchRegex)
     showSearch(text, tiddlers, title, useRegExp, caseSensitive)
   }
 }
