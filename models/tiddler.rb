@@ -234,10 +234,7 @@ class Tiddler
       end
     end
     candidates = @wiki.normal_tiddlers - [self]
-    if linking
-      re = Regexp.new(specs[0], true)
-      candidates.select!{|t| t.content =~ re}
-    end
+    candidates.select!{|t| t.content =~ Regexp.new(specs[0], true)} if linking
     edits = candidates.select do |t|
       old_content = t.content
       new_content = linking ? 
