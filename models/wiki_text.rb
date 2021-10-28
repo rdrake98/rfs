@@ -81,9 +81,10 @@ class WikiText
         wikiNameIndex = names.minimalName == names.wikiName ?
           blanked =~ forWikiing : nil
         offset = match.begin(0)
-        replacer = target ? "[[" + match[0] + "|" + target + "]]" :
+        insert = offset > 0 && textForLink[offset-1] == "[" ? "''''" : ""
+        replacer = target ? insert + "[[" + match[0] + "|" + target + "]]" :
           wikiNameIndex && offset - wikiNameIndex > -1 ?
-            names.wikiName : "[[" + match[0] + "]]"
+            names.wikiName : insert + "[[" + match[0] + "]]"
         textForLink = textForLink[offset..-1].sub(forBracketting, replacer)
       end
       newText = newText[0...startPos+offset] + textForLink
