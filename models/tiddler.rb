@@ -222,19 +222,19 @@ class Tiddler
   end
 
   def bulk_change
-    specs = @content.lines[0].chomp.split(", ")
-    re = /^\"\"\"(.*)\"\"\"$/
-    specs = specs.map{|spec| spec =~ re ? $1 : spec}
-    linking = specs[1] == "link"
-    if !linking
-      from, to = specs
+    specs = @content.lines[0].chomp.split(", ").map{ |spec|
+      spec =~ /^\"\"\"(.*)\"\"\"$/ ? $1 : spec }
+    from, to = specs
+    linking = to == "link"
+    candidates = @wiki.normal_tiddlers - [self]
+    if linking
+      candidates.select!{|t| t.content =~ Regexp.new(specs[0], true)}
+    else
       if from[0] == ","
         from = /(\W)#{from[1..-1]}/
         to = "\\1#{to}"
       end
     end
-    candidates = @wiki.normal_tiddlers - [self]
-    candidates.select!{|t| t.content =~ Regexp.new(specs[0], true)} if linking
     edits = candidates.select do |t|
       old_content = t.content
       new_content = linking ? 
