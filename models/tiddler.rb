@@ -226,20 +226,20 @@ class Tiddler
       spec =~ /^\"\"\"(.*)\"\"\"$/ ? $1 : spec }
     from, to = specs
     linking = to == "link"
+    comma = from[0] == ","
+    fromre = comma ? /(\W|^)#{from[1..-1]}/ : /#{from}/
     candidates = @wiki.normal_tiddlers - [self]
     if linking
-      candidates.select!{|t| t.content =~ Regexp.new(specs[0], true)}
-    else
-      if from[0] == ","
-        from = /(\W)#{from[1..-1]}/
-        to = "\\1#{to}"
-      end
+      candidates.select!{|t| t.content =~ fromre}
+      from = from[1..-1] if comma
+    elsif comma
+      to = "\\1#{to}"
     end
     edits = candidates.select do |t|
       old_content = t.content
       new_content = linking ? 
-        t.link(specs[0], specs[2], false, false)[0] :
-        old_content.sub(from, to)
+        t.link(from, specs[2], false, false)[0] :
+        old_content.sub(fromre, to)
       t.update_content(new_content, true)
       old_content != new_content
     end
