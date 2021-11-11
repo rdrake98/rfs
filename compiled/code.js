@@ -2689,6 +2689,7 @@ function getTiddlyLinkInfo(title,currClasses)
   classes.pushUnique("tiddlyLink")
   var tiddler = store.findTarget(title)
   if(tiddler) {
+    if(!tiddler.getSubtitle){console.log(tiddler); return null}
     var subTitle = tiddler.getSubtitle()
     classes.pushUnique("tiddlyLinkExisting")
     classes.remove("tiddlyLinkNonExisting")
@@ -2726,6 +2727,7 @@ function createTiddlyLink(place,title,includeText,linkedFromTiddler,referer)
   var title = $.trim(title)
   var text = includeText ? title : null
   var i = getTiddlyLinkInfo(title)
+  if(!i) console.log(title)
   var btn = createTiddlyButton(place,text,i.subTitle,onClickTiddlerLink,i.classes)
   btn.setAttribute("refresh","link")
   btn.setAttribute("tiddlyLink", i.targetTitle)
