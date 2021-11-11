@@ -2689,7 +2689,6 @@ function getTiddlyLinkInfo(title,currClasses)
   classes.pushUnique("tiddlyLink")
   var tiddler = store.findTarget(title)
   if(tiddler) {
-    if(!tiddler.getSubtitle){console.log(tiddler); return null}
     var subTitle = tiddler.getSubtitle()
     classes.pushUnique("tiddlyLinkExisting")
     classes.remove("tiddlyLinkNonExisting")
@@ -2727,7 +2726,6 @@ function createTiddlyLink(place,title,includeText,linkedFromTiddler,referer)
   var title = $.trim(title)
   var text = includeText ? title : null
   var i = getTiddlyLinkInfo(title)
-  if(!i) console.log(title)
   var btn = createTiddlyButton(place,text,i.subTitle,onClickTiddlerLink,i.classes)
   btn.setAttribute("refresh","link")
   btn.setAttribute("tiddlyLink", i.targetTitle)
@@ -4080,18 +4078,17 @@ commands.link.handler = function(event,src,title)
   }
 }
 
-function getOutput(limit) {
-  var limit = limit || 999999
+function getOutput() {
   var text = ""
+  var dev = wikiType() == "dev"
   store.forEachTiddler(function(title,tiddler) {
-    if(limit > 0) {
+    if(!dev || title != "StrangeOne") { // kludge to get dev to produce
       text += "<h3>\n" + title + "\n</h3>\n"
       var div = document.createElement("div")
       wikify(tiddler.text, div, null, tiddler)
       var inner = div.innerHTML.replace(/<br>/g, "<br>\n")
       var comment = "<!-- " + "getOutput " + title + " -->\n"
       text += "<div>\n" + inner + "\n</div> " + comment
-      limit -= 1
     }
   })
   return text
