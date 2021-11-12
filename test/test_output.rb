@@ -11,18 +11,13 @@ class TestOutput < MiniTest::Test
   wiki = Splitter.new(wiki_path)
   one = ARGV[1]
   all = !few && !one
-  re = /src=".*?"/
-  re2 = /href="txmt:.*?"/
   describe "all" do
     Regex.scan_output(path).each_with_index do |chunk, i|
       name, output = chunk
       # 95 seems to be number of tests in RubyTests
       if all || few && (i < 95 || name =~ /RFF\d\d/) || one && name == one
         it "output for '#{name}'" do
-          output.gsub!(re, 'src="image/URL"')
-          output.gsub!(re2, 'src="textmate/URL"')
-          wiki_output = wiki[name].output.gsub(re, 'src="image/URL"')
-          wiki_output.gsub!(re2, 'src="textmate/URL"')
+          output, wiki_output = wiki[name].fix_outputs(output)
           assert_equal(output, wiki_output)
         end
       end
