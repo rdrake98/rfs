@@ -17,12 +17,14 @@ class TestOutput < MiniTest::Test
   re2 = /href="txmt:.*?"/
   last_name = "--"
   count = 0
+  first = nil
   describe "all" do
     Regex.scan_output(path).each_with_index do |chunk, i|
       name, output = chunk
-      if all || few && (i < limit || name =~ /RFF\d\d/) || one && name == one
-        last_name = name
+      if all || few && (i <= limit + 1 || name =~ /RFF\d\d/) || one && name == one
+        last_name = name unless name =~ /RFF\d\d/
         count += 1
+        first = i unless first
         it "output for '#{name}'" do
           output.gsub!(re, 'src="image/URL"')
           output.gsub!(re2, 'src="textmate/URL"')
@@ -33,9 +35,8 @@ class TestOutput < MiniTest::Test
       end
     end
   end
-  puts last_name if few
+  puts first if few
   puts count if few
-  puts
+  puts last_name if few
   puts "ruby -e 'require \"Splitter\"; Splitter.#{type}[\"#{one}\"].output;' dd" if one
-  puts
 end
