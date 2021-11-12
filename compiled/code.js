@@ -4080,16 +4080,13 @@ commands.link.handler = function(event,src,title)
 
 function getOutput() {
   var text = ""
-  var dev = wikiType() == "dev"
   store.forEachTiddler(function(title,tiddler) {
-    if(!dev || title != "StrangeOne") { // kludge to get dev to produce
-      text += "<h3>\n" + title + "\n</h3>\n"
-      var div = document.createElement("div")
-      wikify(tiddler.text, div, null, tiddler)
-      var inner = div.innerHTML.replace(/<br>/g, "<br>\n")
-      var comment = "<!-- " + "getOutput " + title + " -->\n"
-      text += "<div>\n" + inner + "\n</div> " + comment
-    }
+    text += "<h3>\n" + title + "\n</h3>\n"
+    var div = document.createElement("div")
+    wikify(tiddler.text, div, null, tiddler)
+    var inner = div.innerHTML.replace(/<br>/g, "<br>\n")
+    var comment = "<!-- " + "getOutput " + title + " -->\n"
+    text += "<div>\n" + inner + "\n</div> " + comment
   })
   return text
 }
