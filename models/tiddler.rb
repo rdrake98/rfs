@@ -279,14 +279,13 @@ class Tiddler
     # puts @output if $dd
   end
 
+  def fix_output(output)
+    output.gsub!(/src=".*?"/, 'src="image/URL"')
+    output.gsub(/href="txmt:.*?"/, 'src="textmate/URL"')
+  end
+
   def fix_outputs(js_output)
-    re = /src=".*?"/
-    re2 = /href="txmt:.*?"/
-    js_output.gsub!(re, 'src="image/URL"')
-    js_output.gsub!(re2, 'src="textmate/URL"')
-    ruby_output = output.gsub(re, 'src="image/URL"')
-    ruby_output.gsub!(re2, 'src="textmate/URL"')
-    [js_output, ruby_output]
+    [fix_output(js_output), fix_output(output)]
   end
 
   def Tiddler.html(title, output)
