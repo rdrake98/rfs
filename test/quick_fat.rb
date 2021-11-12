@@ -14,7 +14,8 @@ unless scan.size == size
 end
 count = 0
 failures = scan.map do |name, output|
-  if wiki[name].output == output
+  js_output, ruby_output = wiki[name].fix_outputs(output)
+  if js_output == ruby_output
     count += 1
     nil
   else
