@@ -106,7 +106,8 @@ class Splitter
   end
 
   def titles_excluded
-    titles_linked("MacrosNotTo") + titles_linked("AcceptableDifferences")
+    titles_linked("MacrosNotTo") + titles_linked("AcceptableDifferences") +
+      ["Search", "DefaultTiddlers"]
   end
 
   def testing_tiddlers
@@ -115,7 +116,7 @@ class Splitter
   end
 
   def normal_tiddlers
-    tiddlers - [self["Search"], self["NewTiddlers"]]
+    tiddlers - [self["Search"], self["DefaultTiddlers"]]
   end
 
   def store_size

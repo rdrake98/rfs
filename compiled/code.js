@@ -4095,10 +4095,11 @@ function seed() {
   if(wikiType().length == 3)
     if(macros.unsavedChanges.full.size == 0) {
       dumpM("starting to seed...")
+      var output = getOutput()
       ajaxPost('seed', {
           type: wikiType(),
           edition: edition,
-          output: getOutput(),
+          output: output,
         },
         function success(response) {dumpM(response)},
         function fail() {dumpM("seed failure")}
