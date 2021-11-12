@@ -9,22 +9,17 @@ class TestOutput < MiniTest::Test
   wiki_path = Dir.data "#{type}_.html"
   path = Dir.data "#{type}_output.html"
   wiki = Splitter.new(wiki_path)
-  limit = few && wiki["RubyTests"].tiddler_links.size
-  puts limit
   one = ARGV[1]
   all = !few && !one
   re = /src=".*?"/
   re2 = /href="txmt:.*?"/
   last_name = "--"
-  count = 0
-  first = nil
   describe "all" do
     Regex.scan_output(path).each_with_index do |chunk, i|
       name, output = chunk
-      if all || few && (i <= limit + 1 || name =~ /RFF\d\d/) || one && name == one
+      # 95 seems to be number of tests in RubyTests
+      if all || few && (i < 95 || name =~ /RFF\d\d/) || one && name == one
         last_name = name unless name =~ /RFF\d\d/
-        count += 1
-        first = i unless first
         it "output for '#{name}'" do
           output.gsub!(re, 'src="image/URL"')
           output.gsub!(re2, 'src="textmate/URL"')
@@ -35,8 +30,6 @@ class TestOutput < MiniTest::Test
       end
     end
   end
-  puts first if few
-  puts count if few
   puts last_name if few
   puts "ruby -e 'require \"Splitter\"; Splitter.#{type}[\"#{one}\"].output;' dd" if one
 end
