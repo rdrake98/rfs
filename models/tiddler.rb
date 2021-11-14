@@ -288,7 +288,7 @@ class Tiddler
     ruby_output = output
     if $fixes && js_output != ruby_output
       $fixes += 1
-      $last_fix = [title, js_output, ruby_output]
+      $ex ||= [title, js_output, ruby_output] if js_output =~ /txmt/
     end
     [fix_output(js_output), fix_output(ruby_output)]
   end

@@ -37,8 +37,9 @@ class Wikifier
     href = !txmt || full || tilde ?
       link :
       "txmt://open?url=file://~/" + link[23..-1]
-    unless href =~ /#{Regex.urlPattern}/
-      href = "file://" + (href[0] == "/" ? "" : @wiki.parent_dir) + href
+    unless Regex.isUrl?(href)
+      # kludge as in js
+      href = "file:///Users/rd/Dropbox/" + href
       unless href =~ /\.(html|pdf)(#\S*)?$/
         href = "txmt://open?url=" + href
         txmt = true
