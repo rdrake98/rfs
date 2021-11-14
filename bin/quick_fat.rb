@@ -1,9 +1,10 @@
-# quick_fat.rb
+# bin/quick_fat.rb
 
 require 'splitter'
 
-wiki_path = Dir.data "fat_.html"
-path = Dir.data "fat_output.html"
+preamble = ARGV[0] ? "../#{ARGV[0]}/" : ""
+wiki_path = Dir.data "#{preamble}fat_.html"
+path = Dir.data "#{preamble}fat_output.html"
 wiki = Splitter.new(wiki_path)
 size = wiki.tiddlers.size
 puts "#{size} tiddlers"
