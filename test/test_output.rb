@@ -17,8 +17,7 @@ class TestOutput < MiniTest::Test
       # 95 seems to be number of tests in RubyTests
       if all || few && (i < 95 || name =~ /RFF\d\d/) || one && name == one
         it "output for '#{name}'" do
-          js_output, ruby_output = wiki[name].fix_outputs(output)
-          assert_equal(js_output, ruby_output)
+          assert_equal(output, wiki[name].output)
         end
       end
     end
