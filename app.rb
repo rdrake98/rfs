@@ -128,12 +128,19 @@ class App < Roda
         p = r.params
         type = p['type']
         wiki = wiki(type) # type is checked in javascript
-        if wiki.check_file_edition(p['edition'])
+        normal = type.size == 3
+        if normal && wiki.check_file_edition(p['edition'])
           "version clash"
         else
-          `cp $#{type} $data/#{type}_.html`
-          File.write(Dir.data("#{type}_output.html"), p['output'])
-          puts "#{type}_ and #{type}_output written"
+          output_file = if normal
+            `cp $#{type} $data/#{type}_.html`
+            puts "#{type}_ written"
+            Dir.data("#{type}_output.html")
+          else
+            "#{type[0..-6]}output.html"
+          end
+          File.write(output_file, p['output'])
+          puts "#{output_file} written"
           "seed success"
         end
       end

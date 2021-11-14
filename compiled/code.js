@@ -4092,11 +4092,12 @@ function getOutput() {
 }
 
 function seed() {
-  if(wikiType().length == 3)
+  var type = wikiType()
+  if(type.length == 3 || type.endsWith("fat_.html"))
     if(macros.unsavedChanges.full.size == 0) {
       dumpM("starting to seed...")
       ajaxPost('seed', {
-          type: wikiType(),
+          type: type,
           edition: edition,
           output: getOutput(),
         },
