@@ -2,6 +2,8 @@
 
 require 'splitter'
 
+$fixes = 0
+$last_fix = ""
 preamble = ARGV[0] ? "../#{ARGV[0]}/" : ""
 wiki = Splitter.new(Dir.data("#{preamble}fat_.html"))
 size = wiki.tiddlers.size
@@ -30,9 +32,10 @@ percent = 100 - percent
 puts "#{"%.1f" % (percent)}% failing - #{count}"
 failures = failures - wiki.titles_excluded
 puts "*** #{failures.size} failures ***" if failures.size != count
-exit if failures.size == 0
+# exit if failures.size == 0
 puts
 p failures if failures.size < 100
 puts
-puts "ruby test/test_output.rb fat #{failures.sample}"
-puts
+# puts "ruby test/test_output.rb fat #{failures.sample}"
+puts "#{$fixes} fixes"
+puts $last_fix

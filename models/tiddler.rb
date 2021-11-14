@@ -280,12 +280,17 @@ class Tiddler
   end
 
   def fix_output(output)
-    output.gsub!(/src=".*?"/, 'src="image/URL"')
-    output.gsub(/href="txmt:.*?"/, 'src="textmate/URL"')
+    output.gsub(/src=".*?"/, 'src="image/URL"').
+           gsub(/href="txmt:.*?"/, 'src="textmate/URL"')
   end
 
   def fix_outputs(js_output)
-    [fix_output(js_output), fix_output(output)]
+    ruby_output = output
+    if $fixes && js_output != ruby_output
+      $fixes += 1
+      $last_fix = [title, js_output, ruby_output]
+    end
+    [fix_output(js_output), fix_output(ruby_output)]
   end
 
   def Tiddler.html(title, output)

@@ -302,7 +302,9 @@ class Wikifier
           img.align = "left" if match[1].size > 0
           img.align = "right" if match[2].size > 0
           src = match[3].split(' ')
-          img.src = src[0]
+          link = src[0]
+          # kludge for tinys as in js
+          img.src = Regex.isUrl?(link) ? link : "/Users/rd/Dropbox/#{link}"
           if src[1]
             img.width = src[1]
           elsif match[3][-1] == " " && !img.align

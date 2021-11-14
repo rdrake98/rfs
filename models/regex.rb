@@ -3,6 +3,7 @@
 class Regex
   def self.initialize
     @urlPattern = "(?:file|http|https|mailto|ftp|irc|news|data):[^\\s'\"]+(?:/|\\b)"
+    @urlPatternR = /#{@urlPattern}/
     upperLetter = "[A-Z\u00c0-\u00de\u0150\u0170]"
     @upperStart = /^#{upperLetter}/
     lowerLetter = "[a-z0-9\u00df-\u00ff\u0151\u0171]"
@@ -62,6 +63,10 @@ class Regex
       end
     end
     [prettySplits, /^(#{recipes.join('|')})/]
+  end
+
+  def self.isUrl?(link)
+    link =~ @urlPatternR
   end
 
   def self.scan_output(filename)
