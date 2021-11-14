@@ -3,12 +3,10 @@
 require 'splitter'
 
 preamble = ARGV[0] ? "../#{ARGV[0]}/" : ""
-wiki_path = Dir.data "#{preamble}fat_.html"
-path = Dir.data "#{preamble}fat_output.html"
-wiki = Splitter.new(wiki_path)
+wiki = Splitter.new(Dir.data("#{preamble}fat_.html"))
 size = wiki.tiddlers.size
 puts "#{size} tiddlers"
-scan = Regex.scan_output(path)
+scan = Regex.scan_output(Dir.data("#{preamble}fat_output.html"))
 unless scan.size == size
   puts "#{scan.size} javascript tiddlers - exiting"
   exit 1
