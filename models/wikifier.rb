@@ -39,7 +39,7 @@ class Wikifier
       "txmt://open?url=file://~/" + link[23..-1]
     unless Regex.isUrl?(href)
       # kludge as in js
-      href = "file:///Users/rd/Dropbox/" + href
+      href = "file://#{Dir.home}/Dropbox/" + href
       unless href =~ /\.(html|pdf)(#\S*)?$/
         href = "txmt://open?url=" + href
         txmt = true
@@ -305,7 +305,7 @@ class Wikifier
           src = match[3].split(' ')
           link = src[0]
           # kludge for tinys as in js
-          img.src = Regex.isUrl?(link) ? link : "/Users/rd/Dropbox/#{link}"
+          img.src = Regex.isUrl?(link) ? link : "#{Dir.home}/Dropbox/#{link}"
           if src[1]
             img.width = src[1]
           elsif match[3][-1] == " " && !img.align

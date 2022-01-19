@@ -49,7 +49,7 @@ end
 
 def share_output(&block)
   out = capture_stdout(&block)
-  File.write("/Users/rd/Dropbox/_shared/out#{Time.now_dotted}.txt", out)
+  File.write("#{Dir.home}/Dropbox/_shared/out#{Time.now_dotted}.txt", out)
   puts out
 end
 
@@ -112,7 +112,7 @@ def snip(original_file)
   code = original_file == Dir.compiled("code.js")
   file = original_file.sub("#{Dir.home}/", "")
   prefix = file != original_file ? "../" : ""
-  require_relative "/Users/rd/scripts/textmate/base_tm"
+  require_relative "#{Dir.home}/scripts/textmate/base_tm"
   selection = TMSelection.new
   text = selection.text
   line = selection.line

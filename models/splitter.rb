@@ -240,11 +240,11 @@ class Splitter
   end
 
   def shared_changes_file(host=@host)
-    "/Users/rd/Dropbox/_changes/m#{host}_#{@type}.json"
+    "#{Dir.home}/Dropbox/_changes/m#{host}_#{@type}.json"
   end
 
   def shared_open_file(host=@host)
-    "/Users/rd/Dropbox/_changes/m#{host}_#{@type}_open.json"
+    "#{Dir.home}/Dropbox/_changes/m#{host}_#{@type}_open.json"
   end
 
   def add_changes(json, shared=true)
@@ -347,7 +347,7 @@ class Splitter
     @before.gsub!(/^(var edition = ").*";$/, '\1' + ed + '";')
     bits = @filename.split("/")
     protect = bits[-2] == "_backup"
-    filename = protect ? "/Users/rd/ww/_changed/#{bits[-1]}" : new_name(suffix)
+    filename = protect ? "#{Dir.home}/ww/_changed/#{bits[-1]}" : new_name(suffix)
     puts "writing edition #{edition} to #{filename}"
     File.write(filename, contents)
     protect ? filename : nil
@@ -432,7 +432,7 @@ class Splitter
   end
 
   def self.check_tiddlers(fixed=true)
-    f = fixed ? fat : new("/Users/rd/rf/_milestones/f181211.212407g.html")
+    f = fixed ? fat : new("#{Dir.home}/rf/_milestones/f181211.212407g.html")
     puts f.tiddlers.select {|t| t.content =~ /\n\Z/}.size
     puts f.tiddlers.select {|t| t.content =~ / (\n|\Z)/}.size
     puts f.tiddlers.select {|t| t.created.size != 12}.size

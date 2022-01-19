@@ -56,7 +56,7 @@ class Splitr < Splitter
     end
   end
 
-  def self.dir; "/Users/rd/rf/tiddlers3"; end
+  def self.dir; "#{Dir.home}/rf/tiddlers3"; end
 
   def write_tiddlers(time=nil, noisy=true, message=edition)
     # byebug if $dd
@@ -106,7 +106,7 @@ class Splitr < Splitter
 
   def self.test_write
     mkdir
-    write_sample('/Users/rd/rf/_history/_backup', 1, true)
+    write_sample(Dir.home + '/rf/_history/_backup', 1, true)
   end
 
   def save_time
