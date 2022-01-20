@@ -5,8 +5,8 @@ require 'regex'
 
 # X = $t1 && []
 # XX = $t1 && Struct.new(:tiddler, :type)
-require 'dd' if $dd
-require 'd' if $d
+# require 'dd' if $dd
+# require 'd' if $d
 
 class Wikifier
   attr_reader :output, :matchText, :source, :matchStart, :wiki

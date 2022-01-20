@@ -2,8 +2,8 @@
 
 require 'tiddler'
 require 'json'
-require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
-require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
+# require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
+# require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
 
 class Splitter
   attr_accessor :code, :filename
