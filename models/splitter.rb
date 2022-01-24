@@ -2,7 +2,7 @@
 
 require 'tiddler'
 require 'json'
-# require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
+require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
 # require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
 
 class Splitter
@@ -468,6 +468,7 @@ class Splitter
     titles = config_titles + (expand ? expanded(selected) : selected)
     divs = titles.map {|t| self[t]&.div_text}.join
     tiny_bytes = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
+    q "titles.size", "tiny_bytes.size" if $d
     filename = Dir.tinys "#{file}.html"
     File.write(filename, tiny_bytes)
     tiny = Splitter.new(filename)
