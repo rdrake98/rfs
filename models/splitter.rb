@@ -2,7 +2,7 @@
 
 require 'tiddler'
 require 'json'
-require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
+# require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
 # require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
 
 class Splitter
@@ -19,7 +19,9 @@ class Splitter
     @filename = filename
     @type = "dev" if @filename == Dir.dev
     @type = "fat" if @filename == Dir.fat
-    @backup_area = "#{@filename.split("/")[0..-2].join("/")}/_backup" if @type
+    atoms = @filename.split("/")
+    do_backup = @type || atoms[-1] == "bones.html"
+    @backup_area = do_backup && "#{atoms[0..-2].join("/")}/_backup"
     @tiddler_hash = {}
     @tiddler_splits = {}
     @host = hostc
@@ -61,7 +63,7 @@ class Splitter
   end
 
   def backup
-    return unless @type
+    return unless @backup_area
     command = "rsync -a #{@filename} #{@backup_area}/#{edition}"
     puts "backing up edition #{edition}"
     puts command
