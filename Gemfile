@@ -5,5 +5,4 @@ gem 'roda'
 gem 'rack-cors'
 
 # Testing
-gem 'shotgun'
 gem 'pry'
