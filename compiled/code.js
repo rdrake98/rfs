@@ -334,6 +334,7 @@ isExternalLink = function(link)
   if(store.isAvailable(link)) return false
   if(isUrl(link)) return true
   if(link.indexOf(".")!=-1 || link.indexOf("/")!=-1) return true
+  if(link.indexOf("^")==0) return true
   return false
 }
 
@@ -2656,8 +2657,9 @@ function createExternalLink(place,url,label)
 {
   var link = document.createElement("a")
   link.className = "externalLink"
-  var txmt_ = url.indexOf("txmt://") == 0
-  var txmt = url.indexOf("txmt://open?url=file://") == 0
+  var file = url.indexOf("^") == 0
+  var txmt_ = !file && url.indexOf("txmt://") == 0
+  var txmt = !file && url.indexOf("txmt://open?url=file://") == 0
   if (txmt_ && !txmt) {
     url = "txmt://open?url=file://" + url.slice(7)
     txmt = true
@@ -2665,12 +2667,12 @@ function createExternalLink(place,url,label)
   var full = url.indexOf("txmt://open?url=file:///") == 0
   var tilde = url.indexOf("txmt://open?url=file://~") == 0
   var href = !txmt || full || tilde ?
-    url :
+    file ? url.slice(1) : url :
     "txmt://open?url=file://~/" + url.slice(23)
   if(!isUrl(href) && !wikiType().match(/\/bones\//)) {
     // kludge follows
     href = "file:///Users/rd/Dropbox/" + href
-    if (!/\.(html|pdf)(#\S*)?$/.test(href)) {
+    if (!/\.(html|pdf)(#\S*)?$/.test(href) && !file) {
       href = "txmt://open?url=" + href
       txmt = true
     }
