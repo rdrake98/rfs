@@ -2651,7 +2651,7 @@ function createExternalLink(place,url,label)
 {
   var link = document.createElement("a")
   link.className = "externalLink"
-  var wfo = url.indexOf("^") == 0
+  var wfo = url.match(/^(\^+)/)
   var txmt_ = !wfo && url.indexOf("txmt://") == 0
   var txmt = !wfo && url.indexOf("txmt://open?url=file://") == 0
   if (txmt_ && !txmt) {
