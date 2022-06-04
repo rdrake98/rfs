@@ -2652,9 +2652,9 @@ function createExternalLink(place,url,label)
 {
   var link = document.createElement("a")
   link.className = "externalLink"
-  var file = url.indexOf("^") == 0
-  var txmt_ = !file && url.indexOf("txmt://") == 0
-  var txmt = !file && url.indexOf("txmt://open?url=file://") == 0
+  var wfo = url.indexOf("^") == 0
+  var txmt_ = !wfo && url.indexOf("txmt://") == 0
+  var txmt = !wfo && url.indexOf("txmt://open?url=file://") == 0
   if (txmt_ && !txmt) {
     url = "txmt://open?url=file://" + url.slice(7)
     txmt = true
@@ -2662,12 +2662,12 @@ function createExternalLink(place,url,label)
   var full = url.indexOf("txmt://open?url=file:///") == 0
   var tilde = url.indexOf("txmt://open?url=file://~") == 0
   var href = !txmt || full || tilde ?
-    file ? url.slice(1) : url :
+    wfo ? url.slice(1) : url :
     "txmt://open?url=file://~/" + url.slice(23)
   if(!isUrl(href) && !wikiType().match(/\/bones\//)) {
     // kludge follows
     href = "file:///Users/rd/Dropbox/" + href
-    if (!/\.(html|pdf)(#\S*)?$/.test(href) && !file) {
+    if (!/\.(html|pdf)(#\S*)?$/.test(href) && !wfo) {
       href = "txmt://open?url=" + href
       txmt = true
     }
