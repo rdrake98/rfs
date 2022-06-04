@@ -311,17 +311,6 @@ config.formatterHelpers = {
       } catch (ex) {
       }
   },
-
-  enclosedTextHelper: function(w)
-  {
-    this.lookaheadRegExp.lastIndex = w.matchStart
-    var lookaheadMatch = this.lookaheadRegExp.exec(w.source)
-    if(lookaheadMatch && lookaheadMatch.index == w.matchStart) {
-      var text = lookaheadMatch[1]
-      createTiddlyElement(w.output,this.element,null,null,text)
-      w.nextMatch = lookaheadMatch.index + lookaheadMatch[0].length
-    }
-  },
 }
 
 isUrl = function(link)
@@ -606,7 +595,13 @@ config.formatters = [
     default:
       break
     }
-    config.formatterHelpers.enclosedTextHelper.call(this,w)
+    this.lookaheadRegExp.lastIndex = w.matchStart
+    var lookaheadMatch = this.lookaheadRegExp.exec(w.source)
+    if(lookaheadMatch && lookaheadMatch.index == w.matchStart) {
+      var text = lookaheadMatch[1]
+      createTiddlyElement(w.output,this.element,null,null,text)
+      w.nextMatch = lookaheadMatch.index + lookaheadMatch[0].length
+    }
   }
 },
 
@@ -1251,8 +1246,8 @@ macros.search.onClick = function(e)
 {
   var text = this.nextSibling.value
   doSearch(
-    config.options.chkRegExp || e.altKey ? text : text.toLowerCase(), 
-    null, 
+    config.options.chkRegExp || e.altKey ? text : text.toLowerCase(),
+    null,
     e.altKey
   )
 }
@@ -3796,7 +3791,7 @@ macros.tiddlerDates = {
     var medited = tiddler.medited()
     var text = modified
     if(medited) text += " med " + medited.formatDay()
-    if(modified != created && !excludeTitle(tiddler.title)) 
+    if(modified != created && !excludeTitle(tiddler.title))
       text += " (created " + created + ")"
     $(place).text(text)
   }
@@ -3823,10 +3818,10 @@ macros.openTiddlers = {
       macros.tabs.switchTab(tabsets[0],"Open")
     if(!justRolled) commands.roll.anchor = null
     if(wikiType().length == 3) {
-      ajaxPost('order_change', 
+      ajaxPost('order_change',
         {type: wikiType(), open: JSON.stringify(openTitles())},
         function success() {}, function fail() {})
-    }  
+    }
   },
 }
 
