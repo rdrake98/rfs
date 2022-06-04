@@ -2651,24 +2651,31 @@ function createExternalLink(place,url,label)
 {
   var link = document.createElement("a")
   link.className = "externalLink"
+  var txmt = false
+  var href = url
   var wfo = url.match(/^(\^+)/)
-  var txmt_ = !wfo && url.indexOf("txmt://") == 0
-  var txmt = !wfo && url.indexOf("txmt://open?url=file://") == 0
-  if (txmt_ && !txmt) {
-    url = "txmt://open?url=file://" + url.slice(7)
-    txmt = true
-  }
-  var full = url.indexOf("txmt://open?url=file:///") == 0
-  var tilde = url.indexOf("txmt://open?url=file://~") == 0
-  var href = !txmt || full || tilde ?
-    wfo ? url.slice(1) : url :
-    "txmt://open?url=file://~/" + url.slice(23)
-  if(!isUrl(href) && !wikiType().match(/\/bones\//)) {
-    // kludge follows
-    href = "file:///Users/rd/Dropbox/" + href
-    if (!/\.(html|pdf)(#\S*)?$/.test(href) && !wfo) {
-      href = "txmt://open?url=" + href
+  if (wfo) {
+    var n = wfo[0].length
+    href = (n == 1 ? "file:///Users/rd/Dropbox/" :
+      n == 2 ? "file:///Users/rd/" : "file:///") + url.slice(n)
+  } else {
+    var txmt_ = url.indexOf("txmt://") == 0
+    txmt = url.indexOf("txmt://open?url=file://") == 0
+    if (txmt_ && !txmt) {
+      url = "txmt://open?url=file://" + url.slice(7)
       txmt = true
+    }
+    var full = url.indexOf("txmt://open?url=file:///") == 0
+    var tilde = url.indexOf("txmt://open?url=file://~") == 0
+    if (txmt && !full && !tilde)
+      href = "txmt://open?url=file://~/" + url.slice(23)
+    if(!isUrl(href) && !wikiType().match(/\/bones\//)) {
+      // kludge follows
+      href = "file:///Users/rd/Dropbox/" + href
+      if (!/\.(html|pdf)(#\S*)?$/.test(href)) {
+        href = "txmt://open?url=" + href
+        txmt = true
+      }
     }
   }
   link.href = href
