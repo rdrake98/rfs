@@ -322,8 +322,7 @@ isExternalLink = function(link)
 {
   if(store.isAvailable(link)) return false
   if(isUrl(link)) return true
-  if(link.indexOf(".")!=-1 || link.indexOf("/")!=-1) return true
-  if(link.indexOf("^")==0) return true
+  if(/^\^|[.\/]/.test(link)) return true
   return false
 }
 
