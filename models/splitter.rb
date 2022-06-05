@@ -19,8 +19,8 @@ class Splitter
     @filename = filename
     @type = "dev" if @filename == Dir.dev
     @type = "fat" if @filename == Dir.fat
-    atoms = @filename&.split("/") || []
-    do_backup = @type || atoms[-1] == "bones.html"
+    atoms = @filename&.split("/")
+    do_backup = @type || atoms && atoms[-1] == "bones.html"
     @backup_area = do_backup && "#{atoms[0..-2].join("/")}/_backup"
     @tiddler_hash = {}
     @tiddler_splits = {}
