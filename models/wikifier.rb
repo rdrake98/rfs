@@ -26,8 +26,8 @@ class Wikifier
     a = node_type.new("a")
     a.class = image ? "externalLink imageLink" : "externalLink"
     txmt = false
-    wfo = link.match(/^(\^+)/)
-    if wfo
+
+    if wfo = link.match(/^(\^+)/)
       n = wfo[1].size
       href = (n == 1 ? "file:///Users/rd/Dropbox/" :
         n == 2 ? "file:///Users/rd/" : "file:///") + link[n..-1]
