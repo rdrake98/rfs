@@ -28,8 +28,8 @@ class Wikifier
     txmt = false
     if wfo = link.match(/^(\^+)/)
       n = wfo[1].size
-      href = (n == 1 ? "file:///Users/rd/Dropbox/" :
-        n == 2 ? "file:///Users/rd/" : "file:///") + link[n..-1]
+      href = (n == 1 ? "file://#{Dir.home}/Dropbox/" :
+        n == 2 ? "file://#{Dir.home}/" : "file:///") + link[n..-1]
     else
       txmt_ = link.index("txmt://") == 0
       txmt = link.index("txmt://open?url=file://") == 0
@@ -37,11 +37,8 @@ class Wikifier
         link = "txmt://open?url=file://" + link[7..-1]
         txmt = true
       end
-      full = link.index("txmt://open?url=file:///") == 0
-
-      href = !txmt || full ?
-        link :
-        "txmt://open?url=file://~/" + link[23..-1]
+      href = !txmt || link.index("txmt://open?url=file:///") == 0 ?
+        link : "txmt://open?url=file://~/" + link[23..-1]
       unless Regex.isUrl?(href)
         # kludge as in js
         href = "file://#{Dir.home}/Dropbox/" + href
