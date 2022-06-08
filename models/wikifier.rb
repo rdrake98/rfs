@@ -25,24 +25,32 @@ class Wikifier
   def createExternalLink(text, link=text, image=false)
     a = node_type.new("a")
     a.class = image ? "externalLink imageLink" : "externalLink"
-    txmt_ = link.index("txmt://") == 0
-    txmt = link.index("txmt://open?url=file://") == 0
-    if txmt_ && !txmt
-      link = "txmt://open?url=file://" + link[7..-1]
-      txmt = true
-    end
-    full = link.index("txmt://open?url=file:///") == 0
-    tilde = link.index("txmt://open?url=file://~") == 0
-
-    href = !txmt || full || tilde ?
-      link :
-      "txmt://open?url=file://~/" + link[23..-1]
-    unless Regex.isUrl?(href)
-      # kludge as in js
-      href = "file://#{Dir.home}/Dropbox/" + href
-      unless href =~ /\.(html|pdf)(#\S*)?$/
-        href = "txmt://open?url=" + href
+    txmt = false
+    wfo = link.match(/^(\^+)/)
+    if wfo
+      n = wfo[1].size
+      href = (n == 1 ? "file:///Users/rd/Dropbox/" :
+        n == 2 ? "file:///Users/rd/" : "file:///") + link[n..-1]
+    else
+      txmt_ = link.index("txmt://") == 0
+      txmt = link.index("txmt://open?url=file://") == 0
+      if txmt_ && !txmt
+        link = "txmt://open?url=file://" + link[7..-1]
         txmt = true
+      end
+      full = link.index("txmt://open?url=file:///") == 0
+      tilde = link.index("txmt://open?url=file://~") == 0
+
+      href = !txmt || full || tilde ?
+        link :
+        "txmt://open?url=file://~/" + link[23..-1]
+      unless Regex.isUrl?(href)
+        # kludge as in js
+        href = "file://#{Dir.home}/Dropbox/" + href
+        unless href =~ /\.(html|pdf)(#\S*)?$/
+          href = "txmt://open?url=" + href
+          txmt = true
+        end
       end
     end
 
