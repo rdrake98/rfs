@@ -26,7 +26,6 @@ class Wikifier
     a = node_type.new("a")
     a.class = image ? "externalLink imageLink" : "externalLink"
     txmt = false
-
     if wfo = link.match(/^(\^+)/)
       n = wfo[1].size
       href = (n == 1 ? "file:///Users/rd/Dropbox/" :
@@ -39,9 +38,8 @@ class Wikifier
         txmt = true
       end
       full = link.index("txmt://open?url=file:///") == 0
-      tilde = link.index("txmt://open?url=file://~") == 0
 
-      href = !txmt || full || tilde ?
+      href = !txmt || full ?
         link :
         "txmt://open?url=file://~/" + link[23..-1]
       unless Regex.isUrl?(href)
