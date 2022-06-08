@@ -2665,8 +2665,7 @@ function createExternalLink(place,url,label)
       url = "txmt://open?url=file://" + url.slice(7)
       txmt = true
     }
-    var full = url.indexOf("txmt://open?url=file:///") == 0
-    if (txmt && !full)
+    if (txmt && !url.indexOf("txmt://open?url=file:///") == 0)
       href = "txmt://open?url=file://~/" + url.slice(23)
     if(!isUrl(href) && !wikiType().match(/\/bones\//)) {
       // kludge follows
