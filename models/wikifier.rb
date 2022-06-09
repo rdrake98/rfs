@@ -26,23 +26,25 @@ class Wikifier
     a = node_type.new("a")
     a.class = image ? "externalLink imageLink" : "externalLink"
     tpart, fpart = "txmt://open?url=file://", "file://#{Dir.home}/Dropbox/"
-    a.href = if n = (link =~ /^(\^+)/) && $1.size
+    a.href =
+    if n = (link =~ /^(\^+)/) && $1.size
       txmt = false
       (n == 1 ? fpart : n == 2 ? fpart[0..-9] : fpart[0..7]) + link[n..-1]
     else
       txmt = link.index(tpart) == 0
-      href = txmt && !link.index("#{tpart}/") ?
-        "#{tpart}~/#{link[23..-1]}" :
-        link
-      if !Regex.isUrl?(href)
-        if href =~ /\.(html|pdf)(#\S*)?$/
-          fpart + href
-        else
-          txmt = true
-          tpart[0..15] + fpart + href
-        end
+      if txmt && !link.index("#{tpart}/")
+        "#{tpart}~/#{link[23..-1]}"
       else
-        href
+        if Regex.isUrl?(link)
+          link
+        else
+          if link =~ /\.(html|pdf)(#\S*)?$/
+            fpart + link
+          else
+            txmt = true
+            tpart[0..15] + fpart + link
+          end
+        end
       end
     end
     # byebug if $dd
