@@ -30,9 +30,9 @@ class Wikifier
       txmt = false
       (n == 1 ? fpart : n == 2 ? fpart[0..-9] : fpart[0..7]) + link[n..-1]
     else
+      href = link
       txmt = link.index(tpart) == 0
-      href = !txmt || link.index("#{tpart}/") == 0 ?
-        link : "#{tpart}~/" + link[23..-1]
+      href = "#{tpart}~/#{link[23..-1]}" if txmt && link.index("#{tpart}/") != 0
       if !Regex.isUrl?(href)
         href = fpart + href
         unless href =~ /\.(html|pdf)(#\S*)?$/
