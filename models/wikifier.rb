@@ -27,9 +27,8 @@ class Wikifier
     a.class = image ? "externalLink imageLink" : "externalLink"
     tpart = "txmt://open?url=file://"
     fpart = "file://#{Dir.home}/Dropbox/"
-    if wfo = link.match(/^(\^+)/)
+    if n = link.match(/^(\^+)/)&.[](1)&.size
       txmt = false
-      n = wfo[1].size
       href = (n < 2 ? fpart : n < 3 ? fpart[0..-9] : fpart[0..7]) + link[n..-1]
     else
       txmt = link.index(tpart) == 0
