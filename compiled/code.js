@@ -2659,12 +2659,7 @@ function createExternalLink(place,url,label)
     href = (n == 1 ? "file:///Users/rd/Dropbox/" :
       n == 2 ? "file:///Users/rd/" : "file:///") + url.slice(n)
   } else {
-    var txmt_ = url.indexOf("txmt://") == 0
     txmt = url.indexOf("txmt://open?url=file://") == 0
-    if (txmt_ && !txmt) {
-      url = "txmt://open?url=file://" + url.slice(7)
-      txmt = true
-    }
     if (txmt && !url.indexOf("txmt://open?url=file:///") == 0)
       href = "txmt://open?url=file://~/" + url.slice(23)
     if(!isUrl(href) && !wikiType().match(/\/bones\//)) {
