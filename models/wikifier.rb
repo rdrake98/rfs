@@ -27,7 +27,7 @@ class Wikifier
     a.class = image ? "externalLink imageLink" : "externalLink"
     tpart, fpart = "txmt://open?url=file://", "file://#{Dir.home}/Dropbox/"
     a.href =
-    if n = (link =~ /^(\^+)/) && $1.size
+    if n = (link =~ /^(\^+)/) && $1.size # WFo
       txmt = false
       (n == 1 ? fpart : n == 2 ? fpart[0..-9] : fpart[0..7]) + link[n..-1]
     else
@@ -38,11 +38,11 @@ class Wikifier
         if Regex.isUrl?(link)
           link
         else
-          if link =~ /\.(html|pdf)(#\S*)?$/
+          if link =~ /\.(html|pdf)(#\S*)?$/ # don't open html or pdf in txmt
             fpart + link
           else
             txmt = true
-            tpart[0..15] + fpart + link
+            tpart[0..15] + fpart + link # open everything else in txmt
           end
         end
       end
