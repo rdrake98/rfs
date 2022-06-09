@@ -34,10 +34,11 @@ class Wikifier
       txmt = link.index(tpart) == 0
       href = "#{tpart}~/#{link[23..-1]}" if txmt && link.index("#{tpart}/") != 0
       if !Regex.isUrl?(href)
-        href = fpart + href
-        unless href =~ /\.(html|pdf)(#\S*)?$/
-          href = tpart[0..15] + href
+        href = if href =~ /\.(html|pdf)(#\S*)?$/
+          fpart + href
+        else
           txmt = true
+          tpart[0..15] + fpart + href
         end
       end
       href
