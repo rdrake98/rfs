@@ -25,9 +25,8 @@ class Wikifier
   def createExternalLink(text, link=text, image=false)
     a = node_type.new("a")
     a.class = image ? "externalLink imageLink" : "externalLink"
-    tpart = "txmt://open?url=file://"
-    fpart = "file://#{Dir.home}/Dropbox/"
-    if n = link.match(/^(\^+)/)&.[](1)&.size
+    tpart, fpart = "txmt://open?url=file://", "file://#{Dir.home}/Dropbox/"
+    if n = link.match(/^(\^+)/) && $1.size
       txmt = false
       href = (n < 2 ? fpart : n < 3 ? fpart[0..-9] : fpart[0..7]) + link[n..-1]
     else
@@ -35,7 +34,6 @@ class Wikifier
       href = !txmt || link.index("#{tpart}/") == 0 ?
         link : "#{tpart}~/" + link[23..-1]
       unless Regex.isUrl?(href)
-        # kludge as in js
         href = fpart + href
         unless href =~ /\.(html|pdf)(#\S*)?$/
           href = tpart[0..15] + href
@@ -43,7 +41,6 @@ class Wikifier
         end
       end
     end
-
     # byebug if $dd
     a.href = href
     a.title = "External link to #{link}"

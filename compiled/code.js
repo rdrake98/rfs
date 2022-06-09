@@ -2663,7 +2663,6 @@ function createExternalLink(place,url,label)
     if (txmt && !url.indexOf("txmt://open?url=file:///") == 0)
       href = "txmt://open?url=file://~/" + url.slice(23)
     if(!isUrl(href) && !wikiType().match(/\/bones\//)) {
-      // kludge follows
       href = "file:///Users/rd/Dropbox/" + href
       if (!/\.(html|pdf)(#\S*)?$/.test(href)) {
         href = "txmt://open?url=" + href
