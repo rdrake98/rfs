@@ -38,7 +38,7 @@ class Wikifier
         if Regex.isUrl?(link)
           link
         else
-          if link =~ /\.(html|pdf)(#\S*)?$/ # don't open html or pdf in txmt
+          if link =~ /\.(html|htm|pdf)(#\S*)?$/ # don't open html or pdf in txmt
             fpart + link
           else
             txmt = true

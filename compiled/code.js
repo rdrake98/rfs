@@ -2664,7 +2664,7 @@ function createExternalLink(place,url,label)
       href = "txmt://open?url=file://~/" + url.slice(23)
     if(!isUrl(href) && !wikiType().match(/\/bones\//)) {
       href = "file:///Users/rd/Dropbox/" + href
-      if (!/\.(html|pdf)(#\S*)?$/.test(href)) {
+      if (!/\.(html|htm|pdf)(#\S*)?$/.test(href)) {
         href = "txmt://open?url=" + href
         txmt = true
       }
