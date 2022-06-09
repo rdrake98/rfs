@@ -25,20 +25,21 @@ class Wikifier
   def createExternalLink(text, link=text, image=false)
     a = node_type.new("a")
     a.class = image ? "externalLink imageLink" : "externalLink"
-    txmt = false
+    tpart = "txmt://open?url=file://"
+    fpart = "file://#{Dir.home}/Dropbox/"
     if wfo = link.match(/^(\^+)/)
+      txmt = false
       n = wfo[1].size
-      href = (n == 1 ? "file://#{Dir.home}/Dropbox/" :
-        n == 2 ? "file://#{Dir.home}/" : "file:///") + link[n..-1]
+      href = (n < 2 ? fpart : n < 3 ? fpart[0..-9] : fpart[0..7]) + link[n..-1]
     else
-      txmt = link.index("txmt://open?url=file://") == 0
-      href = !txmt || link.index("txmt://open?url=file:///") == 0 ?
-        link : "txmt://open?url=file://~/" + link[23..-1]
+      txmt = link.index(tpart) == 0
+      href = !txmt || link.index("#{tpart}/") == 0 ?
+        link : "#{tpart}~/" + link[23..-1]
       unless Regex.isUrl?(href)
         # kludge as in js
-        href = "file://#{Dir.home}/Dropbox/" + href
+        href = fpart + href
         unless href =~ /\.(html|pdf)(#\S*)?$/
-          href = "txmt://open?url=" + href
+          href = tpart[0..15] + href
           txmt = true
         end
       end
