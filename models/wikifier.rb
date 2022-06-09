@@ -31,7 +31,7 @@ class Wikifier
       (n == 1 ? fpart : n == 2 ? fpart[0..-9] : fpart[0..7]) + link[n..-1]
     else
       txmt = link.index(tpart) == 0
-      href = txmt && link.index("#{tpart}/") != 0 ?
+      href = txmt && !link.index("#{tpart}/") ?
         "#{tpart}~/#{link[23..-1]}" :
         link
       if !Regex.isUrl?(href)
