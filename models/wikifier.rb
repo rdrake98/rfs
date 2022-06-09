@@ -30,18 +30,20 @@ class Wikifier
       txmt = false
       (n == 1 ? fpart : n == 2 ? fpart[0..-9] : fpart[0..7]) + link[n..-1]
     else
-      href = link
       txmt = link.index(tpart) == 0
-      href = "#{tpart}~/#{link[23..-1]}" if txmt && link.index("#{tpart}/") != 0
+      href = txmt && link.index("#{tpart}/") != 0 ?
+        "#{tpart}~/#{link[23..-1]}" :
+        link
       if !Regex.isUrl?(href)
-        href = if href =~ /\.(html|pdf)(#\S*)?$/
+        if href =~ /\.(html|pdf)(#\S*)?$/
           fpart + href
         else
           txmt = true
           tpart[0..15] + fpart + href
         end
+      else
+        href
       end
-      href
     end
     # byebug if $dd
     a.title = "External link to #{link}"
