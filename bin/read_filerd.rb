@@ -2,7 +2,7 @@
 
 require 'splitter'
 
-dir = ARGV[0] || "rd"
+dir = $dir || ARGV[0] || "rd"
 $fat = Splitter.fat
 tiddlers = $fat.tiddlers
 puts tiddlers.size
