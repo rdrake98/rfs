@@ -225,8 +225,7 @@ class Tiddler
     candidates = @wiki.normal_tiddlers - [self]
     specs = @content.lines[0].chomp.split(", ").map{ |spec|
       spec =~ /^\"\"\"(.*)\"\"\"$/ ? $1 : spec }
-    from, to, filter = specs
-    puts from, to, filter
+    from, to, link_target, filter = specs
     puts candidates.size
     if filter
       re = /file:\/\/\/Users\/(rd|richarddrake)\/(.*?)(\]\]|\s)/
@@ -247,10 +246,10 @@ class Tiddler
     edits = candidates.select do |t|
       old_content = t.content
       new_content = linking ?
-        t.link(from, specs[2], false, false)[0] :
+        t.link(from, link_target, false, false)[0] :
         filter ?
           old_content.gsub(fromre, to) :
-          old_content.sub(fromre, to)
+          old_content.sub(fromre, to) # no idea why only sub
       t.update_content(new_content, true)
       old_content != new_content
     end
