@@ -4,23 +4,33 @@ require 'wiki_with_tabs'
 class Wany < Roda
   puts "restarting wany"
   puts ENV["RUBYLIB"]
-  Fat = Splitter.fat
+  Fat = Wiki.fat
   puts Fat.tiddlers.size
 
   route do |r|
-    # r.on "public" do
-    #   r.post "search" do
-    #     response = {}
-    #     p = r.params
-    #     type, name, regex, caseSensitive, edition =
-    #       p['type'], p['name'], p['regex'], p['case'], p['edition']
-    #     puts "searching for '#{name}' using '#{regex}' in #{type}"
-    #     response.to_json
-    #   end
-    # end
-
     r.get "show" do
       Fat.tiddlers.size.to_s
+    end
+
+    r.get "copy_backups" do
+      WikiWithTabs.copy_backups
+    end
+
+    r.get "tabs" do
+      WikiWithTabs.new.show_final_tabs.to_s
+    end
+
+    r.get "unpeel" do
+      WikiWithTabs.unpeel
+    end
+
+    r.get "copy_tabs_to_fat" do
+      WikiWithTabs.copy_to_fat
+      "copy_to_fat complete"
+    end
+
+    r.get "commit_tabs_mods" do
+      WikiWithTabs.commit_mods
     end
   end
 end

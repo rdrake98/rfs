@@ -1,5 +1,5 @@
 require 'roda'
-require 'wiki_with_tabs'
+require 'splitter'
 
 class App < Roda
   puts "restarting rfs"
@@ -98,7 +98,7 @@ class App < Roda
       r.post "search" do
         response = {}
         p = r.params
-        type, name, regex, caseSensitive, edition = 
+        type, name, regex, caseSensitive, edition =
           p['type'], p['name'], p['regex'], p['case'], p['edition']
         puts "searching for '#{name}' using '#{regex}' in #{type}"
         normal = wiki(type, true)
@@ -144,27 +144,6 @@ class App < Roda
           "seed success"
         end
       end
-    end
-
-    r.get "copy_backups" do
-      WikiWithTabs.copy_backups
-    end
-
-    r.get "tabs" do
-      WikiWithTabs.new.show_final_tabs.to_s
-    end
-
-    r.get "unpeel" do
-      WikiWithTabs.unpeel
-    end
-
-    r.get "copy_tabs_to_fat" do
-      WikiWithTabs.copy_to_fat
-      "copy_to_fat complete"
-    end
-
-    r.get "commit_tabs_mods" do
-      WikiWithTabs.commit_mods
     end
 
     r.get "cp_other_dev" do
