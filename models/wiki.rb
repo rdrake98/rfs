@@ -7,7 +7,7 @@ class Wiki < Splitter
     $t1 = true
     $a = []
     $aa = Struct.new(:tiddler, :url)
-    self["WanyURLs"].output
-    puts $a
+    tiddlers.each(&:output)
+    puts $a.size
   end
 end
