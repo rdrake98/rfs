@@ -18,6 +18,7 @@ class Wiki < Splitter
     bg = $b.group_by &:tiddler;
     puts bg.size
     [ag, bg]
+    # ag, bg = fat.test_urls;
     # Xbox has the same
     # diff = ag.keys - bg.keys and the opposite
   end
