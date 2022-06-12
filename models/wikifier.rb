@@ -3,8 +3,6 @@
 require 'ruby_dom'
 require 'regex'
 
-# X = $t1 && []
-# XX = $t1 && Struct.new(:tiddler, :type)
 # require 'dd' if $dd
 # require 'd' if $d
 
@@ -47,6 +45,7 @@ class Wikifier
         end
       end
     end
+    $a << $aa.new($t, a.href) if $t1
     # byebug if $dd
     a.title = "External link to #{link}"
     a.target = "_blank" if !txmt
