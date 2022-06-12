@@ -149,7 +149,7 @@ class Tiddler
   def parse_external_links
     juice = @content.gsub(/(<html>.*?<\/html>|{{{.*?}}}|""".*?""")/m, " ")
     re = /(\[\[(.*?)\]\]|\[[<>]?img\[.*?\]\]|((http|https|file|ftp):\/\/\S*)(?=\s))/
-    " #{juice} ".scan(re).map do |a|
+    links = " #{juice} ".scan(re).map do |a|
       if a[1]
         pair = a[1].split("|")
         pair = [pair[0],pair[1..-1].join("|")] if pair.size > 2
@@ -163,6 +163,8 @@ class Tiddler
         nil
       end
     end.select(&:itself) # removing false, not nil
+    links.each{ |link| $b << $aa.new(@title, link[1]) } if $t1
+    links
   end
 
   def external_links

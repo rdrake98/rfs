@@ -8,10 +8,12 @@ class Wiki < Splitter
     $t1 = true
     $a = []
     $aa = Struct.new(:tiddler, :url)
+    $b = []
     puts Benchmark.measure {tiddlers.each(&:output)}
     puts Benchmark.measure {tiddlers.each(&:output)}
     puts Benchmark.measure {tiddlers.each(&:external_links)}
     puts Benchmark.measure {tiddlers.each(&:external_links)}
     puts $a.size
+    puts $b.size
   end
 end
