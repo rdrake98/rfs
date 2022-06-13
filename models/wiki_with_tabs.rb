@@ -98,6 +98,7 @@ class WikiWithTabs
   def self.set_last_backup(spec=Splitter.new(Dir.tinys "spec.html"), value)
     spec["LastBackup"].content = last_backup
     spec.write("")
+    "LastBackup in #{spec.filename} is now #{last_backup}"
   end
 
   def self.commit_mods
@@ -108,9 +109,7 @@ class WikiWithTabs
       dir = "backups/b#{ymd}%02d" %
         (Dir.cd(:tinys, 'backups').glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1)
       puts `cd $tinys; rsync -t --out-format=%n%L sb.html spec.html #{dir}`
-      set_last_backup(spec, last_backup)
-      message = "LastBackup in #{spec.filename} is now #{last_backup}"
-      puts message
+      message = set_last_backup(spec, last_backup).taps
       cleanup # slow and dirty
       Splitter.fat.commit_mods
       "commit_mods done: " + message
