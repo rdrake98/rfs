@@ -17,7 +17,9 @@ class Wany < Roda
     end
 
     r.get "tabs" do
-      WikiWithTabs.new.show_final_tabs.to_s
+      Benchmark.realtime do
+        WikiWithTabs.new.show_final_tabs.to_s
+      end.taps
     end
 
     r.get "unpeel" do

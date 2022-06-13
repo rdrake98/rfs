@@ -59,4 +59,17 @@ class Wiki < Splitter
     # TerribleItalicBug
     #   http://script.aculo.us)//
   end
+
+  def check_benchmark
+    $t1 = true
+    $aa = Struct.new(:tiddler, :url)
+    re = /^(http|https):\/\//
+    $b = []
+    Benchmark.realtime do
+      puts Benchmark.realtime {tiddlers.each(&:external_links)}
+      puts $b.size
+      puts Benchmark.realtime {$b.select!{ |s| s.url =~ re }}
+      puts $b.size
+    end.taps
+  end
 end
