@@ -83,7 +83,7 @@ class WikiWithTabs
     name = Dir.cd(Downloads).glob("session_buddy_backup_*.json")[-1].taps
     copied_local = Copied + (short_name = short_name(name))
     if File.file? copied_local
-      # `rm #{name}` want to try again and again
+      `rm #{name}` # want to try again and again but not using this!
       puts `rm -v #{copied_local}`
       `cd $tab_backups; mv -v #{short_name} _rejected`
     else
