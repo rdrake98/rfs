@@ -65,11 +65,8 @@ class Wiki < Splitter
     $aa = Struct.new(:tiddler, :url)
     re = /^(http|https):\/\//
     $b = []
-    Benchmark.realtime do
-      puts Benchmark.realtime {tiddlers.each(&:external_links)}
-      puts $b.size
-      puts Benchmark.realtime {$b.select!{ |s| s.url =~ re }}
-      puts $b.size
-    end.taps
+    timeb "total" do
+      timeb("elinks") {tiddlers.each(&:external_links)}
+    end
   end
 end

@@ -53,6 +53,13 @@ def share_output(&block)
   puts out
 end
 
+def timeb(label="", &block)
+  result = nil
+  seconds = Benchmark.realtime { result = block.call }
+  puts '%-15s%.3f' % [label, seconds]
+  result
+end
+
 class Object
   def in?(collection); collection.include?(self); end
 

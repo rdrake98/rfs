@@ -12,14 +12,12 @@ class Wany < Roda
       Fat.tiddlers.size.to_s
     end
 
-    r.get "copy_backups" do
+    r.get "copy_backups" do # when and why?
       WikiWithTabs.copy_backups
     end
 
     r.get "tabs" do
-      Benchmark.realtime do
-        WikiWithTabs.new.show_final_tabs.to_s
-      end.taps
+      timeb("total") { WikiWithTabs.new.show_final_tabs.to_s }
     end
 
     r.get "unpeel" do

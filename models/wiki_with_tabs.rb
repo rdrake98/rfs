@@ -6,14 +6,14 @@ require 'file_links'
 class WikiWithTabs
   attr_reader :wiki
   def initialize(name=nil, file=nil)
-    @wiki = file ? Wiki.new(Dir.data "#{file}.html") : Wiki.fat
+    timeb("fat") { @wiki = file ? Wiki.new(Dir.data "#{file}.html") : Wiki.fat }
     @spec = Splitter.new("#{file ? Dir.data : Dir.tinys}/spec.html")
     @stop_list = spec_for("StopListInitial")
     @preambles = spec_for("PreamblesInitial")
     @hash_preambles = spec_for("HashPreambles")
     @q_preambles = spec_for("QPreambles")
     last_backup = @spec["LastBackup"]&.content&.chomp # nil in old tests
-    self.class.copy_backups
+    timeb("copy_backups") { self.class.copy_backups } # old ones parked on mp
     all_names = self.class.read_all_names
     names = name ?
       [name] :
@@ -95,12 +95,6 @@ class WikiWithTabs
     Dir.cd(:tab_backups).glob("s*.js")
   end
 
-  def self.set_last_backup(spec=Splitter.new(Dir.tinys "spec.html"), value)
-    spec["LastBackup"].content = last_backup
-    spec.write("")
-    "LastBackup in #{spec.filename} is now #{last_backup}"
-  end
-
   def self.commit_mods
     last_backup = read_all_names[-1]
     spec = Splitter.new(Dir.tinys "spec.html")
@@ -109,7 +103,9 @@ class WikiWithTabs
       dir = "backups/b#{ymd}%02d" %
         (Dir.cd(:tinys, 'backups').glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1)
       puts `cd $tinys; rsync -t --out-format=%n%L sb.html spec.html #{dir}`
-      message = set_last_backup(spec, last_backup).taps
+      spec["LastBackup"].content = last_backup
+      spec.write("")
+      message = "LastBackup in #{spec.filename} is now #{last_backup}".taps
       cleanup # slow and dirty
       Splitter.fat.commit_mods
       "commit_mods done: " + message
@@ -155,10 +151,10 @@ class WikiWithTabs
     end
     tabs_wiki.create_new("Windows", tiddlers.join("\n"))
 
-    p initial_reduce
-    p second_reduce
-    p qs_reduce
-    p hashes_reduce
+    timeb("i_reduce") { p initial_reduce }
+    timeb("s_reduce") { p second_reduce }
+    timeb("q_reduce") { p qs_reduce }
+    timeb("h_reduce") { p hashes_reduce }
     wins = file_links.filter {|win| win.content.size > 0}
     tiddlers = ["ExternalURLs"]
     wins.each_with_index do |win, i|
