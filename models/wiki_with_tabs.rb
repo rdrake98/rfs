@@ -83,7 +83,7 @@ class WikiWithTabs
     name = Dir.cd(Downloads).glob("session_buddy_backup_*.json")[-1].taps
     copied_local = Copied + (short_name = short_name(name))
     if File.file? copied_local
-      `rm #{name}`
+      # `rm #{name}` want to try again and again
       puts `rm -v #{copied_local}`
       `cd $tab_backups; mv -v #{short_name} _rejected`
     else
@@ -95,10 +95,10 @@ class WikiWithTabs
     Dir.cd(:tab_backups).glob("s*.js")
   end
 
-  def self.commit_mods(force=false)
+  def self.commit_mods
     last_backup = read_all_names[-1]
     spec = Splitter.new(Dir.tinys "spec.html")
-    if force || spec["LastBackup"].content != last_backup
+    if spec["LastBackup"].content != last_backup
       ymd = Time.new.ymd
       dir = "backups/b#{ymd}%02d" %
         (Dir.cd(:tinys, 'backups').glob("b#{ymd}*")[-1]&.[](-2..-1).to_i + 1)
