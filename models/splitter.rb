@@ -364,7 +364,7 @@ class Splitter
   end
 
   def read_file_edition
-    new(@filename, false).edition # just used on fat and dev?
+    Splitter.new(@filename, false).edition # just used on fat and dev?
   end
 
   def check_file_edition(browser_edition, json=nil)

@@ -119,7 +119,7 @@ class App < Roda
         wiki = wiki("fat", true)
         wiki = reload if wrong_edition?(wiki)
         machine = from_self ? 'self' : 'm' + wiki.other_host
-        puts "adding changes to fat on startup from #{machine}"
+        puts "adding changes from #{machine} to fat on startup"
         wiki.other_changes(from_self)
       end
 
