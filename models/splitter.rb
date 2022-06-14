@@ -15,7 +15,7 @@ class Splitter
     (filename ? filename.split("/")[0..-2].join("/") : "unknown") + "/"
   end
 
-  def initialize(filename=nil)
+  def initialize(filename=nil, load_tiddlers=true)
     @filename = filename
     @type = "dev" if @filename == Dir.dev
     @type = "fat" if @filename == Dir.fat
@@ -32,6 +32,7 @@ class Splitter
         @before << line
       end
       @before << line
+      return unless load_tiddlers
       while (line = file.gets) =~ /<div title=.*/
         tiddler = Tiddler.from_file(self, file, line)
         self[tiddler.title] = tiddler
@@ -52,6 +53,10 @@ class Splitter
 
   def Splitter.fat
     new Dir.fat
+  end
+
+  def Splitter.fat_edition
+    new(Dir.fat, false).edition
   end
 
   def Splitter.dev
@@ -303,7 +308,7 @@ class Splitter
     ts = normal_tiddlers.select{|tiddler| tiddler.content =~ re}
     puts "#{ts.size} tiddlers matching"
     ref = referent(search_text)
-    (ts -= [ref]).select! do |tiddler| 
+    (ts -= [ref]).select! do |tiddler|
       !(ref && tiddler.tiddlers_linked.include?(ref)) &&
       tiddler.link_changes?(search_text)
     end

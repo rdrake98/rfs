@@ -129,7 +129,7 @@ class App < Roda
         type = p['type']
         wiki = wiki(type) # type is checked in javascript
         normal = type.size == 3
-        if normal && wiki.check_file_edition(p['edition'])
+        if normal && wiki.check_file_edition(p['edition']) # never true for dev
           "version clash"
         else
           output_file = if normal
