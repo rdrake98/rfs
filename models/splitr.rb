@@ -58,6 +58,11 @@ class Splitr < Splitter
 
   def self.dir; "#{Dir.home}/rf/tiddlers3"; end
 
+  def edition # copied from old Splitter
+    @before =~ /^var edition = "(.*)";$/
+    $1 || @filename
+  end
+
   def write_tiddlers(time=nil, noisy=true, message=edition)
     # byebug if $dd
     Dir.chdir(Splitr.dir) do

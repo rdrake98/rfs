@@ -88,8 +88,7 @@ class Splitter
   end
 
   def edition
-    @before =~ /^var edition = "(.*)";$/
-    $1 || @filename
+    @before =~ /^var edition = "(.*)";$/ && $1
   end
 
   def unsorted_tiddlers
@@ -365,13 +364,7 @@ class Splitter
   end
 
   def read_file_edition
-    # new(@filename, false).edition - is the nil below essential?
-    open(@filename) do |file|
-      until (line = file.gets) =~ /<div id="storeArea">/
-        return $1 if line =~ /^var edition = "(.*)";$/
-      end
-    end
-    nil
+    new(@filename, false).edition # just used on fat and dev?
   end
 
   def check_file_edition(browser_edition, json=nil)
