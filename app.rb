@@ -6,7 +6,7 @@ class App < Roda
   puts ENV["RUBYLIB"]
   Wikis = {}
 
-  def reload(type="fat", saving=true, edition=nil, changes=nil)
+  def reload(type="fat", saving=false, edition=nil, changes=nil)
     puts "reloading #{type} into server from file"
     wiki = type == "fat" ?
       Splitter.fat :
@@ -64,7 +64,7 @@ class App < Roda
         if clash
           {"clash" => clash.split(",")[0]}.to_json
         else
-          wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
+          wiki = reload(type) if normal && wrong_edition?(wiki, edition)
           wiki.add_tiddlers(p['changes'])
           wiki[title].bulk_change
         end
@@ -84,7 +84,7 @@ class App < Roda
         if clash
           response["clash"] = clash.split(",")[0]
         else
-          wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
+          wiki = reload(type) if normal && wrong_edition?(wiki, edition)
           wiki.add_tiddlers(p['changes'])
           unlink = p['unlink'] == "true"
           overlink = p['overlink'] == "true"
@@ -107,7 +107,7 @@ class App < Roda
         if clash
           response["clash"] = clash.split(",")[0]
         else
-          wiki = reload(type, false) if normal && wrong_edition?(wiki, edition)
+          wiki = reload(type) if normal && wrong_edition?(wiki, edition)
           wiki.add_tiddlers(p['changes'])
           response["titles"] = wiki.search(regex, name, caseSensitive)
         end
@@ -119,7 +119,7 @@ class App < Roda
         type = p['type']
         from_self = p['from_self']
         wiki = wiki(type, true)
-        wiki = reload(type, false) if wrong_edition?(wiki)
+        wiki = reload(type) if wrong_edition?(wiki)
         puts "serving changes from m#{wiki.other_host} for #{type} on startup"
         wiki.other_changes(from_self.true?)
       end
