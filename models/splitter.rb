@@ -388,8 +388,7 @@ class Splitter
   end
 
   def save(browser_edition, json)
-    clash = check_file_edition(browser_edition, json)
-    return clash if clash
+    if clash = check_file_edition(browser_edition, json); return clash; end
     commit_changes_file("before #{@type} saved") if @type
     add_changes(json)
     # qq :browser_edition, :edition if $dd
