@@ -365,6 +365,7 @@ class Splitter
   end
 
   def read_file_edition
+    # new(@filename, false).edition - is the nil below essential?
     open(@filename) do |file|
       until (line = file.gets) =~ /<div id="storeArea">/
         return $1 if line =~ /^var edition = "(.*)";$/

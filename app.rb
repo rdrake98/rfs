@@ -60,8 +60,7 @@ class App < Roda
         puts "bulk change based on #{title} in #{type}"
         normal = wiki(type, true)
         wiki = wiki(type)
-        clash = wiki.check_file_edition(edition)
-        if clash
+        if clash = wiki.check_file_edition(edition)
           {"clash" => clash.split(",")[0]}.to_json
         else
           wiki = reload(type) if normal && wrong_edition?(wiki, edition)
@@ -80,8 +79,7 @@ class App < Roda
         puts "#{p['action']} '#{name}'#{insert} in #{title} in #{type}"
         normal = wiki(type, true)
         wiki = wiki(type)
-        clash = wiki.check_file_edition(edition)
-        if clash
+        if clash = wiki.check_file_edition(edition)
           response["clash"] = clash.split(",")[0]
         else
           wiki = reload(type) if normal && wrong_edition?(wiki, edition)
@@ -103,8 +101,7 @@ class App < Roda
         puts "searching for '#{name}' using '#{regex}' in #{type}"
         normal = wiki(type, true)
         wiki = wiki(type)
-        clash = wiki.check_file_edition(edition)
-        if clash
+        if clash = wiki.check_file_edition(edition)
           response["clash"] = clash.split(",")[0]
         else
           wiki = reload(type) if normal && wrong_edition?(wiki, edition)
