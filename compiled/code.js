@@ -204,9 +204,8 @@ function main()
   var hash = decodeURIComponent(location.hash.substr(1))
   var plusChanges = hash.slice(0,12) == "plusChanges*"
   var fromSelf = plusChanges && hash.slice(12) == "*"
-  if(plusChanges && wikiType().length == 3) {
+  if(plusChanges && wikiType() == "fat") {
     ajaxPost('other_changes', {
-        type: wikiType(),
         from_self: fromSelf,
       },
       function success(response) {

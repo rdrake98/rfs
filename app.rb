@@ -20,6 +20,8 @@ class App < Roda
     wiki.edition != (latest_edition || wiki.read_file_edition)
   end
 
+  # reload("fat") if wrong_edition?(wiki)
+
   def wiki(type, strict=false)
     return Wikis[type] if Wikis[type]
     wiki = (type == "fat" ? Splitter.fat :
@@ -113,10 +115,9 @@ class App < Roda
 
       r.post "other_changes" do
         p = r.params
-        type = p['type']
         from_self = p['from_self']
-        wiki = wiki(type, true)
-        wiki = reload(type) if wrong_edition?(wiki)
+        wiki = wiki("fat", true)
+        wiki = reload("fat") if wrong_edition?(wiki)
         puts "serving changes from m#{wiki.other_host} for #{type} on startup"
         wiki.other_changes(from_self.true?)
       end
