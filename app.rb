@@ -115,11 +115,12 @@ class App < Roda
 
       r.post "other_changes" do
         p = r.params
-        from_self = p['from_self']
+        from_self = p['from_self'].true?
         wiki = wiki("fat", true)
-        wiki = reload("fat") if wrong_edition?(wiki)
-        puts "serving changes from m#{wiki.other_host} for #{type} on startup"
-        wiki.other_changes(from_self.true?)
+        wiki = reload if wrong_edition?(wiki)
+        machine = from_self ? 'self' : 'm' + wiki.other_host
+        puts "adding changes to fat on startup from #{machine}"
+        wiki.other_changes(from_self)
       end
 
       r.post "seed" do
