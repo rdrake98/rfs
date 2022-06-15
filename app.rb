@@ -123,9 +123,8 @@ class App < Roda
       r.post "seed" do
         p = r.params
         type = p['type']
-        wiki = wiki(type) # type is checked in javascript:
-        # type.length == 3 || type.endsWith("fat_.html")
-        if type == "fat" && wiki.check_file_edition(p['edition'])
+        # javascript test: type.length == 3 || type.endsWith("fat_.html")
+        if type == "fat" && wiki(type).check_file_edition(p['edition'])
           "version clash"
         else
           output_file = if basic?(type)
