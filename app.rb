@@ -60,8 +60,7 @@ class App < Roda
         p = r.params
         type, title, edition = p['type'], p['title'], p['edition']
         puts "bulk change based on #{title} in #{type}"
-        wiki = wiki(type)
-        if clash = wiki.check_file_edition(edition)
+        if clash = (wiki = wiki type).check_file_edition(edition)
           {"clash" => clash.split(",")[0]}.to_json
         else
           wiki = update_edition(type, wiki, edition)
@@ -78,8 +77,7 @@ class App < Roda
         target = nil if target == ""
         insert = target ? ' with ' + target : ''
         puts "#{p['action']} '#{name}'#{insert} in #{title} in #{type}"
-        wiki = wiki(type)
-        if clash = wiki.check_file_edition(edition)
+        if clash = (wiki = wiki type).check_file_edition(edition)
           response["clash"] = clash.split(",")[0]
         else
           wiki = update_edition(type, wiki, edition)
@@ -99,8 +97,7 @@ class App < Roda
         type, name, regex, caseSensitive, edition =
           p['type'], p['name'], p['regex'], p['case'], p['edition']
         puts "searching for '#{name}' using '#{regex}' in #{type}"
-        wiki = wiki(type)
-        if clash = wiki.check_file_edition(edition)
+        if clash = (wiki = wiki type).check_file_edition(edition)
           response["clash"] = clash.split(",")[0]
         else
           wiki = update_edition(type, wiki, edition)
