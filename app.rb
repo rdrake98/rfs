@@ -6,8 +6,10 @@ class App < Roda
   puts ENV["RUBYLIB"]
   Wikis = {}
 
+  def basic?(type); type.size == 3; end
+
   def load_basic(type)
-    type == "fat" ? Splitter.fat : type == "dev" ? Splitter.dev : nil
+    basic?(type) ? (type == "fat" ? Splitter.fat : Splitter.dev) : nil
   end
 
   def wiki(type, basic_only=false)
@@ -25,7 +27,7 @@ class App < Roda
   end
 
   def update_edition(type, wiki, browser_edition)
-    type.size == 3 && wiki.edition != browser_edition ? reload(type) : wiki
+    basic?(type) && wiki.edition != browser_edition ? reload(type) : wiki
   end
 
   route do |r|
@@ -123,11 +125,10 @@ class App < Roda
         type = p['type']
         wiki = wiki(type) # type is checked in javascript:
         # type.length == 3 || type.endsWith("fat_.html")
-        basic = type.size == 3
-        if basic && wiki.check_file_edition(p['edition']) # never true for dev
+        if type == "fat" && wiki.check_file_edition(p['edition'])
           "version clash"
         else
-          output_file = if basic
+          output_file = if basic?(type)
             `cp $#{type} $data/#{type}_.html`
             puts "#{type}_ written"
             Dir.data("#{type}_output.html")
