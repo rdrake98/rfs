@@ -30,22 +30,28 @@ class App < Roda
     basic?(type) && wiki.edition != browser_edition ? reload(type) : wiki
   end
 
+  def respond(p, &block)
+    response = {}
+    type, browser_edition = p['type'], p['edition']
+    if clash = (wiki = wiki type).check_file_edition(browser_edition)
+      response["clash"] = clash.split(",")[0]
+    else
+      wiki = reload(type) if basic?(type) && wiki.edition != browser_edition
+      wiki.add_tiddlers(p['changes'])
+      block.call wiki, response
+    end
+    response.to_json
+  end
+
   route do |r|
     r.on "public" do
       r.post "search" do
-        response = {}
         p = r.params
-        type, name, regex, caseSensitive, edition =
-          p['type'], p['name'], p['regex'], p['case'], p['edition']
-        puts "searching for '#{name}' using '#{regex}' in #{type}"
-        if clash = (wiki = wiki type).check_file_edition(edition)
-          response["clash"] = clash.split(",")[0]
-        else
-          wiki = update_edition(type, wiki, edition)
-          wiki.add_tiddlers(p['changes'])
+        name, regex, caseSensitive = p['name'], p['regex'], p['case']
+        puts "searching for '#{name}' using '#{regex}' in #{p['type']}"
+        respond(p) do | wiki, response |
           response["titles"] = wiki.search(regex, name, caseSensitive)
         end
-        response.to_json
       end
 
       r.post "link" do
