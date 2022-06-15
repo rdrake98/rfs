@@ -3963,12 +3963,8 @@ bulk_change = function(title) {
       changes: jsonChanges(),
     },
     function success(response) {
-      var changes = JSON.parse(response)
-      var clash = changes.clash
-      if(clash) {
-        _dump("clash between browser edition " + edition + " and " + clash)
-        displayMessage("edition clash")
-      } else if(changes.length > 0) {
+      var changes = JSON.parse(response).changes
+      if(changes.length > 0) {
         dumpM("making " + changes.length + " edits...")
         changes.forEach(function(h) {
           title = h.title

@@ -26,10 +26,6 @@ class App < Roda
     wiki
   end
 
-  def update_edition(type, wiki, browser_edition)
-    basic?(type) && wiki.edition != browser_edition ? reload(type) : wiki
-  end
-
   def respond(p, &block)
     response = {}
     type, browser_edition = p['type'], p['edition']
@@ -55,40 +51,27 @@ class App < Roda
       end
 
       r.post "link" do
-        response = {}
         p = r.params
-        type, title, name, target, edition =
-          p['type'], p['title'], p['name'], p['target'], p['edition']
+        title, name, target = p['title'], p['name'], p['target']
         target = nil if target == ""
         insert = target ? ' with ' + target : ''
-        puts "#{p['action']} '#{name}'#{insert} in #{title} in #{type}"
-        if clash = (wiki = wiki type).check_file_edition(edition)
-          response["clash"] = clash.split(",")[0]
-        else
-          wiki = update_edition(type, wiki, edition)
-          wiki.add_tiddlers(p['changes'])
+        puts "#{p['action']} '#{name}'#{insert} in #{title} in #{p['type']}"
+        respond(p) do | wiki, response |
           unlink = p['unlink'] == "true"
           overlink = p['overlink'] == "true"
           new_text, replacer = wiki[title].link(name, target, unlink, overlink)
           response["newText"] = new_text
           response["replacer"] = replacer
         end
-        response.to_json
       end
 
       r.post "bulk_change" do
-        response = {}
         p = r.params
-        type, title, edition = p['type'], p['title'], p['edition']
-        puts "bulk change based on #{title} in #{type}"
-        if clash = (wiki = wiki type).check_file_edition(edition)
-          response["clash"] = clash.split(",")[0]
-        else
-          wiki = update_edition(type, wiki, edition)
-          wiki.add_tiddlers(p['changes'])
-          wiki[title].bulk_change
+        title = p['title']
+        puts "bulk change based on #{title} in #{p['type']}"
+        respond(p) do | wiki, response |
+          response["changes"] = wiki[title].bulk_change
         end
-        response.to_json
       end
 
       r.post "save" do

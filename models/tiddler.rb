@@ -240,6 +240,7 @@ class Tiddler
       fromre = comma ? /(\W|^)#{from[1..-1]}/ : /#{from}/
       if linking
         candidates.select!{|t| t.content =~ fromre}
+        puts candidates.size
         from = from[1..-1] if comma
       elsif comma
         to = "\\1#{to}"
@@ -247,14 +248,19 @@ class Tiddler
     end
     edits = candidates.select do |t|
       old_content = t.content
-      new_content = linking ?
-        t.link(from, link_target, false, false)[0] :
+      new_content = if linking
+        # ($tt = t.title == "RefactoringTest" ? t : nil) if $dd
+        t.link(from, link_target, false, false)[0]
+        # q :old_content, :nc if $dd && $tt
+      else
         filter ?
           old_content.gsub(fromre, to) :
           old_content.sub(fromre, to) # no idea why only sub
+      end
       t.update_content(new_content, true)
       old_content != new_content
     end
+    # byebug if $dd
     if edits.size > 0
       time = edits[0].medited.to_minute
       links = edits.map(&:to_link).join(" - ")

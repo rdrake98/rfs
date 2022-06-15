@@ -49,7 +49,7 @@ class WikiText
   end
 
   def link(wiki, searchText, target, unlink, overlink)
-    # byebug if $dd
+    # q :searchText if $dd && $tt
     names = queryNames(wiki, searchText)
     newText = @content
     startPos = index = 0
