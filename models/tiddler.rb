@@ -256,7 +256,6 @@ class Tiddler
       t.update_content(new_content, true)
       old_content != new_content
     end
-    byebug if $dd
     if edits.size > 0
       time = edits[0].medited.to_minute
       links = edits.map(&:to_link).join(" - ")
