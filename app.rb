@@ -32,40 +32,18 @@ class App < Roda
 
   route do |r|
     r.on "public" do
-      r.post "save" do
-        p = r.params
-        type, edition, changes = p['type'], p['edition'], p['changes']
-        wiki = wiki(type)
-        wiki.check_file_edition(edition, changes) || # clash if not nil
-          wiki.save(edition, changes) || reload(type).save(edition, changes)
-      end
-
-      r.post "change_tiddler" do
-        p = r.params
-        type = p['type']
-        message = "#{p['title']} #{p['action']} in #{type}"
-        puts message
-        wiki(type, true)&.add_changes(p['changes'], p['shared'] == "true")
-        message
-      end
-
-      r.post "order_change" do
-        p = r.params
-        wiki(p['type'], true)&.order_change(p['open'])
-        ""
-      end
-
-      r.post "bulk_change" do
+      r.post "search" do
         response = {}
         p = r.params
-        type, title, edition = p['type'], p['title'], p['edition']
-        puts "bulk change based on #{title} in #{type}"
+        type, name, regex, caseSensitive, edition =
+          p['type'], p['name'], p['regex'], p['case'], p['edition']
+        puts "searching for '#{name}' using '#{regex}' in #{type}"
         if clash = (wiki = wiki type).check_file_edition(edition)
           response["clash"] = clash.split(",")[0]
         else
           wiki = update_edition(type, wiki, edition)
           wiki.add_tiddlers(p['changes'])
-          wiki[title].bulk_change
+          response["titles"] = wiki.search(regex, name, caseSensitive)
         end
         response.to_json
       end
@@ -92,20 +70,42 @@ class App < Roda
         response.to_json
       end
 
-      r.post "search" do
+      r.post "bulk_change" do
         response = {}
         p = r.params
-        type, name, regex, caseSensitive, edition =
-          p['type'], p['name'], p['regex'], p['case'], p['edition']
-        puts "searching for '#{name}' using '#{regex}' in #{type}"
+        type, title, edition = p['type'], p['title'], p['edition']
+        puts "bulk change based on #{title} in #{type}"
         if clash = (wiki = wiki type).check_file_edition(edition)
           response["clash"] = clash.split(",")[0]
         else
           wiki = update_edition(type, wiki, edition)
           wiki.add_tiddlers(p['changes'])
-          response["titles"] = wiki.search(regex, name, caseSensitive)
+          wiki[title].bulk_change
         end
         response.to_json
+      end
+
+      r.post "save" do
+        p = r.params
+        type, edition, changes = p['type'], p['edition'], p['changes']
+        wiki = wiki(type)
+        wiki.check_file_edition(edition, changes) || # clash if not nil
+          wiki.save(edition, changes) || reload(type).save(edition, changes)
+      end
+
+      r.post "change_tiddler" do
+        p = r.params
+        type = p['type']
+        message = "#{p['title']} #{p['action']} in #{type}"
+        puts message
+        wiki(type, true)&.add_changes(p['changes'], p['shared'] == "true")
+        message
+      end
+
+      r.post "order_change" do
+        p = r.params
+        wiki(p['type'], true)&.order_change(p['open'])
+        ""
       end
 
       r.post "other_changes" do
