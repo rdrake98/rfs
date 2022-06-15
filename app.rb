@@ -6,12 +6,12 @@ class App < Roda
   puts ENV["RUBYLIB"]
   Wikis = {}
 
-  def reload(type="fat", saving=false, edition=nil, changes=nil)
+  def reload(type="fat")
     puts "reloading #{type} into server from file"
     wiki = type == "fat" ?
       Splitter.fat : type == "dev" ? Splitter.dev : Splitter.new(type)
     Wikis[type] = wiki
-    saving ? edition ? wiki.save(edition, changes) : wiki.do_save : wiki
+    wiki
   end
 
   def wrong_edition?(wiki, browser_edition)
@@ -32,8 +32,9 @@ class App < Roda
       r.post "save" do
         p = r.params
         type, edition, changes = p['type'], p['edition'], p['changes']
-        wiki(type).save(edition, changes) ||
-          reload(type, true, edition, changes)
+        wiki = wiki(type)
+        wiki.check_file_edition(edition, changes) || # clash message
+          wiki.save(edition, changes) || reload(type).save(edition, changes)
       end
 
       r.post "change_tiddler" do
@@ -56,7 +57,7 @@ class App < Roda
         p = r.params
         type, title, edition = p['type'], p['title'], p['edition']
         puts "bulk change based on #{title} in #{type}"
-        normal = wiki(type, true)
+        normal = wiki(type, true) # weird?
         wiki = wiki(type)
         if clash = wiki.check_file_edition(edition)
           {"clash" => clash.split(",")[0]}.to_json

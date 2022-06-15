@@ -363,14 +363,13 @@ class Splitter
     `open #{new_name(suffix)}`
   end
 
-  def check_file_edition(browser_edition, json=nil)
+  def check_file_edition(browser_edition, changes=nil)
     return nil unless @type == "fat"
     file_edition = Splitter.fat_edition
     return nil if browser_edition == file_edition
-    if json
-      @browser_edition = browser_edition
+    if changes
       commit_changes_file("before fat file clash", false)
-      add_changes(json)
+      add_changes(changes)
       commit_changes_file("after fat file clash", false)
     end
     puts "clash between browser #{browser_edition} and file #{file_edition}"
@@ -378,25 +377,19 @@ class Splitter
   end
 
   def save(browser_edition, json)
-    if clash = check_file_edition(browser_edition, json); return clash; end
     commit_changes_file("before #{@type} saved") if @type
     add_changes(json)
     # qq :browser_edition, :edition if $dd
     if browser_edition == edition
-      newFile = do_save(json)
+      add_tiddlers(json, true)
+      backup
+      newFile = write("", @host)
+      commit_changes_file("#{@type} #{json ? '' : 'force '}saved") if @type
+      `cp -p #{@filename} $db/_shared/dev/m#{@host}` if @type == "dev"
       newFile ? [edition, newFile].join(",") : edition
     else
       nil
     end
-  end
-
-  def do_save(json=nil)
-    add_tiddlers(json, true)
-    backup
-    newFile = write("", @host)
-    commit_changes_file("#{@type} #{json ? '' : 'force '}saved") if @type
-    `cp -p #{@filename} $db/_shared/dev/m#{@host}` if @type == "dev"
-    newFile
   end
 
   def cp_other_dev
