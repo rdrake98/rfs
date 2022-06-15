@@ -29,6 +29,13 @@ class App < Roda
 
   route do |r|
     r.on "public" do
+      r.post "save" do
+        p = r.params
+        type, edition, changes = p['type'], p['edition'], p['changes']
+        wiki(type).save(edition, changes) ||
+          reload(type, true, edition, changes)
+      end
+
       r.post "change_tiddler" do
         p = r.params
         type = p['type']
@@ -42,13 +49,6 @@ class App < Roda
         p = r.params
         wiki(p['type'], true)&.order_change(p['open'])
         ""
-      end
-
-      r.post "save" do
-        p = r.params
-        type, edition, changes = p['type'], p['edition'], p['changes']
-        wiki(type).save(edition, changes) ||
-          reload(type, true, edition, changes)
       end
 
       r.post "bulk_change" do
