@@ -17,8 +17,8 @@ class App < Roda
     wiki
   end
 
-  def wrong_edition?(type, wiki, browser_edition)
-    type.size == 3 && wiki.edition != browser_edition
+  def update_edition(type, wiki, browser_edition)
+    type.size == 3 && wiki.edition != browser_edition ? reload(type) : wiki
   end
 
   def wiki(type, strict=false)
@@ -62,7 +62,7 @@ class App < Roda
         if clash = wiki.check_file_edition(edition)
           {"clash" => clash.split(",")[0]}.to_json
         else
-          wiki = reload(type) if wrong_edition?(type, wiki, edition)
+          wiki = update_edition(type, wiki, edition)
           wiki.add_tiddlers(p['changes'])
           wiki[title].bulk_change
         end
@@ -80,7 +80,7 @@ class App < Roda
         if clash = wiki.check_file_edition(edition)
           response["clash"] = clash.split(",")[0]
         else
-          wiki = reload(type) if wrong_edition?(type, wiki, edition)
+          wiki = update_edition(type, wiki, edition)
           wiki.add_tiddlers(p['changes'])
           unlink = p['unlink'] == "true"
           overlink = p['overlink'] == "true"
@@ -101,7 +101,7 @@ class App < Roda
         if clash = wiki.check_file_edition(edition)
           response["clash"] = clash.split(",")[0]
         else
-          wiki = reload(type) if wrong_edition?(type, wiki, edition)
+          wiki = update_edition(type, wiki, edition)
           wiki.add_tiddlers(p['changes'])
           response["titles"] = wiki.search(regex, name, caseSensitive)
         end
