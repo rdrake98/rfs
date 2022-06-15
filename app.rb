@@ -6,10 +6,13 @@ class App < Roda
   puts ENV["RUBYLIB"]
   Wikis = {}
 
+  def load_basic_wiki(type)
+    type == "fat" ? Splitter.fat : type == "dev" ? Splitter.dev : nil
+  end
+
   def reload(type)
     puts "reloading #{type} into server from file"
-    wiki = type == "fat" ?
-      Splitter.fat : type == "dev" ? Splitter.dev : Splitter.new(type)
+    wiki = load_basic_wiki(type) || Splitter.new(type)
     Wikis[type] = wiki
     wiki
   end
@@ -20,9 +23,7 @@ class App < Roda
 
   def wiki(type, strict=false)
     return Wikis[type] if Wikis[type]
-    wiki = (type == "fat" ? Splitter.fat :
-      type == "dev" ? Splitter.dev :
-      strict ? nil : Splitter.new(type))
+    wiki = load_basic_wiki(type) || (strict ? nil : Splitter.new(type))
     Wikis[type] = wiki if wiki
     wiki
   end
@@ -110,7 +111,7 @@ class App < Roda
       r.post "other_changes" do
         p = r.params
         from_self = p['from_self'].true?
-        fat = wiki("fat", true)
+        fat = wiki("fat")
         fat = reload("fat") if fat.edition != Splitter.fat_edition
         machine = from_self ? 'this machine' : 'm' + fat.other_host
         puts "adding changes from #{machine} to fat on startup"

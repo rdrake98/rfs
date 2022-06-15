@@ -262,9 +262,7 @@ class Splitter
   end
 
   def order_change(json)
-    if @type
-      File.write(shared_open_file, json + "\n")
-    end
+    File.write(shared_open_file, json + "\n")
   end
 
   def other_host
