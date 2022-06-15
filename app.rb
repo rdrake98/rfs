@@ -6,20 +6,20 @@ class App < Roda
   puts ENV["RUBYLIB"]
   Wikis = {}
 
-  def load_basic_wiki(type)
+  def load_basic(type)
     type == "fat" ? Splitter.fat : type == "dev" ? Splitter.dev : nil
   end
 
   def wiki(type, basic_only=false)
     return Wikis[type] if Wikis[type]
-    wiki = load_basic_wiki(type) || (basic_only ? nil : Splitter.new(type))
+    wiki = load_basic(type) || (basic_only ? nil : Splitter.new(type))
     Wikis[type] = wiki if wiki
     wiki
   end
 
   def reload(type)
     puts "reloading #{type} into server from file"
-    wiki = load_basic_wiki(type) || Splitter.new(type)
+    wiki = load_basic(type) || Splitter.new(type)
     Wikis[type] = wiki
     wiki
   end
