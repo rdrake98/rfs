@@ -2,8 +2,6 @@
 
 require 'tiddler'
 require 'json'
-# require 'd' if $d ||= ARGV[-1] == "d" || ENV["dd"] == "d"
-# require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
 
 class Splitter
   attr_accessor :code, :filename
@@ -285,7 +283,6 @@ class Splitter
   def add_tiddlers(json=File.read(changes_file), loud=false)
     titles_changed = []
     JSON[json].each do |hash|
-      # byebug if $dd
       title = hash["title"]
       if title
         delete(title) # because splitname may have changed
@@ -377,7 +374,6 @@ class Splitter
   def save(browser_edition, json)
     commit_changes_file("before #{@type} saved") if @type
     add_changes(json)
-    # qq :browser_edition, :edition if $dd
     if browser_edition == edition
       add_tiddlers(json, true)
       backup
@@ -455,7 +451,6 @@ class Splitter
     titles = config_titles + (expand ? expanded(selected) : selected)
     divs = titles.map {|t| self[t]&.div_text}.join
     tiny_bytes = @before + divs + @mid + @code.gsub('"75"', '"400"') + @after
-    # q "titles.size", "tiny_bytes.size" if $d
     filename = Dir.tinys "#{file}.html"
     File.write(filename, tiny_bytes)
     tiny = Splitter.new(filename)

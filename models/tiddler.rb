@@ -228,11 +228,9 @@ class Tiddler
     specs = @content.lines[0].chomp.split(", ").map{ |spec|
       spec =~ /^\"\"\"(.*)\"\"\"$/ ? $1 : spec }
     from, to, link_target, filter = specs
-    puts candidates.size
     if filter
       re = /file:\/\/\/Users\/(rd|richarddrake)\/(.*?)(\]\]|\s)/
       candidates.select!{|t| t.content =~ re && $3 == "]]"}
-      puts candidates.size
       fromre = Regexp.new(Regexp.escape(from))
     else
       linking = to == "link"
@@ -249,9 +247,7 @@ class Tiddler
     edits = candidates.select do |t|
       old_content = t.content
       new_content = if linking
-        # ($tt = t.title == "RefactoringTest" ? t : nil) if $dd
         t.link(from, link_target, false, false)[0]
-        # q :old_content, :nc if $dd && $tt
       else
         filter ?
           old_content.gsub(fromre, to) :
@@ -260,7 +256,7 @@ class Tiddler
       t.update_content(new_content, true)
       old_content != new_content
     end
-    # byebug if $dd
+    byebug if $dd
     if edits.size > 0
       time = edits[0].medited.to_minute
       links = edits.map(&:to_link).join(" - ")
@@ -292,9 +288,7 @@ class Tiddler
   end
 
   def output
-    $t = @title if $t1 || $d
     @output ||= Tiddler.output(@content, @wiki)
-    # puts @output if $dd
   end
 
   def Tiddler.html(title, output)
@@ -320,7 +314,6 @@ class Tiddler
   end
 
   def write
-    # byebug if $dd && filename == "F1706mgN01.3l.txt"
     readable = []
     readable << splitname
     readable << modified

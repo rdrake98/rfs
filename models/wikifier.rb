@@ -3,9 +3,6 @@
 require 'ruby_dom'
 require 'regex'
 
-# require 'dd' if $dd
-# require 'd' if $d
-
 class Wikifier
   attr_reader :output, :matchText, :source, :matchStart, :wiki
   attr_accessor :nextMatch
@@ -46,7 +43,6 @@ class Wikifier
       end
     end
     $a << $aa.new($t, a.href) if $t1
-    # byebug if $dd
     a.title = "External link to #{link}"
     a.target = "_blank" if !txmt
     a << text
@@ -105,7 +101,6 @@ class Wikifier
           colspan =  1
           while position < match.end(0) - 1
             td_match = /(?:(>)| *(!)?(.*?))\|/.match(w.source, position)
-            # byebug if $dd # and $t == "$#####"
             if td_match[1]
               colspan += 1
               w.nextMatch = td_match.end(0)
@@ -120,7 +115,6 @@ class Wikifier
               end
               regex = /( *)!?.*?( *)\|$/
               td_match = regex.match(w.source[0...w.nextMatch], position)
-              # q "w.source[0...w.nextMatch]" if $d
               right = td_match[1].size > 0
               left = td_match[2].size > 0
               td.align = "center" if left and right
@@ -177,7 +171,6 @@ class Wikifier
       type: :quoteByLine,
       match: "^>{1,2}",
       handler: -> w do
-        # byebug if $dd and $t == "$$$#"
         block = node_type.new("blockquote")
         regex = /^(>{1,2})(.*)$/
         old_level = 1
@@ -461,8 +454,6 @@ class Wikifier
       @matchText = match[0]
       @nextMatch = match.end(0)
       formatter = formatters[match[2..-1].index(&:itself)]
-      # X << XX.new($t, formatter[:type]) if $t1
-      # byebug if $dd
       formatter[:handler].(self)
     end
     if @nextMatch < source.size

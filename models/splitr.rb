@@ -64,7 +64,6 @@ class Splitr < Splitter
   end
 
   def write_tiddlers(time=nil, noisy=true, message=edition)
-    # byebug if $dd
     Dir.chdir(Splitr.dir) do
       `rm *.txt`
       puts "writing #{message}" if noisy
