@@ -10,6 +10,13 @@ class App < Roda
     type == "fat" ? Splitter.fat : type == "dev" ? Splitter.dev : nil
   end
 
+  def wiki(type, strict=false)
+    return Wikis[type] if Wikis[type]
+    wiki = load_basic_wiki(type) || (strict ? nil : Splitter.new(type))
+    Wikis[type] = wiki if wiki
+    wiki
+  end
+
   def reload(type)
     puts "reloading #{type} into server from file"
     wiki = load_basic_wiki(type) || Splitter.new(type)
@@ -19,13 +26,6 @@ class App < Roda
 
   def update_edition(type, wiki, browser_edition)
     type.size == 3 && wiki.edition != browser_edition ? reload(type) : wiki
-  end
-
-  def wiki(type, strict=false)
-    return Wikis[type] if Wikis[type]
-    wiki = load_basic_wiki(type) || (strict ? nil : Splitter.new(type))
-    Wikis[type] = wiki if wiki
-    wiki
   end
 
   route do |r|
