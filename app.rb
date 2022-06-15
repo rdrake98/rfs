@@ -14,8 +14,8 @@ class App < Roda
     wiki
   end
 
-  def wrong_edition?(wiki, browser_edition)
-    wiki.edition != browser_edition
+  def wrong_edition?(type, wiki, browser_edition)
+    type.size == 3 && wiki.edition != browser_edition
   end
 
   def wiki(type, strict=false)
@@ -57,12 +57,11 @@ class App < Roda
         p = r.params
         type, title, edition = p['type'], p['title'], p['edition']
         puts "bulk change based on #{title} in #{type}"
-        normal = wiki(type, true) # weird?
         wiki = wiki(type)
         if clash = wiki.check_file_edition(edition)
           {"clash" => clash.split(",")[0]}.to_json
         else
-          wiki = reload(type) if normal && wrong_edition?(wiki, edition)
+          wiki = reload(type) if wrong_edition?(type, wiki, edition)
           wiki.add_tiddlers(p['changes'])
           wiki[title].bulk_change
         end
@@ -76,12 +75,11 @@ class App < Roda
         target = nil if target == ""
         insert = target ? ' with ' + target : ''
         puts "#{p['action']} '#{name}'#{insert} in #{title} in #{type}"
-        normal = wiki(type, true)
         wiki = wiki(type)
         if clash = wiki.check_file_edition(edition)
           response["clash"] = clash.split(",")[0]
         else
-          wiki = reload(type) if normal && wrong_edition?(wiki, edition)
+          wiki = reload(type) if wrong_edition?(type, wiki, edition)
           wiki.add_tiddlers(p['changes'])
           unlink = p['unlink'] == "true"
           overlink = p['overlink'] == "true"
@@ -98,12 +96,11 @@ class App < Roda
         type, name, regex, caseSensitive, edition =
           p['type'], p['name'], p['regex'], p['case'], p['edition']
         puts "searching for '#{name}' using '#{regex}' in #{type}"
-        normal = wiki(type, true)
         wiki = wiki(type)
         if clash = wiki.check_file_edition(edition)
           response["clash"] = clash.split(",")[0]
         else
-          wiki = reload(type) if normal && wrong_edition?(wiki, edition)
+          wiki = reload(type) if wrong_edition?(type, wiki, edition)
           wiki.add_tiddlers(p['changes'])
           response["titles"] = wiki.search(regex, name, caseSensitive)
         end
@@ -123,12 +120,13 @@ class App < Roda
       r.post "seed" do
         p = r.params
         type = p['type']
-        wiki = wiki(type) # type is checked in javascript
-        normal = type.size == 3
-        if normal && wiki.check_file_edition(p['edition']) # never true for dev
+        wiki = wiki(type) # type is checked in javascript:
+        # type.length == 3 || type.endsWith("fat_.html")
+        basic = type.size == 3
+        if basic && wiki.check_file_edition(p['edition']) # never true for dev
           "version clash"
         else
-          output_file = if normal
+          output_file = if basic
             `cp $#{type} $data/#{type}_.html`
             puts "#{type}_ written"
             Dir.data("#{type}_output.html")
