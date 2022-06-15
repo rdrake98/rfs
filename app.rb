@@ -10,9 +10,9 @@ class App < Roda
     type == "fat" ? Splitter.fat : type == "dev" ? Splitter.dev : nil
   end
 
-  def wiki(type, strict=false)
+  def wiki(type, basic_only=false)
     return Wikis[type] if Wikis[type]
-    wiki = load_basic_wiki(type) || (strict ? nil : Splitter.new(type))
+    wiki = load_basic_wiki(type) || (basic_only ? nil : Splitter.new(type))
     Wikis[type] = wiki if wiki
     wiki
   end
