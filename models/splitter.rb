@@ -67,6 +67,10 @@ class Splitter
     "#{name[0...-5]}#{suffix}.html"
   end
 
+  def edition
+    @before =~ /^var edition = "(.*)";$/ && $1
+  end
+
   def backup
     return unless @backup_area
     command = "rsync -a #{@filename} #{@backup_area}/#{edition}"
@@ -85,10 +89,6 @@ class Splitter
 
   def count
     @tiddler_hash.count
-  end
-
-  def edition
-    @before =~ /^var edition = "(.*)";$/ && $1
   end
 
   def unsorted_tiddlers
@@ -363,13 +363,9 @@ class Splitter
     `open #{new_name(suffix)}`
   end
 
-  def read_file_edition
-    Splitter.new(@filename, false).edition # just used on fat and dev?
-  end
-
   def check_file_edition(browser_edition, json=nil)
     return nil unless @type == "fat"
-    file_edition = read_file_edition
+    file_edition = Splitter.fat_edition
     return nil if browser_edition == file_edition
     if json
       @browser_edition = browser_edition

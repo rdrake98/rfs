@@ -9,18 +9,14 @@ class App < Roda
   def reload(type="fat", saving=false, edition=nil, changes=nil)
     puts "reloading #{type} into server from file"
     wiki = type == "fat" ?
-      Splitter.fat :
-      type == "dev" ? Splitter.dev : Splitter.new(type)
+      Splitter.fat : type == "dev" ? Splitter.dev : Splitter.new(type)
     Wikis[type] = wiki
     saving ? edition ? wiki.save(edition, changes) : wiki.do_save : wiki
   end
 
-  def wrong_edition?(wiki, latest_edition=nil)
-    return true unless wiki
-    wiki.edition != (latest_edition || wiki.read_file_edition)
+  def wrong_edition?(wiki, browser_edition)
+    wiki.edition != browser_edition
   end
-
-  # reload("fat") if wrong_edition?(wiki)
 
   def wiki(type, strict=false)
     return Wikis[type] if Wikis[type]
@@ -116,11 +112,11 @@ class App < Roda
       r.post "other_changes" do
         p = r.params
         from_self = p['from_self'].true?
-        wiki = wiki("fat", true)
-        wiki = reload if wrong_edition?(wiki)
-        machine = from_self ? 'self' : 'm' + wiki.other_host
+        fat = wiki("fat", true)
+        fat = reload if fat.edition != Splitter.fat_edition
+        machine = from_self ? 'this machine' : 'm' + fat.other_host
         puts "adding changes from #{machine} to fat on startup"
-        wiki.other_changes(from_self)
+        fat.other_changes(from_self)
       end
 
       r.post "seed" do
