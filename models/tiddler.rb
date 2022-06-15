@@ -259,9 +259,9 @@ class Tiddler
       time = edits[0].medited.to_minute
       links = edits.map(&:to_link).join(" - ")
       self.content = @content + "\n#{time} #{links}"
-      ([to_h] + edits.map(&:to_h)).to_json
+      [to_h] + edits.map(&:to_h)
     else
-      "[]"
+      []
     end
   end
 
