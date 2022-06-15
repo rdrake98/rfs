@@ -7,12 +7,12 @@ GEM
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    puma (5.6.2)
+    puma (5.6.4)
       nio4r (~> 2.0)
-    rack (2.2.3)
+    rack (2.2.3.1)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
-    roda (3.53.0)
+    roda (3.57.0)
       rack
 
 PLATFORMS
@@ -25,4 +25,4 @@ DEPENDENCIES
   roda
 
 BUNDLED WITH
-   2.3.8
+   2.3.7
