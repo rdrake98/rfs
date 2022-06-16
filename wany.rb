@@ -2,18 +2,41 @@ require 'roda'
 require 'wiki_with_tabs'
 
 class Wany < Roda
-  puts "restarting wany"
+  puts "restarting wany.rb"
   puts ENV["RUBYLIB"]
-  Fat = Wiki.fat
-  puts Fat.tiddlers.size
+  @@fat = nil
+
+  def Wany.fat_
+    if @@fat&.edition != (edition = Splitter.fat_edition)
+      puts "", edition + " being loaded"
+      timeb("load fat") { @@fat = Splitter.fat }
+      timeb("cache elinks") { @@fat.tiddlers.each(&:external_links) }
+    end
+    @@fat
+  end
+
+  def fat_
+    fat = Wany.fat_
+    puts "", fat.edition + " being used"
+    fat
+  end
+
+  Thread.new do
+    loop do
+      begin
+        Wany.fat_
+        sleep(20)
+      end
+    end
+  end
 
   route do |r|
     r.get "show" do
-      Fat.tiddlers.size.to_s
+      fat ? fat.tiddlers.size.to_s : "nil"
     end
 
     r.get "tabs" do
-      timeb("total") { WikiWithTabs.new.show_final_tabs.to_s }
+      timeb("total") { WikiWithTabs.new(fat_).show_final_tabs.to_s }
     end
 
     r.get "unpeel" do
@@ -21,7 +44,7 @@ class Wany < Roda
     end
 
     r.get "copy_tabs_to_fat" do
-      WikiWithTabs.copy_to_fat
+      WikiWithTabs.copy_to_fat(fat_)
       "copy_to_fat complete"
     end
 

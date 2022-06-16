@@ -6,4 +6,4 @@ use Rack::Cors do
     resource '/public/*', :headers => :any, :methods => [:get, :post]
   end
 end
-run Wany.freeze.app
+run Wany.app

@@ -6,16 +6,16 @@ require 'file_links'
 class WikiWithTabs
   attr_reader :wiki
   def initialize(name=nil, file=nil)
-    timeb("fat") { @wiki = file ? Wiki.new(Dir.data "#{file}.html") : Wiki.fat }
+    @wiki = file ? Wiki.new(Dir.data "#{file}.html") : name
     @spec = Splitter.new("#{file ? Dir.data : Dir.tinys}/spec.html")
     @stop_list = spec_for("StopListInitial")
     @preambles = spec_for("PreamblesInitial")
     @hash_preambles = spec_for("HashPreambles")
     @q_preambles = spec_for("QPreambles")
     last_backup = @spec["LastBackup"]&.content&.chomp # nil in old tests
-    timeb("copy_backups") { self.class.copy_backups } # old ones parked on mp
+    timeb("copy_backups") { self.class.copy_backups } # old ones parked for now
     all_names = self.class.read_all_names
-    names = name ?
+    names = file ?
       [name] :
       all_names[all_names.index(last_backup) + 1..-1]
     @file_links = []
@@ -115,8 +115,7 @@ class WikiWithTabs
     end
   end
 
-  def self.copy_to_fat
-    fat = Splitter.fat
+  def self.copy_to_fat(fat)
     puts fat.tiddlers.size
     sb = Splitter.new(Dir.tinys "sb.html")
     titles = sb.titles
