@@ -14,14 +14,12 @@ class App < Roda
   def wiki(type, any_wiki=true)
     Wikis[type] ||
     (wiki = load_basic(type) || any_wiki && Splitter.new(type)) &&
-    (Wikis[type] = wiki)
+    Wikis[type] = wiki
   end
 
   def reload(type)
     puts "reloading #{type} into server from file"
-    wiki = load_basic(type) || Splitter.new(type)
-    Wikis[type] = wiki
-    wiki
+    Wikis[type] = load_basic(type) || Splitter.new(type)
   end
 
   def respond(p, &block)
