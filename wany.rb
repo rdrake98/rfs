@@ -3,8 +3,7 @@ require 'wiki_with_tabs'
 
 class Wany < Roda
   puts "restarting wany.rb"
-  puts ENV["RUBYLIB"]
-  @fat = nil
+  @fat
 
   def Wany.fat
     if @fat&.edition != (edition = Wiki.fat_edition)

@@ -3,7 +3,6 @@ require 'splitter'
 
 class App < Roda
   puts "restarting rfs"
-  puts ENV["RUBYLIB"]
   Wikis = {}
 
   def basic?(type); type.size == 3; end
@@ -12,11 +11,10 @@ class App < Roda
     basic?(type) ? (type == "fat" ? Splitter.fat : Splitter.dev) : nil
   end
 
-  def wiki(type, basic_only=false)
-    return Wikis[type] if Wikis[type]
-    wiki = load_basic(type) || (basic_only ? nil : Splitter.new(type))
-    Wikis[type] = wiki if wiki
-    wiki
+  def wiki(type, any_wiki=true)
+    Wikis[type] ||
+    (wiki = load_basic(type) || any_wiki && Splitter.new(type)) &&
+    (Wikis[type] = wiki)
   end
 
   def reload(type)
@@ -87,13 +85,13 @@ class App < Roda
         type = p['type']
         message = "#{p['title']} #{p['action']} in #{type}"
         puts message
-        wiki(type, true)&.add_changes(p['changes'], p['shared'] == "true")
+        wiki(type, nil)&.add_changes(p['changes'], p['shared'] == "true")
         message
       end
 
       r.post "order_change" do
         p = r.params
-        wiki(p['type'], true)&.order_change(p['open'])
+        wiki(p['type'], nil)&.order_change(p['open'])
         ""
       end
 
@@ -111,7 +109,7 @@ class App < Roda
         p = r.params
         type = p['type']
         # javascript test: type.length == 3 || type.endsWith("fat_.html")
-        if type == "fat" && wiki(type).check_file_edition(p['edition'])
+        if type == "fat" && wiki("fat").check_file_edition(p['edition'])
           "version clash"
         else
           output_file = if basic?(type)
