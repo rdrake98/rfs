@@ -8,7 +8,7 @@ class Wany < Roda
 
   def Wany.fat_
     if @@fat&.edition != (edition = Splitter.fat_edition)
-      puts "", edition + " being loaded"
+      puts "", edition + " loading"
       timeb("load fat") { @@fat = Splitter.fat }
       timeb("cache elinks") { @@fat.tiddlers.each(&:external_links) }
     end
