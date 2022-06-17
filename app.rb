@@ -3,6 +3,7 @@ require 'splitter'
 
 class App < Roda
   puts "restarting rfs"
+  puts Splitter.fat_edition
   Wikis = {}
 
   def basic?(type); type.size == 3; end
