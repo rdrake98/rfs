@@ -370,15 +370,15 @@ class Splitter
     "#{file_edition},clash"
   end
 
-  def save(browser_edition, json)
+  def save(browser_edition, changes)
     if clash = check_file_edition(browser_edition); return clash; end
     commit_changes_file("before #{@type} saved") if @type
-    add_changes(json)
+    add_changes(changes)
     if browser_edition == edition
-      add_tiddlers(json, true)
+      add_tiddlers(changes, true)
       backup
       newFile = write("", @host)
-      commit_changes_file("#{@type} #{json ? '' : 'force '}saved") if @type
+      commit_changes_file("#{@type} saved") if @type
       `cp -p #{@filename} $db/_shared/dev/m#{@host}` if @type == "dev"
       newFile ? [edition, newFile].join(",") : edition
     else
