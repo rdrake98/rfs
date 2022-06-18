@@ -391,7 +391,7 @@ class Splitter
     `cp -p $db/_shared/dev/m#{other_host}/dev5.html #{parent_dir}`
   end
 
-  def show_update_scripts
+  def show_scripts
     puts @mid.lines[-1]
     puts @after.lines[0..4]
   end
