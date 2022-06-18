@@ -73,10 +73,7 @@ class App < Roda
 
       r.post "save" do
         p = r.params
-        type, edition, changes = p['type'], p['edition'], p['changes']
-        wiki = wiki(type)
-        wiki.check_file_edition(edition, changes) || # clash if not nil
-          wiki.save(edition, changes) # try code reduction
+        wiki(p['type']).save(p['edition'], p['changes'])
       end
 
       r.post "change_tiddler" do

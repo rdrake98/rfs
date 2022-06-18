@@ -2541,10 +2541,9 @@ function saveChanges(event)
     },
     function success(response) {
       var r = response.split(",")
-      if(r[1]=="clash") {
-        _dump("clash between browser edition " + edition + " and " + r[0])
-        displayMessage("edition clash")
-      } else {
+      if(r[1]=="clash")
+        dumpM("clash between browser " + edition + " and " + r[0])
+      else {
         edition = r[0]
         _dump("successful ruby save of edition " + edition)
         var newFile = r[1]
