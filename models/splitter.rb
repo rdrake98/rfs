@@ -391,25 +391,7 @@ class Splitter
     `cp -p $db/_shared/dev/m#{other_host}/dev5.html #{parent_dir}`
   end
 
-  def inject_tests(testing)
-    lines = @before.split("\n")
-    lines[4] = testing ?
-      "<script src='node_modules/qunitjs/qunit/qunit.js'></script>" :
-      "<script type='text/javascript'>var QUnit = {test: function(){}}</script>"
-    @before = lines.join_n
-  end
-
-  def update_code(testing=nil, suffix="")
-    puts File.read(Dir.compiled "code.js").size
-    puts "we can still inject tests into dev, for now"
-    old_before = @before
-    inject_tests(testing) unless testing == nil
-    same = @before == old_before
-    write(suffix) unless same
-    !same
-  end
-
-  def update_scripts
+  def show_update_scripts
     puts @mid.lines[-1]
     puts @after.lines[0..4]
   end
