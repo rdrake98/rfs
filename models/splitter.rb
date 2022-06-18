@@ -359,10 +359,9 @@ class Splitter
   end
 
   def check_file_edition(browser_edition, changes=nil)
-    return nil unless @type == "fat"
-    file_edition = Splitter.fat_edition
+    file_edition = Splitter.new(@filename, false).edition
     return nil if browser_edition == file_edition
-    if changes
+    if changes && @type == "fat"
       commit_changes_file("before fat file clash", false)
       add_changes(changes)
       commit_changes_file("after fat file clash", false)
@@ -383,7 +382,7 @@ class Splitter
       `cp -p #{@filename} $db/_shared/dev/m#{@host}` if @type == "dev"
       newFile ? [edition, newFile].join(",") : edition
     else
-      puts "save problem: browser #{browser_edition}, server #{edition}"
+      puts "**unexpected problem: browser #{browser_edition}, server #{edition}"
     end
   end
 
