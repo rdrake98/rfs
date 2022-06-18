@@ -382,7 +382,7 @@ class Splitter
       `cp -p #{@filename} $db/_shared/dev/m#{@host}` if @type == "dev"
       newFile ? [edition, newFile].join(",") : edition
     else
-      nil
+      puts "save problem: browser #{browser_edition}, server #{edition}"
     end
   end
 
