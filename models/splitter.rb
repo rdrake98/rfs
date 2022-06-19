@@ -374,16 +374,13 @@ class Splitter
     if clash = check_file_edition(browser_edition); return clash; end
     commit_changes_file("before #{@type} saved") if @type
     add_changes(changes)
-    if browser_edition == edition
-      add_tiddlers(changes, true)
-      backup
-      newFile = write("", @host)
-      commit_changes_file("#{@type} saved") if @type
-      `cp -p #{@filename} $db/_shared/dev/m#{@host}` if @type == "dev"
-      newFile ? [edition, newFile].join(",") : edition
-    else
-      puts "** unexpected: b&f #{browser_edition}, s #{edition} **"
-    end
+    # browser_edition == edition assumed
+    add_tiddlers(changes, true)
+    backup
+    newFile = write("", @host)
+    commit_changes_file("#{@type} saved") if @type
+    `cp -p #{@filename} $db/_shared/dev/m#{@host}` if @type == "dev"
+    newFile ? [edition, newFile].join(",") : edition
   end
 
   def cp_other_dev
