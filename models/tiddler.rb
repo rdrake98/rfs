@@ -235,10 +235,10 @@ class Tiddler
     else
       linking = to == "link"
       comma = from[0] == ","
-      fromre = comma ? /(\W|^)#{from[1..-1]}/ : /#{from}/
+      fromre = comma ? /(\W|^)#{from[1..-1]}/ : /#{Regexp.escape(from)}/
       if linking
         candidates.select!{|t| t.content =~ fromre}
-        puts candidates.size
+        puts "#{candidates.size} candidates"
         from = from[1..-1] if comma
       elsif comma
         to = "\\1#{to}"
@@ -256,6 +256,7 @@ class Tiddler
       t.update_content(new_content, true)
       old_content != new_content
     end
+    puts "#{edits.size} edits"
     if edits.size > 0
       time = edits[0].medited.to_minute
       links = edits.map(&:to_link).join(" - ")
