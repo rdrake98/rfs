@@ -455,11 +455,11 @@ class Splitter
     write_selected("sb", %w[ExternalURLs], false)
   end
 
-  def write_extract(titles_changed=[])
+  def write_extract(titles_changed=[], file="extract", expand=true)
     titles_open = JSON[File.read(shared_open_file(@host))]
     titles_open_content = default_tiddlers_string(titles_open)
     selected = (titles_open + titles_changed).uniq
-    write_tiny("extract", titles_open_content, "extract", true, selected)
+    write_tiny(file, titles_open_content, file, expand, selected)
   end
 
   # for use from Pry
