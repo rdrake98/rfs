@@ -72,7 +72,10 @@ class Splitter
     destination = if @backup_area
       "#{@backup_area}/#{edition}"
     else
-      parent_dir + "gen1001.html"
+      Dir.cd parent_dir
+      name = @filename.split("/")[-1][0...-5]
+      latest = Dir.glob(name + "_*.html")[-1]
+      new_name('_%03i' % (latest[-8..-6].to_i + 1))
     end
     command = "rsync -a #{@filename} #{destination}"
     puts "backing up edition #{edition}"
@@ -83,8 +86,7 @@ class Splitter
   def commit_mods
     new_one = Splitter.name_(@filename)
     if File.file?(new_one)
-      backup
-      # backup(true)
+      backup(true)
       `mv #{new_one} #{@filename}`
     end
   end
