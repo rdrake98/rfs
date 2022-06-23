@@ -17,6 +17,7 @@ class Splitter
     atoms = @filename&.split("/")
     do_backup = @type || atoms && atoms[-1] == "bones.html"
     @backup_area = do_backup && "#{atoms[0..-2].join("/")}/_backup"
+    @gens = atoms[-2] == "gens" || atoms[-3] == "gens"
     @tiddler_hash = {}
     @tiddler_splits = {}
     @host = hostc
@@ -66,9 +67,14 @@ class Splitter
     @before =~ /^var edition = "(.*)";$/ && $1
   end
 
-  def backup
-    return unless @backup_area
-    command = "rsync -a #{@filename} #{@backup_area}/#{edition}"
+  def backup(gens_included=false)
+    return unless @backup_area || @gens && gens_included
+    destination = if @backup_area
+      "#{@backup_area}/#{edition}"
+    else
+      parent_dir + "gen1001.html"
+    end
+    command = "rsync -a #{@filename} #{destination}"
     puts "backing up edition #{edition}"
     puts command
     `#{command}`
@@ -78,6 +84,7 @@ class Splitter
     new_one = Splitter.name_(@filename)
     if File.file?(new_one)
       backup
+      # backup(true)
       `mv #{new_one} #{@filename}`
     end
   end
@@ -202,6 +209,7 @@ class Splitter
   end
 
   def delete(title, noisy=false)
+    puts title if noisy
     tiddler = self[title]
     if tiddler
       puts "- tiddler found" if noisy
