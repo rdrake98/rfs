@@ -7,10 +7,7 @@ class Splitter
   attr_accessor :code, :filename
 
   def parent_dir
-    # kludge to support rff testing
-    parent_type = @filename.split("/")[-1][0..2]
-    filename = ENV[parent_type]
-    (filename ? filename.split("/")[0..-2].join("/") : "unknown") + "/"
+    @filename.split("/")[0..-2].join("/") + "/"
   end
 
   def initialize(filename=nil, load_tiddlers=true)
