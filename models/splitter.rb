@@ -391,11 +391,6 @@ class Splitter
     `cp -p $db/_shared/dev/m#{other_host}/dev5.html #{parent_dir}`
   end
 
-  def show_scripts
-    puts @mid.lines[-1]
-    puts @after.lines[0..4]
-  end
-
   def self.check_tiddlers(fixed=true)
     f = fixed ? fat : new("#{Dir.home}/rf/_milestones/f181211.212407g.html")
     puts f.tiddlers.select {|t| t.content =~ /\n\Z/}.size
@@ -476,6 +471,11 @@ class Splitter
     write_selected(file, self[title].titles_linked)
   end
 
+
+  def show_scripts
+    puts @mid.lines[-1]
+    puts @after.lines[0..4]
+  end
 
   def show_jq
     lines = @after.lines
