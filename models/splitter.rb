@@ -81,6 +81,12 @@ class Splitter
     puts "backing up edition #{edition}"
     puts command
     `#{command}`
+    if @gens
+      backup_wiki = Splitter.new(destination)
+      backup_wiki["SiteTitle"].content = destination.split("/")[-1][0...-5]
+      backup_wiki.write ""
+    end
+    destination
   end
 
   def commit_mods
