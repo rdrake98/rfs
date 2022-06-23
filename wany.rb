@@ -30,8 +30,8 @@ class Wany < Roda
   end
 
   route do |r|
-    r.get "show" do
-      fat ? fat.tiddlers.size.to_s : "nil"
+    r.get "copy_backups" do
+      WikiWithTabs.copy_backups
     end
 
     r.get "tabs" do
