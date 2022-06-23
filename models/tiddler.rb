@@ -279,6 +279,10 @@ class Tiddler
     tiddlers_linked.map(&:title)
   end
 
+  def references
+    @wiki.normal_tiddlers.select{ |t| t.tiddlers_linked.include?(self) }
+  end
+
   def self.wikify(text, wiki=Splitter.new)
     Wikifier.new(text, wiki).wikify
   end
