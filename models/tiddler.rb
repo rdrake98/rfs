@@ -268,7 +268,7 @@ class Tiddler
   end
 
   def exclude?
-    @title == "Search" || @title == "DefaultTiddlers"
+    @title.in? %w[Search DefaultTiddlers]
   end
 
   def tiddlers_linked
