@@ -471,19 +471,6 @@ class Splitter
     write_selected(file, self[title].titles_linked)
   end
 
-
-  def show_scripts
-    puts @mid.lines[-1]
-    puts @after.lines[0..4]
-  end
-
-  def show_jq
-    lines = @after.lines
-    puts lines.size
-    script_line = lines[1]
-    puts script_line
-  end
-
   # testing WikifierNull by inspection
 
   def self.test_null(title)

@@ -4,10 +4,15 @@ require 'splitter'
 require 'benchmark'
 
 class Wiki < Splitter
-  def Wiki.quicker_edition
-    my_fat = nil
-    timeb("slow") {puts (my_fat = fat).edition}
-    timeb("quicker") {puts fat_edition}
-    timeb("quickest") {puts my_fat.edition}
+  def show_scripts
+    puts @mid.lines[-1]
+    puts @after.lines[0..4]
+  end
+
+  def show_jq
+    lines = @after.lines
+    puts lines.size
+    script_line = lines[1]
+    puts script_line
   end
 end
