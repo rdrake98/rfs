@@ -7,6 +7,7 @@ require 'time'
 
 class Tiddler
   attr_reader :header, :title, :content
+  attr_accessor :references
 
   def initialize(wiki, title, content, header_or_split=nil)
     @wiki = wiki
@@ -272,7 +273,7 @@ class Tiddler
   end
 
   def tiddlers_linked
-    tiddler_links.map{|s|@wiki.referent(s)}.compact.uniq
+    @tiddlers_linked ||= tiddler_links.map{|s|@wiki.referent(s)}.compact.uniq
   end
 
   def titles_linked
@@ -280,7 +281,7 @@ class Tiddler
   end
 
   def references
-    @wiki.normal_tiddlers.select{ |t| t.tiddlers_linked.include?(self) }
+    @references ||= @wiki.normal_tiddlers.select{ |t| t.tiddlers_linked.include?(self) }
   end
 
   def self.wikify(text, wiki=Splitter.new)
