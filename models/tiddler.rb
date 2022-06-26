@@ -344,7 +344,7 @@ class Tiddler
         candidates.select!{|t| t.content =~ fromre}
         puts "#{candidates.size} candidates"
         from = from[1..-1] if comma
-        target_tidder = @wiki.referent(from)
+        target_tidder = @wiki.referent(link_target || from)
       elsif comma
         to = "\\1#{to}"
       end
