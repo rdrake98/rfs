@@ -21,25 +21,4 @@ class Wiki < Splitter
     write
     # `open #{new_name}`
   end
-
-  def Wiki.time_references
-    f1 = nil
-    timeb("fat") { f1 = fat }
-    timeb("warm2") { f1.tiddlers.each(&:tiddler_links) }
-    timeb("ref1") { f1.tiddlers[333].references }
-    timeb("refs") { f1.tiddlers[334...363].each(&:references) }
-    f1
-  end
-
-  def show_scripts
-    puts @mid.lines[-1]
-    puts @after.lines[0..4]
-  end
-
-  def show_jq
-    lines = @after.lines
-    puts lines.size
-    script_line = lines[1]
-    puts script_line
-  end
 end
