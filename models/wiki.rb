@@ -26,11 +26,11 @@ class Wiki < Splitter
   Ref = Struct.new(:linker, :link)
 
   def Wiki.time_references
-    f1, linking_tiddlers = nil
+    f1 = nil
     timeb("fat") { f1 = fat }
-    timeb("warm") { linking_tiddlers = f1.warm_references }
+    timeb("warm") { f1.warm_references }
     timeb("refs") { f1.tiddlers[333...363].map(&:references) }
-    [f1, linking_tiddlers]
+    f1
   end
 
   def warm_references
@@ -44,7 +44,7 @@ class Wiki < Splitter
     linking_tiddlers = links.keys.group_by {|s| self.referent(s)}
     puts linking_tiddlers.size
     linking_tiddlers.each do |tiddler, refs|
-      titles = refs.map{|r|links[r]}.flatten.map(&:linker).uniq
+      titles = refs.map{|r|links[r]}.flatten.map(&:linker).uniq # uniq needed?
       if tiddler
         tiddler.references =
           titles.sort_by{ |title| self.splitName(title).downcase }.
@@ -53,7 +53,6 @@ class Wiki < Splitter
         puts titles.size
       end
     end
-    linking_tiddlers
   end
 
   def show_scripts
