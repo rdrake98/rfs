@@ -281,7 +281,9 @@ class Tiddler
   end
 
   def references
-    @references ||= @wiki.normal_tiddlers.select{ |t| t.tiddlers_linked.include?(self) }
+    @references ||=
+      @wiki.normal_tiddlers.select { |t| t.tiddlers_linked.include?(self) }.
+      sort_by(&:splitdown)
   end
 
   def self.wikify(text, wiki=Splitter.new)

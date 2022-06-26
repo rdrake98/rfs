@@ -28,8 +28,9 @@ class Wiki < Splitter
   def Wiki.time_references
     f1 = nil
     timeb("fat") { f1 = fat }
-    timeb("warm") { f1.warm_references }
-    timeb("refs") { f1.tiddlers[333...363].map(&:references) }
+    timeb("warm2") { f1.tiddlers.each(&:tiddler_links) }
+    timeb("ref1") { f1.tiddlers[333].references }
+    timeb("refs") { f1.tiddlers[334...363].each(&:references) }
     f1
   end
 
