@@ -35,7 +35,7 @@ class Wiki < Splitter
 
   def warm_references
     puts tiddlers.size
-    full = tiddlers.map do |t|
+    full = normal_tiddlers.map do |t|
       t.tiddler_links.map { |link| Ref.new(t.title, link) }
     end.flatten
     puts full.size
