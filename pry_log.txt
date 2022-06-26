@@ -12,7 +12,7 @@ writing edition f220623.221023r.html to /Users/rd/Dropbox/gens/gen1_.html
 
 --
 
-[1] pry(main)> require 'wiki'; f1, links = Wiki.time_references;
+[1] pry(main)> require 'wiki'; f1 = Wiki.time_references;
 fat            1.932
 37725
 398209
