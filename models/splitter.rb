@@ -17,7 +17,7 @@ class Splitter
     atoms = @filename&.split("/")
     do_backup = @type || atoms && atoms[-1] == "bones.html"
     @backup_area = do_backup && "#{atoms[0..-2].join("/")}/_backup"
-    @gens = atoms[-2] == "gens" || atoms[-3] == "gens"
+    @gens = atoms && (atoms[-2] == "gens" || atoms[-3] == "gens")
     @tiddler_hash = {}
     @tiddler_splits = {}
     @host = hostc
