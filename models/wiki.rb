@@ -1,7 +1,6 @@
 # wiki.rb
 
 require 'splitter'
-require 'benchmark'
 
 class Wiki < Splitter
   def advance_gen

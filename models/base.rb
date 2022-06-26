@@ -3,6 +3,7 @@
 require 'time'
 require 'cgi'
 require 'stringio'
+require 'benchmark'
 
 Downloads = Dir.home + "/Downloads"
 
