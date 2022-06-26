@@ -2,7 +2,6 @@
 
 require 'splitter'
 require 'benchmark'
-# require 'dd'
 
 class Wiki < Splitter
   def advance_gen
@@ -27,27 +26,32 @@ class Wiki < Splitter
   Ref = Struct.new(:linker, :link)
 
   def Wiki.time_references
-    f1, links = nil
+    f1, linking_tiddlers = nil
     timeb("fat") { f1 = fat }
-    timeb("warm") { links = f1.warm_refs }
-    timeb("refs") { f1.tiddlers[333...343].map(&:references) }
-    [f1, links]
+    timeb("warm") { linking_tiddlers = f1.warm_references }
+    timeb("refs") { f1.tiddlers[333...363].map(&:references) }
+    [f1, linking_tiddlers]
   end
 
-  def warm_refs
+  def warm_references
+    puts tiddlers.size
     full = tiddlers.map do |t|
       t.tiddler_links.map { |link| Ref.new(t.title, link) }
     end.flatten
-    puts tiddlers.size
     puts full.size
     links = full.group_by &:link
     puts links.size
     linking_tiddlers = links.keys.group_by {|s| self.referent(s)}
     puts linking_tiddlers.size
-    # linking_tiddlers.each do |t, refs|
-    #   byebug
-    # end
-    links
+    linking_tiddlers.each do |tiddler, refs|
+      titles = refs.map{|r|links[r]}.flatten.map(&:linker).uniq.sort
+      if tiddler
+        tiddler.references = titles.map{ |title| self[title] }
+      else
+        puts titles.size
+      end
+    end
+    linking_tiddlers
   end
 
   def show_scripts
