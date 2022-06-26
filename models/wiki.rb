@@ -23,8 +23,6 @@ class Wiki < Splitter
     # `open #{new_name}`
   end
 
-  Ref = Struct.new(:linker, :link)
-
   def Wiki.time_references
     f1 = nil
     timeb("fat") { f1 = fat }
