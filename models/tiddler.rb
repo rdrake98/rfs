@@ -176,9 +176,7 @@ class Tiddler
     regex = /#{Regex.tiddlerAnyLink}/m
     match = regex.match(" " + text)
     links = []
-    # q :text
     while (match)
-      # q :match
       if match[1]
         links << match[1][1..-1] unless match[1][0] == "~"
       elsif match[4]
