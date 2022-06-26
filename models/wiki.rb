@@ -44,9 +44,11 @@ class Wiki < Splitter
     linking_tiddlers = links.keys.group_by {|s| self.referent(s)}
     puts linking_tiddlers.size
     linking_tiddlers.each do |tiddler, refs|
-      titles = refs.map{|r|links[r]}.flatten.map(&:linker).uniq.sort
+      titles = refs.map{|r|links[r]}.flatten.map(&:linker).uniq
       if tiddler
-        tiddler.references = titles.map{ |title| self[title] }
+        tiddler.references =
+          titles.sort_by{ |title| self.splitName(title).downcase }.
+          map { |title| self[title] }
       else
         puts titles.size
       end
