@@ -222,52 +222,8 @@ class Tiddler
     }
   end
 
-  def bulk_change
-    candidates = @wiki.normal_tiddlers - [self]
-    specs = @content.lines[0].chomp.split(", ").map{ |spec|
-      spec =~ /^\"\"\"(.*)\"\"\"$/ ? $1 : spec }
-    from, to, link_target, filter = specs
-    if filter
-      re = /file:\/\/\/Users\/(rd|richarddrake)\/(.*?)(\]\]|\s)/
-      candidates.select!{|t| t.content =~ re && $3 == "]]"}
-      fromre = Regexp.new(Regexp.escape(from))
-    else
-      linking = to == "link"
-      comma = from[0] == ","
-      fromre = comma ? /(\W|^)#{from[1..-1]}/ : /#{Regexp.escape(from)}/
-      if linking
-        candidates.select!{|t| t.content =~ fromre}
-        puts "#{candidates.size} candidates"
-        from = from[1..-1] if comma
-      elsif comma
-        to = "\\1#{to}"
-      end
-    end
-    edits = candidates.select do |t|
-      old_content = t.content
-      new_content = if linking
-        t.link(from, link_target, false, false)[0]
-      else
-        filter ?
-          old_content.gsub(fromre, to) :
-          old_content.sub(fromre, to) # no idea why only sub
-      end
-      t.update_content(new_content, true)
-      old_content != new_content
-    end
-    puts "#{edits.size} edits"
-    if edits.size > 0
-      time = edits[0].medited.to_minute
-      links = edits.map(&:to_link).join(" - ")
-      self.content = @content + "\n#{time} #{links}"
-      [to_h] + edits.map(&:to_h)
-    else
-      []
-    end
-  end
-
   def exclude?
-    @title.in? %w[Search DefaultTiddlers]
+    @title.in? Splitter::SpecialTitles
   end
 
   def tiddlers_linked
@@ -369,5 +325,49 @@ class Tiddler
     puts result.size
     p "   " + @content.gsub('"""',"'''").gsub("\n"," ")
     result
+  end
+
+  def bulk_change
+    candidates = @wiki.normal_tiddlers - [self]
+    specs = @content.lines[0].chomp.split(", ").map{ |spec|
+      spec =~ /^\"\"\"(.*)\"\"\"$/ ? $1 : spec }
+    from, to, link_target, filter = specs
+    if filter
+      re = /file:\/\/\/Users\/(rd|richarddrake)\/(.*?)(\]\]|\s)/
+      candidates.select!{|t| t.content =~ re && $3 == "]]"}
+      fromre = Regexp.new(Regexp.escape(from))
+    else
+      linking = to == "link"
+      comma = from[0] == ","
+      fromre = comma ? /(\W|^)#{from[1..-1]}/ : /#{Regexp.escape(from)}/
+      if linking
+        candidates.select!{|t| t.content =~ fromre}
+        puts "#{candidates.size} candidates"
+        from = from[1..-1] if comma
+      elsif comma
+        to = "\\1#{to}"
+      end
+    end
+    edits = candidates.select do |t|
+      old_content = t.content
+      new_content = if linking
+        t.link(from, link_target, false, false)[0]
+      else
+        filter ?
+          old_content.gsub(fromre, to) :
+          old_content.sub(fromre, to) # no idea why only sub
+      end
+      t.update_content(new_content, true)
+      old_content != new_content
+    end
+    puts "#{edits.size} edits"
+    if edits.size > 0
+      time = edits[0].medited.to_minute
+      links = edits.map(&:to_link).join(" - ")
+      self.content = @content + "\n#{time} #{links}"
+      [to_h] + edits.map(&:to_h)
+    else
+      []
+    end
   end
 end

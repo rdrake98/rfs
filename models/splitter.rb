@@ -6,6 +6,8 @@ require 'json'
 class Splitter
   attr_accessor :code, :filename
 
+  SpecialTitles = %w[Search DefaultTiddlers]
+
   def parent_dir
     @filename.split("/")[0..-2].join("/") + "/"
   end
@@ -114,7 +116,7 @@ class Splitter
   end
 
   def titles_linked(title)
-    self[title]&.titles_linked
+    self[title]&.titles_linked || []
   end
 
   def tiddlers_linked(title)
@@ -123,7 +125,7 @@ class Splitter
 
   def titles_excluded
     titles_linked("MacrosNotTo") + titles_linked("AcceptableDifferences") +
-      ["Search", "DefaultTiddlers"]
+      SpecialTitles
   end
 
   def testing_tiddlers
@@ -132,7 +134,7 @@ class Splitter
   end
 
   def normal_tiddlers
-    tiddlers - [self["Search"], self["DefaultTiddlers"]]
+    tiddlers.reject(&:exclude?)
   end
 
   def store_size
