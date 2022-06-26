@@ -344,6 +344,7 @@ class Tiddler
         candidates.select!{|t| t.content =~ fromre}
         puts "#{candidates.size} candidates"
         from = from[1..-1] if comma
+        target_tidder = @wiki.referent(from)
       elsif comma
         to = "\\1#{to}"
       end
@@ -351,11 +352,12 @@ class Tiddler
     edits = candidates.select do |t|
       old_content = t.content
       new_content = if linking
+        target_tidder.in?(t.tiddlers_linked) ? old_content :
         t.link(from, link_target, false, false)[0]
       else
         filter ?
           old_content.gsub(fromre, to) :
-          old_content.sub(fromre, to) # no idea why only sub
+          old_content.sub(fromre, to) # sub to avoid >1 links to same tiddler?
       end
       t.update_content(new_content, true)
       old_content != new_content
