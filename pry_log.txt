@@ -23,3 +23,15 @@ warm           14.854
 refs           0.017
 [2] pry(main)> f1["GreatRefactor"].references.size
 => 17
+
+--
+
+[1] pry(main)> require 'repo'
+=> true
+[2] pry(main)> repo = Rugged::Repository.new Dir.rfs;
+[3] pry(main)> walker = Rugged::Walker.new(repo);
+[4] pry(main)> walker.push(repo.head.target_id);
+[5] pry(main)> walker.first.oid
+=> "0ba0734c3c98539e8144d9976f903ad34f8ad22f"
+[8] pry(main)> repo.head.target_id
+=> "0ba0734c3c98539e8144d9976f903ad34f8ad22f"
