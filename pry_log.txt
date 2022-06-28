@@ -23,3 +23,24 @@ warm           14.854
 refs           0.017
 [2] pry(main)> f1["GreatRefactor"].references.size
 => 17
+
+--
+
+[1] pry(main)> require 'wiki'; f1 = Wiki.time_references;
+fat            2.131
+warm2          14.529
+ref1           0.383
+refs           1.419
+
+--
+
+[1] pry(main)> require 'wiki'; f1, wiki_links, matches, dmatches = Wiki.name_patch_analysis;
+576
+37748
+33065
+
+103
+0
+
+502
+0
