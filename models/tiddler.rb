@@ -189,12 +189,12 @@ class Tiddler
     links.uniq
   end
 
-  def basic_content
-    WikiText.new(@content).basic_content
-  end
-
   def tiddler_links
     @tiddler_links ||= Tiddler.parse_tiddler_links(basic_content, @wiki)
+  end
+
+  def basic_content
+    WikiText.new(@content).basic_content
   end
 
   def link(search_text, target, unlink, overlink)
