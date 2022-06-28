@@ -41,7 +41,7 @@ class Wiki < Splitter
     puts "", dwiki_links.size
     dmatches = dwiki_links.map do |wl|
       ts = tids.select do |t|
-        t.tiddler_links.any? { |s| s == wl } && t != nlp
+        t.tiddler_links.any? { |s| s == wl } && t != nlp && !t.exclude?
       end
       if ts.size > 0
         puts wl
