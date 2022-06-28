@@ -29,7 +29,8 @@ class Wiki < Splitter
     puts lines.size
     wiki_links = lines.select{|s|WikiText.isWikiLink(s)}
     puts wiki_links.size
-    tids = f1.tiddlers - [np, f1["NamePatchRefactor"], f1["PatchExperiments"]]
+    nlp = f1["NonexistentLinkPatches"]
+    tids = f1.tiddlers - [np, f1["NamePatchRefactor"], f1["PatchExperiments"], nlp]
     puts tids.size
     tids.select! do |t|
       t.tiddler_links.any? { |s| !f1.referent(s) }
@@ -40,13 +41,11 @@ class Wiki < Splitter
     puts "", dwiki_links.size
     dmatches = dwiki_links.map do |wl|
       ts = tids.select do |t|
-        t.tiddler_links.any? do |s|
-          s == wl
-        end
+        t.tiddler_links.any? { |s| s == wl } && t != nlp
       end
       if ts.size > 0
         puts wl
-        puts "- " + ts.map(&:title).join(" - ")
+        puts "- " + ts.map(&:to_link).join(" - ")
         ts.map{|t| [wl,t.title]}
       else
         nil
@@ -63,7 +62,7 @@ class Wiki < Splitter
       end
       if ts.size > 0
         puts wl
-        puts "- " + ts.map(&:title).join(" - ")
+        puts "- " + ts.map(&:to_link).join(" - ")
         ts.map{|t| [wl,t.title]}
       else
         nil
