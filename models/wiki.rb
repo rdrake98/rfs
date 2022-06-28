@@ -30,12 +30,12 @@ class Wiki < Splitter
     wiki_links = lines.select{|s|WikiText.isWikiLink(s)}
     tids = f1.tiddlers - [np]
     puts tids.size
-    tids.reject! do |t|
+    tids.select! do |t|
       t.tiddler_links.any? { |s| !f1.referent(s) }
     end
     puts tids.size
 
-    dwiki_links = wiki_links.select { |s| !f1.referent(s) }
+    dwiki_links = wiki_links.select { |s| !f1.referent(s) && s.size > 5 }
     puts "", dwiki_links.size
     dmatches = dwiki_links.map do |wl|
       ts = tids.select do |t|
