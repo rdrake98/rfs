@@ -53,22 +53,23 @@ class Wiki < Splitter
     end.compact
     puts dmatches.size
 
-    puts "", wiki_links.size
-    matches = wiki_links.map do |wl|
-      ts = tids.select do |t|
-        t.tiddler_links.any? do |s|
-          !f1.referent(s) && s=~/(#{wl}\w|\w#{wl})/
-        end
-      end
-      if ts.size > 0
-        puts wl
-        puts "- " + ts.map(&:to_link).join(" - ")
-        ts.map{|t| [wl,t.title]}
-      else
-        nil
-      end
-    end.compact
-    puts matches.size
+    # puts "", wiki_links.size
+    # matches = wiki_links.map do |wl|
+    #   ts = tids.select do |t|
+    #     t.tiddler_links.any? do |s|
+    #       !f1.referent(s) && s=~/(#{wl}\w|\w#{wl})/
+    #     end
+    #   end
+    #   if ts.size > 0
+    #     puts wl
+    #     puts "- " + ts.map(&:to_link).join(" - ")
+    #     ts.map{|t| [wl,t.title]}
+    #   else
+    #     nil
+    #   end
+    # end.compact
+    # puts matches.size
+    matches = []
     [f1, wiki_links, matches, dmatches]
   end
 end
