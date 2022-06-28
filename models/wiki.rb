@@ -69,7 +69,6 @@ class Wiki < Splitter
     #   end
     # end.compact
     # puts matches.size
-    matches = []
-    [f1, wiki_links, matches, dmatches]
+    [f1, wiki_links, [], dmatches]
   end
 end
