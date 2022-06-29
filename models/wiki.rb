@@ -69,6 +69,9 @@ class Wiki < Splitter
       end
     end.compact
     puts matches.size
-    [f1, wiki_links, matches, dmatches]
+    ts1 = matches.map{|a|a[0][0]}
+    ts2 = dmatches.map{|a|a[0][0]}
+    lines_needed = (ts1 + ts2).sort
+    lines_needed
   end
 end

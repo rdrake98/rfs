@@ -34,8 +34,21 @@ refs           1.419
 
 --
 
-[1] pry(main)> require 'wiki'; f1, wiki_links, matches, dmatches = Wiki.name_patch_analysis;
-576
-37748
-33065
-..
+[1] pry(main)> require 'wiki'; lines_needed = Wiki.name_patch_analysis;
+[2] pry(main)> puts lines_needed
+AR5
+AccuWeather
+ActiveSync
+CollabNet
+GameSpot
+GitHub
+JSConf
+JavaScript
+MindManager
+MochiKit
+SABMiller
+TechFlash
+VeriSign
+WebLogic
+WikiCase
+ZiddlyWiki
