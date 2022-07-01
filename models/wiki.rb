@@ -21,25 +21,4 @@ class Wiki < Splitter
     write
     # `open #{new_name}`
   end
-
-  def Wiki.name_patch_iterm
-    f1 = fat
-    np = f1["NamePatches"]
-    lines = np.content.lines.map(&:chomp).reject{|s|s==""}
-    puts lines.size
-    iterm_lines = lines.select { |s| s[0].in? %w[e i j] }
-    puts iterm_lines.size
-    tids = f1.tiddlers - [f1["LinksLikeITerm"]]
-    puts tids.size, ""
-
-    iterm_lines.map do |il|
-      cil = il[0].capitalize + il[1..-1]
-      ts = tids.select { |t| t.tiddler_links.any? { |s| s == cil } }
-      puts cil
-      puts ts.size < 10 ?
-        "- " + ts.map(&:to_link).join(" - ") :
-        ts.size
-      ts.map{|t| [il,t.title]}
-    end
-  end
 end

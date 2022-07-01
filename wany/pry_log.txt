@@ -1,17 +1,3 @@
-[2] pry(main)> gen = Wiki.new(Dir.gens "gen1.html");
-[3] pry(main)> gen.advance_gen
-139
-110
-109
-139
-37707
-JuliaCon - Socialising
-HallwayTrack
-Googling - Socialising - Wiktionary
-writing edition f220623.221023r.html to /Users/rd/Dropbox/gens/gen1_.html
-
---
-
 [1] pry(main)> require 'wiki'; f1 = Wiki.time_references;
 fat            1.932
 37725
