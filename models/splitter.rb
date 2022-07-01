@@ -69,8 +69,8 @@ class Splitter
     @before =~ /^var edition = "(.*)";$/ && $1
   end
 
-  def backup(gens_included=false)
-    return unless @backup_area || @gens && gens_included
+  def backup
+    return unless @backup_area || @gens
     destination = if @backup_area
       "#{@backup_area}/#{edition}"
     else
@@ -94,7 +94,7 @@ class Splitter
   def commit_mods
     new_one = Splitter.name_(@filename)
     if File.file?(new_one)
-      backup(true)
+      backup
       `mv #{new_one} #{@filename}`
     end
   end
