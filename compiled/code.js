@@ -1220,6 +1220,10 @@ macros.newTiddler.onClick = function(event)
     seed()
     return
   }
+  if(event.altKey) {
+    dumpM("alt new tiddler")
+    return
+  }
   var title = "NewTiddler"
   story.displayTiddler(null,title,2)
   story.focusTiddler(title)

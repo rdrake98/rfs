@@ -77,6 +77,13 @@ class App < Roda
         wiki(type).save(edition, changes) || reload(type).save(edition, changes)
       end
 
+      r.post "advance" do
+        p = r.params
+        type, edition, changes = p['type'], p['edition'], p['changes']
+        fat = wiki("fat")
+        wiki(type).advance(fat)
+      end
+
       r.post "change_tiddler" do
         p = r.params
         type = p['type']
