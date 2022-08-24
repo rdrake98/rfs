@@ -1,26 +1,26 @@
 require 'roda'
-require 'splitter'
+require 'wiki'
 
 class App < Roda
   puts "restarting rfs"
-  puts Splitter.fat_edition
+  puts Wiki.fat_edition
   Wikis = {}
 
   def basic?(type); type.size == 3; end
 
   def load_basic(type)
-    basic?(type) ? (type == "fat" ? Splitter.fat : Splitter.dev) : nil
+    basic?(type) ? (type == "fat" ? Wiki.fat : Wiki.dev) : nil
   end
 
   def wiki(type, any_wiki=true)
     Wikis[type] ||
-    (wiki = load_basic(type) || any_wiki && Splitter.new(type)) &&
+    (wiki = load_basic(type) || any_wiki && Wiki.new(type)) &&
     Wikis[type] = wiki
   end
 
   def reload(type)
     puts "reloading #{type} into server from file"
-    Wikis[type] = load_basic(type) || Splitter.new(type)
+    Wikis[type] = load_basic(type) || Wiki.new(type)
   end
 
   def respond(p, &block)
@@ -103,7 +103,7 @@ class App < Roda
         p = r.params
         from_self = p['from_self'].true?
         fat = wiki("fat")
-        fat = reload("fat") if fat.edition != Splitter.fat_edition
+        fat = reload("fat") if fat.edition != Wiki.fat_edition
         machine = from_self ? 'this machine' : 'm' + fat.other_host
         puts "adding changes from #{machine} to fat on startup"
         fat.other_changes(from_self)

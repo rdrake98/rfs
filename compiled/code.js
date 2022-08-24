@@ -1221,7 +1221,20 @@ macros.newTiddler.onClick = function(event)
     return
   }
   if(event.altKey) {
-    dumpM("alt new tiddler")
+    ajaxPost('advance', {
+        type: wikiType(),
+        edition: edition,
+        changes: jsonChanges(),
+      },
+      function success(response) {
+        var tiddlers = JSON.parse(response)
+        dumpM(tiddlers)
+      },
+      function fail() {
+        dumpM('failed in ruby')
+      }
+    )
+
     return
   }
   var title = "NewTiddler"
