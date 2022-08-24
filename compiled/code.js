@@ -1227,8 +1227,13 @@ macros.newTiddler.onClick = function(event)
         changes: jsonChanges(),
       },
       function success(response) {
-        var tiddlers = JSON.parse(response)
-        dumpM(tiddlers)
+        var changes = JSON.parse(response)
+        dumpM(changes)
+        changes.forEach(function(h) {
+          var title = h
+          var t = store.fetchTiddler(title)
+          if(t) store.removeTiddler(title, true)
+        })
       },
       function fail() {
         dumpM('failed in ruby')
