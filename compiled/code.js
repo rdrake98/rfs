@@ -1252,6 +1252,7 @@ macros.newTiddler.onClick = function(event)
           } else action = "unchanged"
           if(!medit) dumpM(title + " " + action)
         })
+        if(changes.length == 0) dumpM("no changes")
         refreshDisplay()
       },
       function fail() {
