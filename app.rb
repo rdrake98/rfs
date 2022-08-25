@@ -79,9 +79,8 @@ class App < Roda
 
       r.post "advance" do
         p = r.params
-        type, edition, changes = p['type'], p['edition'], p['changes']
-        fat = wiki("fat")
-        wiki(type).advance(fat)
+        type, open_titles = p['type'], JSON[p['open']]
+        wiki(type).advance(wiki("fat"), open_titles).to_json
       end
 
       r.post "change_tiddler" do

@@ -1221,19 +1221,38 @@ macros.newTiddler.onClick = function(event)
     return
   }
   if(event.altKey) {
+    dumpM("advancing")
+    var titles = openTitles()
+    dumpM(titles[0])
     ajaxPost('advance', {
         type: wikiType(),
-        edition: edition,
-        changes: jsonChanges(),
+        open: JSON.stringify(titles),
       },
       function success(response) {
         var changes = JSON.parse(response)
-        dumpM(changes)
         changes.forEach(function(h) {
-          var title = h
+          title = h.title || h
           var t = store.fetchTiddler(title)
-          if(t) store.removeTiddler(title, true)
+          var medit = false
+          if(!h.title) {
+            action = t ? "deleted" : "not found"
+            story.closeTiddler(title)
+            if(t) store.removeTiddler(title, true)
+          } else if(!t || h.text != t.text) {
+            action = t ? "changed" : "added"
+            var modified = new Date(h.modified)
+            var medited = h.fields.medited
+            medited = medited && new Date(medited)
+            medit = medited && medited > modified
+            var latest = medited && medited > modified ? medited : modified
+            if(t && latest < t.modified)
+              dumpM("\n** newer " + title + " replaced by older **")
+            store.saveTiddler(h.title,h.title,h.text,h.modifier,modified,
+              h.fields,new Date(h.created),h.creator,true,medit)
+          } else action = "unchanged"
+          if(!medit) dumpM(title + " " + action)
         })
+        refreshDisplay()
       },
       function fail() {
         dumpM('failed in ruby')
