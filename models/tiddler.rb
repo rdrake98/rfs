@@ -57,6 +57,7 @@ class Tiddler
   end
 
   def jsontime(string)
+    return string if string.is_a?(Time)
     string && strftime(Time.parse(string))
   end
 
