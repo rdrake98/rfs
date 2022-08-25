@@ -5,23 +5,22 @@ require 'splitter'
 class Wiki < Splitter
   def advance(fat, open_titles)
     return [] unless @gens
-    changes = []
     puts open_titles.size
-    fat_first = fat[open_titles[0]]
+    advance_title = open_titles[0]
+    fat_first = fat[advance_title]
+    return [] unless fat_first
     # puts fat_first.references.map(&:to_link).join(" - ")
     # puts fat_first.title
     linked = fat_first.tiddlers_linked
-    puts linked.map(&:to_link).join(" - ")
 
-    puts tiddlers.size
     marker = "RejectBelowHere"
-    puts index = open_titles.index(marker)
+    index = open_titles.index(marker)
+    changes = []
     open_titles[index+1..-1].each do |title|
       changes << title
       delete(title)
     end
 
-    puts tiddlers.size
     linked.each do |tiddler|
       title = tiddler.title
       unless self[title]
@@ -30,13 +29,16 @@ class Wiki < Splitter
         changes << hash
       end
     end
-    puts tiddlers.size
     puts changes.size
     if changes.size > 0
-      gen_step_last = self["GenSteps"].titles_linked[-1]
+      gen_steps = self["GenSteps"]
+      gen_step_last = gen_steps.titles_linked[-1]
       gen_step = gen_step_last[-5..-1].to_i + 1
       gen_step = "GenStep" + '%05i' % gen_step
-      puts gen_step
+      gen_steps.content += " - " + gen_step
+      changes << gen_steps.to_h
+      content = advance_title + "\n" + linked.map(&:to_link).join(" - ")
+      changes << create_new(gen_step, content).to_h
     end
     changes
   end
