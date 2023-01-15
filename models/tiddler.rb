@@ -349,7 +349,7 @@ class Tiddler
         target_tidder = @wiki.referent(link_target || from)
       else
         to = "\\1#{to}" if comma
-        if link_target && link_target[0] == "-"
+        if link_target&.[](0) == "-"
           candidates.reject!{|t| t.title == link_target[1..-1]}
         end
       end
