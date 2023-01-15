@@ -333,7 +333,7 @@ class Tiddler
     specs = @content.lines[0].chomp.split(", ").map{ |spec|
       spec =~ /^\"\"\"(.*)\"\"\"$/ ? $1 : spec }
     puts specs
-    from, to, link_target, filter = specs
+    from, to, target, filter = specs
     if filter
       re = /file:\/\/\/Users\/(rd|richarddrake)\/(.*?)(\]\]|\s)/
       candidates.select!{|t| t.content =~ re && $3 == "]]"}
@@ -346,19 +346,17 @@ class Tiddler
         candidates.select!{|t| t.content =~ fromre}
         puts "#{candidates.size} candidates"
         from = from[1..-1] if comma
-        target_tidder = @wiki.referent(link_target || from)
+        target_tidder = @wiki.referent(target || from)
       else
         to = "\\1#{to}" if comma
-        if link_target&.[](0) == "-"
-          candidates.reject!{|t| t.title == link_target[1..-1]}
-        end
+        candidates.reject!{|t| t.title == target[1..-1]} if target&.[](0) == "-"
       end
     end
     edits = candidates.select do |t|
       old_content = t.content
       new_content = if linking
         target_tidder.in?(t.tiddlers_linked) ? old_content :
-        t.link(from, link_target, false, false)[0]
+        t.link(from, target, false, false)[0]
       else
         filter ?
           old_content.gsub(fromre, to) :
