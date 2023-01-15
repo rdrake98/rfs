@@ -332,6 +332,7 @@ class Tiddler
     candidates = @wiki.normal_tiddlers - [self]
     specs = @content.lines[0].chomp.split(", ").map{ |spec|
       spec =~ /^\"\"\"(.*)\"\"\"$/ ? $1 : spec }
+    puts specs
     from, to, link_target, filter = specs
     if filter
       re = /file:\/\/\/Users\/(rd|richarddrake)\/(.*?)(\]\]|\s)/
@@ -346,8 +347,11 @@ class Tiddler
         puts "#{candidates.size} candidates"
         from = from[1..-1] if comma
         target_tidder = @wiki.referent(link_target || from)
-      elsif comma
-        to = "\\1#{to}"
+      else
+        to = "\\1#{to}" if comma
+        if link_target && link_target[0] == "-"
+          candidates.reject!{|t| t.title == link_target[1..-1]}
+        end
       end
     end
     edits = candidates.select do |t|
