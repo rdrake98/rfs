@@ -116,11 +116,11 @@ class Splitter
   end
 
   def titles_linked(title)
-    self[title]&.titles_linked || []
+    referent(title)&.titles_linked || []
   end
 
   def tiddlers_linked(title)
-    self[title]&.tiddlers_linked || []
+    referent(title)&.tiddlers_linked || []
   end
 
   def titles_excluded

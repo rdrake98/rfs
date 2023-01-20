@@ -7,11 +7,14 @@ class Wiki < Splitter
     return [] unless @gens
     puts open_titles.size
     advance_title = open_titles[0]
-    fat_first = fat[advance_title]
-    return [] unless fat_first
-    # puts fat_first.references.map(&:to_link).join(" - ")
-    # puts fat_first.title
-    linked = fat_first.tiddlers_linked
+    first = self[advance_title] || fat[advance_title]
+    return [] unless first
+    # puts first.references.map(&:to_link).join(" - ")
+    # puts first.title
+    links = Tiddler.parse_tiddler_links(first.basic_content, fat)
+    puts links.size
+    linked = links.map{|s|fat.referent(s)}.compact.uniq
+    puts linked.size
 
     marker = "RejectBelowHere"
     index = open_titles.index(marker)
