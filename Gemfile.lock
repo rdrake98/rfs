@@ -12,12 +12,8 @@ GEM
     rack (3.0.4.1)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
-    rackup (2.0.0)
-      rack (>= 3)
-      webrick
     roda (3.64.0)
       rack
-    webrick (1.7.0)
 
 PLATFORMS
   ruby
@@ -25,9 +21,9 @@ PLATFORMS
 DEPENDENCIES
   pry
   puma
+  rack
   rack-cors
-  rackup
   roda
 
 BUNDLED WITH
-   2.3.26
+   2.4.5
