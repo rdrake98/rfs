@@ -21,7 +21,6 @@ PLATFORMS
 DEPENDENCIES
   pry
   puma
-  rack
   rack-cors
   roda
 
