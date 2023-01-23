@@ -1,7 +1,8 @@
 # wiki.rb
 
 require 'splitter'
-require 'dd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
+require 'd' if $dd ||= ARGV[-1] == "dd" || ENV["dd"] == "dd"
+require 'byebug' if $dd
 
 class Wiki < Splitter
   def advance(fat, open_titles)
@@ -9,7 +10,7 @@ class Wiki < Splitter
 
     selected = fat["SelectedGns2"]
     links = selected.tiddler_links
-    # qq :links if $dd
+    qq :links if $dd
     # q :links if $dd
     byebug if $dd
 
