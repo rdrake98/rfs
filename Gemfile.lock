@@ -1,23 +1,39 @@
+GIT
+  remote: https://github.com/cyu/rack-cors.git
+  revision: a2a918f781b6bcbdc22fa180d5e6e454e777fa5a
+  specs:
+    rack-cors (2.0.0.rc1)
+      rack (>= 2.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
+    binding_of_caller (1.0.0)
+      debug_inspector (>= 0.0.1)
     byebug (11.1.3)
+    debug_inspector (1.1.0)
+    minitest (5.17.0)
     nio4r (2.5.8)
     puma (6.0.2)
       nio4r (~> 2.0)
     rack (3.0.4.1)
-    rack-cors (1.1.1)
-      rack (>= 2.0.0)
+    rackup (2.0.0)
+      rack (>= 3)
+      webrick
     roda (3.64.0)
       rack
+    webrick (1.7.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  binding_of_caller
   byebug
+  minitest
   puma
-  rack-cors
+  rack-cors!
+  rackup
   roda
 
 BUNDLED WITH
